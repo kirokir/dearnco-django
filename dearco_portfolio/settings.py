@@ -7,28 +7,21 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from a .env file for local development.
-# This line is ignored in production on Render.
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# The SECRET_KEY is read from an environment variable.
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG is False on Render, and True locally if a .env file sets DEBUG=True.
 # The 'RENDER' env var is set automatically by the Render platform.
 DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
 
 # Get the Render external hostname from the environment variables.
-# This is the most robust way to set your allowed host on Render.
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# You can also add your local development host if needed
-# ALLOWED_HOSTS.append('127.0.0.1')
 
 
 # Application definition
@@ -43,6 +36,8 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'tinymce',
+    'cloudinary',                       # Cloudinary API
+    'django_cloudinary_storage',        # For media file handling (Corrected Name)
 
     # Local apps
     'core.apps.CoreConfig',
@@ -52,7 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # WhiteNoise middleware should be placed right after the security middleware.
+    # WhiteNoise middleware for serving static files
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,23 +79,16 @@ WSGI_APPLICATION = 'dearco_portfolio.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-# This configuration uses dj-database-url to parse the DATABASE_URL
-# environment variable provided by Render (and Supabase).
-# It falls back to a local SQLite database if DATABASE_URL is not set.
-
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=True, # Required for Supabase connections
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
     )
 }
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -110,34 +98,30 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+# --- Static and Media File Configuration ---
+
+# Static files (CSS, JavaScript) are served by WhiteNoise
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Use WhiteNoise's optimized storage backend in production
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# Media files (User Uploads)
+# Media files (User Uploads) are handled by Cloudinary
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'django_cloudinary_storage.storage.MediaCloudinaryStorage' # (Corrected Name)
 
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# --- Third-Party Package Configurations ---
 
 # TinyMCE Configuration
 TINYMCE_DEFAULT_CONFIG = {
@@ -152,4 +136,11 @@ TINYMCE_DEFAULT_CONFIG = {
     "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
     "a11ycheck ltr rtl | showcomments addcomment code",
     "custom_undo_redo_levels": 10,
+}
+
+# Cloudinary Configuration (reads credentials from environment variables)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environget('CLOUDINARY_API_SECRET'),
 }

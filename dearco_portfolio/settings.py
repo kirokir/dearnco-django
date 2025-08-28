@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'tinymce',
     'cloudinary',                       # Cloudinary API
-    'django_cloudinary_storage',        # For media file handling (Corrected Name)
+    'django_cloudinary_storage',        # For media file handling
 
     # Local apps
     'core.apps.CoreConfig',
@@ -114,7 +114,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (User Uploads) are handled by Cloudinary
 MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'django_cloudinary_storage.storage.MediaCloudinaryStorage' # (Corrected Name)
+DEFAULT_FILE_STORAGE = 'django_cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # Default primary key field type
@@ -139,8 +139,9 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # Cloudinary Configuration (reads credentials from environment variables)
+# CORRECTED TYPO HERE
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environget('CLOUDINARY_API_SECRET'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'), # <--- CORRECTED
 }

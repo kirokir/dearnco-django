@@ -5,4 +5,5 @@ class CoreConfig(AppConfig):
     name = 'core'
 
     def ready(self):
-        import core.signals
+        # This is the recommended way to import signals to ensure they are always connected.
+        from . import signals

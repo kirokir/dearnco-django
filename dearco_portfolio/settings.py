@@ -25,6 +25,12 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+# CSRF Configuration for Production
+# This tells Django to trust POST requests (like logins) from your Render domain.
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}']
+
+
 # --- Application Definition ---
 
 INSTALLED_APPS = [
@@ -80,23 +86,19 @@ WSGI_APPLICATION = 'dearco_portfolio.wsgi.application'
 
 
 # --- Database Configuration (Robust Version) ---
-# This configuration intelligently handles both production (PostgreSQL) and local (SQLite) environments.
 
-# First, get the database URL from the environment.
-# In production (Render), this will be the PostgreSQL URL.
-# Locally, our .env file will provide a SQLite URL.
+# Get the database URL from the environment.
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 # Configure the database using dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
-        default=DATABASE_URL,  # Use the URL we just retrieved
+        default=DATABASE_URL,
         conn_max_age=600
     )
 }
 
-# IMPORTANT: Only add the ssl_require option if the database engine is PostgreSQL.
-# This prevents the 'sslmode' error when running commands locally against SQLite.
+# Only add the ssl_require option if the database engine is PostgreSQL.
 if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 

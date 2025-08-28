@@ -18,4 +18,5 @@ def home_view(request):
         'recent_posts': recent_posts,
         'add_project_form': add_project_form,
     }
-    return render(request, 'core/templates/home.html', context)
+    # CORRECTED TEMPLATE PATH
+    return render(request, 'home.html', context)

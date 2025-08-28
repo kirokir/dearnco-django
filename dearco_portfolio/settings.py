@@ -7,12 +7,14 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from a .env file for local development.
+# This line is crucial for your Codespaces environment to work correctly.
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# --- Security Settings ---
+# SECRET_KEY is read from an environment variable for security.
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG is False on Render (production) and True locally if set in .env
 # The 'RENDER' env var is set automatically by the Render platform.
 DEBUG = 'RENDER' not in os.environ
 
@@ -23,8 +25,7 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-
-# Application definition
+# --- Application Definition ---
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -36,8 +37,8 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'tinymce',
-    'cloudinary',                       # Cloudinary API
-    'cloudinary_storage',        # For media file handling
+    'cloudinary',
+    'cloudinary_storage',
 
     # Local apps
     'core.apps.CoreConfig',
@@ -78,17 +79,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dearco_portfolio.wsgi.application'
 
 
-# Database
+# --- Database Configuration (Robust Version) ---
+# This configuration intelligently handles both production (PostgreSQL) and local (SQLite) environments.
+
+# First, get the database URL from the environment.
+# In production (Render), this will be the PostgreSQL URL.
+# Locally, our .env file will provide a SQLite URL.
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+# Configure the database using dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
-        conn_max_age=600,
-        ssl_require=True, # Required for Supabase connections
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+        default=DATABASE_URL,  # Use the URL we just retrieved
+        conn_max_age=600
     )
 }
 
+# IMPORTANT: Only add the ssl_require option if the database engine is PostgreSQL.
+# This prevents the 'sslmode' error when running commands locally against SQLite.
+if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
-# Password validation
+
+# --- Password validation ---
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -97,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# --- Internationalization ---
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -117,7 +130,7 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-# Default primary key field type
+# --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
@@ -139,9 +152,8 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # Cloudinary Configuration (reads credentials from environment variables)
-# CORRECTED TYPO HERE
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'), # <--- CORRECTED
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }

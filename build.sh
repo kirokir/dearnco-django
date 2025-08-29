@@ -2,17 +2,28 @@
 # exit on error
 set -o errexit
 
+echo "---> Building project..."
+
+# Upgrade pip
+pip install --upgrade pip
+
+# Install dependencies
 pip install -r requirements.txt
 
-python manage.py collectstatic --no-input
-python manage.py migrate
-#!/usr/bin/env bash
-# exit on error
-set -o errexit
+# Create migration files (this is safe to run even if they exist)
+echo "---> Creating migration files..."
+python manage.py makemmigrations
 
-pip install -r requirements.txt
-
-python manage.py collectstatic --no-input
+# Apply database migrations
+echo "---> Applying database migrations..."
 python manage.py migrate
+
+# Create the superuser
+echo "---> Ensuring superuser exists..."
 python manage.py createsu
-python manage.py resetadminpass
+
+# Collect static files
+echo "---> Collecting static files..."
+python manage.py collectstatic --no-input
+
+echo "---> Build finished."

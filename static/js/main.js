@@ -1,8 +1,26 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Sticky Header Logic
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    const body = document.body;
+
+    if (hamburgerBtn && mobileNav) {
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('open');
+            mobileNav.classList.toggle('open');
+            body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+        });
+
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburgerBtn.classList.remove('open');
+                mobileNav.classList.remove('open');
+                body.style.overflow = '';
+            });
+        });
+    }
+
     const header = document.getElementById('sticky-header');
     const heroSection = document.querySelector('.hero-brutalist');
-    // Ensure heroSection exists before trying to get its height
     if (heroSection) {
         const heroHeight = heroSection.offsetHeight;
         window.addEventListener('scroll', () => {
@@ -14,13 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Observer for fade-in animations
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
     }, { threshold: 0.15 });
     document.querySelectorAll('.project-card, .stat-item').forEach((el) => observer.observe(el));
     
-    // Observer for stats counter animation
     const statsBar = document.getElementById('stats-bar');
     if (statsBar) {
         const statsObserver = new IntersectionObserver((entries, obs) => {
@@ -42,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
         statsObserver.observe(statsBar);
     }
 
-    // Function for drawing connecting lines
     const svg = document.getElementById('connector-svg');
     const cards = document.querySelectorAll('.project-card');
     function drawConnectingLines() {
@@ -51,27 +66,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const svgRect = svg.getBoundingClientRect();
         for (let i = 0; i < cards.length - 1; i++) {
             const c1 = cards[i], c2 = cards[i + 1], r1 = c1.getBoundingClientRect(), r2 = c2.getBoundingClientRect();
-            // Ensure we only draw lines if cards are visible
             if (r1.width === 0 || r2.width === 0) continue;
-
             const isC1Even = (i + 1) % 2 === 0;
-            const isC1R = window.getComputedStyle(c1).flexDirection === 'row-reverse' || (window.innerWidth <= 768);
-            const isC2R = window.getComputedStyle(c2).flexDirection === 'row-reverse' || (window.innerWidth <= 768);
-            
             let p1x, p2x;
             if (window.innerWidth > 768) {
-                // Desktop logic: alternate sides
                 p1x = isC1Even ? r1.left - svgRect.left : r1.right - svgRect.left;
                 p2x = !isC1Even ? r2.left - svgRect.left : r2.right - svgRect.left;
             } else {
-                // Mobile logic: always from center bottom to center top
                 p1x = r1.left + r1.width / 2 - svgRect.left;
                 p2x = r2.left + r2.width / 2 - svgRect.left;
             }
-            
             const p1y = r1.bottom - svgRect.top;
             const p2y = r2.top - svgRect.top;
-            
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); 
             const cf = 100;
             const d = `M ${p1x} ${p1y} C ${p1x} ${p1y + cf}, ${p2x} ${p2y - cf}, ${p2x} ${p2y}`;
@@ -83,12 +89,9 @@ document.addEventListener("DOMContentLoaded", function() {
             svg.appendChild(path);
         }
     }
-    
-    // Use a timeout to ensure layout is stable before drawing
     setTimeout(drawConnectingLines, 100);
     window.addEventListener('resize', drawConnectingLines);
 
-    // Whack-a-Mole Game Logic
     const moles = document.querySelectorAll('.mole');
     if (moles.length > 0) {
         let lastMole, timeUp = false;
@@ -111,7 +114,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         moles.forEach(mole => mole.addEventListener('click', e => {
             if(e.currentTarget.classList.contains('up')){
-                window.open("https://wa.me/919846547132?text=I%20caught%20the%20mole!", "_blank");
+                const whatsAppUrl = e.currentTarget.closest('.mole-game-footer').dataset.whatsappUrl;
+                if (whatsAppUrl) {
+                    window.open(whatsAppUrl, "_blank");
+                }
             }
         }));
         peep();

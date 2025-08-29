@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us | Dear&Co{% endblock %}
+
+{% block content %}
+<main class="static-page-container">
+    <h1>Contact Us</h1>
+    <p>We're ready to listen. Whether you have a groundbreaking idea for a SaaS platform, a complex AI challenge, or need a stunning web presence, our team is here to help you build something that matters.</p>
+    
+    <div class="contact-info">
+        <h2>General Inquiries & Partnerships</h2>
+        <p>For all new project inquiries, partnership opportunities, or just to say hello, please reach out to us via email. We strive to respond to all messages within one business day.</p>
+        <a href="mailto:{{ site_config.email }}" class="contact-email-link">{{ site_config.email }}</a>
+    </div>
+
+    <div class="contact-info">
+        <h2>Careers</h2>
+        <p>We are always looking for obsessive, talented engineers and designers who believe in building exceptional products. If you think you're a good fit for our team, we'd love to hear from you.</p>
+        <a href="mailto:{{ site_config.email }}?subject=Job Application" class="contact-email-link">Join Our Team</a>
+    </div>
+
+    <div class="contact-info">
+        <h2>Follow Our Journey</h2>
+        <p>Stay up to date with our latest projects, insights, and behind-the-scenes content by following us on our social channels.</p>
+        <div class="contact-icons-static-page">
+            {% if site_config.instagram %}<a href="{{ site_config.instagram }}" target="_blank" title="Instagram">Instagram</a>{% endif %}
+            {% if site_config.linkedin %}<a href="{{ site_config.linkedin }}" target="_blank" title="LinkedIn">LinkedIn</a>{% endif %}
+            {% if site_config.behance %}<a href="{{ site_config.behance }}" target="_blank" title="Behance">Behance</a>{% endif %}
+            {% if site_config.youtube %}<a href="{{ site_config.youtube }}" target="_blank" title="YouTube">YouTube</a>{% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

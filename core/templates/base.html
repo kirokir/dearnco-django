@@ -13,14 +13,39 @@
 </head>
 <body>
     <header id="sticky-header">
-        <div class="header-logo">Dear&Co</div>
+        <a href="{% url 'core:home' %}" class="header-logo-link">
+            {% if site_config.logo %}
+                <img src="{{ site_config.logo.url }}" alt="Dear&Co Logo" class="site-logo">
+            {% else %}
+                <div class="header-logo">Dear&Co</div>
+            {% endif %}
+        </a>
         <nav class="header-nav">
             <a href="{% url 'core:home' %}#blog-preview">Blog</a>
             <a href="{% url 'portfolio:team' %}">Team</a>
             <a href="{% url 'core:home' %}#projects">Work</a>
         </nav>
-        <a href="mailto:thedearandco@gmail.com" class="header-connect-btn">Let's Connect</a>
+        <a href="mailto:{{ site_config.email }}" class="header-connect-btn">Let's Connect</a>
+        <button id="hamburger-btn" aria-label="Open Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+
+    <div id="mobile-nav">
+        <a href="{% url 'core:home' %}#blog-preview">Blog</a>
+        <a href="{% url 'portfolio:team' %}">Team</a>
+        <a href="{% url 'core:home' %}#projects">Work</a>
+        <a href="{% url 'core:contact' %}">Contact Us</a>
+        <hr>
+        <a href="{% url 'core:terms' %}">Terms & Conditions</a>
+        <a href="{% url 'core:privacy' %}">Privacy Policy</a>
+    </div>
+
+    {% if not is_homepage %}
+        {% include "core/breadcrumbs.html" %}
+    {% endif %}
 
     {% block content %}{% endblock %}
 
@@ -29,7 +54,8 @@
             <div class="footer-bg-logo">DEAR&CO</div>
             <div class="footer-left">
                 <h2>Your next project<br>starts here.</h2>
-                <a href="#" class="partner-btn">Become a Partner →</a>
+                <a href="mailto:{{ site_config.email }}?subject=I would like to be a partner" class="partner-btn">Become a Partner →</a>
+                <a href="mailto:{{ site_config.email }}?subject=Job Application" class="join-us-btn">Join Us</a>
             </div>
             <div class="footer-right">
                 <div class="footer-links">
@@ -37,14 +63,14 @@
                         <li><a href="{% url 'core:home' %}#blog-preview">Blog</a></li>
                         <li><a href="{% url 'portfolio:team' %}">Our Team</a></li>
                         <li><a href="{% url 'core:home' %}#projects">Portfolio</a></li>
-                        <li><a href="mailto:thedearandco@gmail.com">Contact Us</a></li>
+                        <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
                     <ul>
                         <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="{% url 'core:terms' %}">Terms & Conditions</a></li>
+                        <li><a href="{% url 'core:privacy' %}">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>

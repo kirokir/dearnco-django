@@ -1,0 +1,21 @@
+{% if breadcrumbs %}
+<nav class="breadcrumbs">
+    <div class="breadcrumbs-container">
+        <a href="{% url 'core:home' %}" class="breadcrumb-home">
+            {% if site_config.logo %}
+                <img src="{{ site_config.logo.url }}" alt="Home" class="breadcrumb-logo">
+            {% else %}
+                Home
+            {% endif %}
+        </a>
+        {% for crumb in breadcrumbs %}
+            <span class="breadcrumb-separator">/</span>
+            {% if crumb.url %}
+                <a href="{{ crumb.url }}" class="breadcrumb-link">{{ crumb.name }}</a>
+            {% else %}
+                <span class="breadcrumb-current">{{ crumb.name }}</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}

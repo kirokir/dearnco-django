@@ -3,7 +3,12 @@ from .models import BlogPost
 
 def blog_post_detail_view(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
+    breadcrumbs = [
+        {'name': 'Blog', 'url': '/#blog-preview'},
+        {'name': post.title}
+    ]
     context = {
-        'post': post
+        'post': post,
+        'breadcrumbs': breadcrumbs,
     }
     return render(request, 'blog/blog_post_detail.html', context)

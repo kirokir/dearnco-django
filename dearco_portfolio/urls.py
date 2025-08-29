@@ -11,6 +11,8 @@ urlpatterns = [
     path('', include('portfolio.urls')),
 ]
 
+# This is the crucial change.
+# This line will only be active during local development (DEBUG=True)
+# and will be ignored in production, which is the correct behavior.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

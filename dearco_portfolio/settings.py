@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tinymce',
     'cloudinary',
-    'singleton_model',
     'core.apps.CoreConfig',
     'blog.apps.BlogConfig',
     'portfolio.apps.PortfolioConfig',

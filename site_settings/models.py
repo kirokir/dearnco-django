@@ -1,9 +1,8 @@
 from django.db import models
-from singleton_model import SingletonModel
 from cloudinary.models import CloudinaryField
+from core.models import SingletonModel
 
 class SiteConfiguration(SingletonModel):
-    # All your model fields remain exactly the same
     logo = CloudinaryField('logo', null=True, blank=True, help_text="Your site's primary logo. Should be a transparent PNG.")
     hero_image = CloudinaryField('hero_image', null=True, blank=True, help_text="The main background image for the homepage hero section.")
     hero_image_opacity = models.PositiveIntegerField(default=20, help_text="Opacity of the hero image (0-100). 20 is a good starting point.")
@@ -21,4 +20,4 @@ class SiteConfiguration(SingletonModel):
         return "Site Configuration"
 
     class Meta:
-        verbose_name = "Site Configuration"
+        verbose_name_plural = "Site Configuration"

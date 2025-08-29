@@ -1,8 +1,18 @@
 from django.db import models
-from singleton_model import SingletonModel
 from cloudinary.models import CloudinaryField
+# NOTE: We have REMOVED 'from singleton_model import SingletonModel' from here.
 
-class SiteConfiguration(SingletonModel):
+# This class will now perform a "lazy import" of SingletonModel
+class SiteConfiguration(models.Model):
+
+    # This is a special method to dynamically set the parent class
+    def __new__(cls, *args, **kwargs):
+        from singleton_model import SingletonModel
+        # We replace the base 'models.Model' with 'SingletonModel' at runtime
+        cls.__bases__ = (SingletonModel,)
+        return super().__new__(cls)
+
+    # All your model fields remain exactly the same
     logo = CloudinaryField('logo', null=True, blank=True, help_text="Your site's primary logo. Should be a transparent PNG.")
     hero_image = CloudinaryField('hero_image', null=True, blank=True, help_text="The main background image for the homepage hero section.")
     hero_image_opacity = models.PositiveIntegerField(default=20, help_text="Opacity of the hero image (0-100). 20 is a good starting point.")

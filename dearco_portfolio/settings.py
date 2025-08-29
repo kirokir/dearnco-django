@@ -12,11 +12,8 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # --- Security Settings ---
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# ==============================================================================
-# TEMPORARY DEBUGGING SETTING - THIS MUST BE REVERTED BEFORE FINALIZING
-# We are forcing DEBUG to True to see the real error on Render.
-DEBUG = True
-# ==============================================================================
+# DEBUG is False on Render (production)
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
 
@@ -106,6 +103,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# This is the most important part for fixing your images.
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 

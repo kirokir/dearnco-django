@@ -4,7 +4,7 @@
 {% block content %}
 <section class="hero-brutalist">
     {% if site_config.hero_image %}
-    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ site_config.hero_image_opacity|div:100 }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
+    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
     {% endif %}
     <div class="content-wrapper">
         <span class="bg-text bg-dearco">DEAR&CO</span>

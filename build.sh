@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 # Create migration files (this is safe to run even if they exist)
 echo "---> Creating migration files..."
-python manage.py makemmigrations
+python manage.py makemigrations # CORRECTED TYPO HERE
 
 # Apply database migrations
 echo "---> Applying database migrations..."

@@ -9,12 +9,20 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 IS_PRODUCTION = 'RENDER' in os.environ
-DEBUG = not IS_PRODUCTION
+
+# ======================================================================
+# TEMPORARY DEBUGGING SETTING
+# This forces the detailed error page to show on Render.
+DEBUG = True
+# ======================================================================
+
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-if IS_PRODUCTION:
+
+# We still need CSRF_TRUSTED_ORIGINS even in debug mode for HTTPS POST requests
+if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}']
 
 INSTALLED_APPS = [

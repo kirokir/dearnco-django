@@ -1,17 +1,19 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
 from .models import Profile
 
-# Unregister the provided UserAdmin
-admin.site.unregister(User)
+# We will no longer use a custom UserAdmin with an inline profile.
+# Instead, we will manage Profiles directly.
+# This avoids the race condition with the signal on user creation.
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-    verbose_name_plural = 'Profile'
-    fk_name = 'user'
-
-@admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline, )
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'image_preview')
+    readonly_fields = ('user',) # You can't change the user a profile is linked to.
+    
+    # A little helper to show the image in the list view
+    def image_preview(self, obj):
+        from django.utils.html import format_html
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 50%;" />', obj.image.url)
+        return "No Image"
+    image_preview.short_description = 'Profile Picture'

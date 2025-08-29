@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from tinymce.models import HTMLField
+from cloudinary.models import CloudinaryField # Import CloudinaryField
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -13,7 +14,10 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    header_image = models.ImageField(upload_to='blog_headers/')
+    
+    # This line is changed from ImageField to CloudinaryField
+    header_image = CloudinaryField('blog_headers')
+    
     content = HTMLField()
     published_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=255, blank=True)

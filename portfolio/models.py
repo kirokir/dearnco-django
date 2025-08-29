@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField # Import CloudinaryField
 
 class Project(models.Model):
     PROJECT_TYPE_CHOICES = (
@@ -8,7 +9,10 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     project_url = models.URLField(max_length=200, blank=True, null=True)
-    image = models.ImageField(upload_to='project_images/')
+    
+    # This line is changed from ImageField to CloudinaryField
+    image = CloudinaryField('project_images')
+    
     project_type = models.CharField(max_length=10, choices=PROJECT_TYPE_CHOICES, default='primary')
     display_order = models.PositiveIntegerField(default=0)
 
@@ -21,7 +25,10 @@ class Project(models.Model):
 class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='team_images/')
+    
+    # This line is changed from ImageField to CloudinaryField
+    image = CloudinaryField('team_images')
+    
     display_order = models.PositiveIntegerField(default=0)
     
     class Meta:

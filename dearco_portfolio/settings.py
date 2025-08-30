@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # This logic correctly sets DEBUG based on the RENDER environment variable
 IS_PRODUCTION = 'RENDER' in os.environ
-DEBUG = not IS_PRODUCTION
+DEBUG = True
 
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')

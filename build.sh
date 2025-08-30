@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
-# exit on error
+# Exit immediately if a command exits with a non-zero status.
 set -o errexit
 
-echo "---> Building project..."
-
-# Upgrade pip
-pip install --upgrade pip
+echo "--- STARTING BUILD PROCESS ---"
 
 # Install dependencies
+echo "--- Installing packages ---"
 pip install -r requirements.txt
 
-# Create migration files (this is safe to run even if they exist)
-echo "---> Creating migration files..."
-python manage.py makemigrations # CORRECTED TYPO HERE
+# Create migration files. This is crucial.
+# If this command says "No changes detected", it's okay.
+echo "--- Creating migrations ---"
+python manage.py makemigrations
 
-# Apply database migrations
-echo "---> Applying database migrations..."
-python manage.py migrate
+# Apply database migrations. The --no-input flag is important for non-interactive environments.
+echo "--- Applying database migrations ---"
+python manage.py migrate --no-input
 
 # Create the superuser
-echo "---> Ensuring superuser exists..."
+echo "--- Ensuring superuser exists ---"
 python manage.py createsu
 
 # Collect static files
-echo "---> Collecting static files..."
-python manage.py collectstatic --no-input
+echo "--- Collecting static files ---"
+python manage.py collectstatic --no-input --clear
 
-echo "---> Build finished."
+echo "--- BUILD PROCESS COMPLETED ---"

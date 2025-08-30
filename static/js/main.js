@@ -4,25 +4,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const body = document.body;
 
     const applyTheme = (theme) => {
-        if (theme === 'dark') {
-            body.classList.add('dark-mode');
-        } else {
-            body.classList.remove('dark-mode');
-        }
+        if (theme === 'dark') { body.classList.add('dark-mode'); } 
+        else { body.classList.remove('dark-mode'); }
     };
 
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    let currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-
-    if (savedTheme) {
-        currentTheme = savedTheme;
-    } else if (prefersDark) {
-        currentTheme = 'dark';
-    }
-    
-    applyTheme(currentTheme);
+    let initialTheme = document.body.classList.contains('dark-mode-default') ? 'dark' : 'light';
+    if (savedTheme) { initialTheme = savedTheme; } 
+    else if (prefersDark) { initialTheme = 'dark'; }
+    applyTheme(initialTheme);
 
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
@@ -35,12 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- HAMBURGER MENU LOGIC ---
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileNav = document.getElementById('mobile-nav');
-
     if (hamburgerBtn && mobileNav) {
         hamburgerBtn.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('open');
+            const isOpen = hamburgerBtn.classList.toggle('open');
             mobileNav.classList.toggle('open');
-            body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+            body.style.overflow = isOpen ? 'hidden' : '';
         });
         mobileNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
@@ -57,11 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (header && heroSection) {
         const heroHeight = heroSection.offsetHeight;
         window.addEventListener('scroll', () => {
-            if (window.scrollY > heroHeight) {
-                header.classList.add('visible');
-            } else {
-                header.classList.remove('visible');
-            }
+            header.classList.toggle('visible', window.scrollY > heroHeight);
         });
     }
 
@@ -69,73 +55,90 @@ document.addEventListener("DOMContentLoaded", function() {
     const floatingLogo = document.querySelector('.hero-floating-logo');
     if (floatingLogo) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { 
-                floatingLogo.classList.add('hide');
-            } else {
-                floatingLogo.classList.remove('hide');
-            }
+            floatingLogo.classList.toggle('hide', window.scrollY > 50);
         });
     }
 
     // --- FADE-IN ANIMATIONS ---
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
             }
         });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.project-card, .stat-item').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.project-card, .stat-item').forEach(el => observer.observe(el));
 
-    // --- STATS COUNTER ANIMATION ---
+    // --- STATS COUNTER ---
     const statsBar = document.getElementById('stats-bar');
     if (statsBar) {
-        const statsObserver = new IntersectionObserver((entries, obs) => {
+        new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const statNumbers = entry.target.querySelectorAll('.stat-number');
                     statNumbers.forEach(num => {
                         const target = +num.getAttribute('data-target');
-                        if (parseInt(num.innerText.replace(/,/g, '')) !== target) {
-                            let current = 0;
-                            const duration = 2000;
-                            const increment = target / (duration / 16);
-                            const updateCount = () => {
-                                current += increment;
-                                if (current < target) {
-                                    num.innerText = Math.ceil(current).toLocaleString();
-                                    requestAnimationFrame(updateCount);
-                                } else {
-                                    num.innerText = target.toLocaleString();
-                                }
-                            };
-                            requestAnimationFrame(updateCount);
-                        }
+                        if (parseInt(num.innerText.replace(/,/g, '')) === target) return;
+                        let current = 0;
+                        const duration = 2000;
+                        const increment = target / (duration / 16);
+                        const updateCount = () => {
+                            current += increment;
+                            if (current < target) {
+                                num.innerText = Math.ceil(current).toLocaleString();
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                num.innerText = target.toLocaleString();
+                            }
+                        };
+                        requestAnimationFrame(updateCount);
                     });
                     obs.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.5 });
-        statsObserver.observe(statsBar);
+        }, { threshold: 0.5 }).observe(statsBar);
     }
     
-    // --- WHACK-A-MOLE GAME ---
+    // --- FLOATING WIDGETS ---
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+    const chatPopupBtn = document.getElementById('chat-popup');
+    const chatWidget = document.getElementById('chat-widget');
+    const closeChatWidgetBtn = document.getElementById('close-chat-widget');
+
+    if (scrollToTopBtn) {
+        window.addEventListener('scroll', () => {
+            scrollToTopBtn.classList.toggle('visible', window.pageYOffset > 300);
+        });
+        scrollToTopBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    if (chatPopupBtn && chatWidget && closeChatWidgetBtn) {
+        chatPopupBtn.addEventListener('click', () => chatWidget.classList.toggle('visible'));
+        closeChatWidgetBtn.addEventListener('click', () => chatWidget.classList.remove('visible'));
+        document.querySelectorAll('.faq-bubble').forEach(bubble => {
+            bubble.addEventListener('click', () => {
+                document.getElementById('chat-input').value = bubble.dataset.question;
+            });
+        });
+    }
+    
+    // --- MOLE GAME ---
     const moleGameFooter = document.querySelector('.mole-game-footer');
     if (moleGameFooter) {
         const moles = moleGameFooter.querySelectorAll('.mole');
         const whatsAppUrl = moleGameFooter.dataset.whatsappUrl;
-
         if (moles.length > 0) {
             let lastMole, timeUp = false;
-            function randomTime(min, max) { return Math.round(Math.random() * (max - min) + min); }
-            function randomMole(moles) {
+            const randomTime = (min, max) => Math.round(Math.random() * (max - min) + min);
+            const randomMole = (moles) => {
                 const idx = Math.floor(Math.random() * moles.length);
                 const mole = moles[idx];
-                if (mole === lastMole) return randomMole(moles);
-                lastMole = mole;
-                return mole;
-            }
-            function peep() {
+                return mole === lastMole ? randomMole(moles) : (lastMole = mole, mole);
+            };
+            const peep = () => {
                 const time = randomTime(500, 1200);
                 const mole = randomMole(moles);
                 mole.classList.add('up');
@@ -143,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     mole.classList.remove('up');
                     if (!timeUp) peep();
                 }, time);
-            }
+            };
             moles.forEach(mole => mole.addEventListener('click', e => {
                 if (e.currentTarget.classList.contains('up') && whatsAppUrl) {
                     window.open(whatsAppUrl, "_blank");

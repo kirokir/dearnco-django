@@ -32,10 +32,9 @@
         </div>
         <div class="bottom-slogan">
             <div class="slogan-main">made with&nbsp;<span class="static-char">l</span><div class="scrolling-a-container"><span class="scrolling-a-text">aaaaaaaaaaaaaaaa</span></div><span class="static-char">v</span></div>
-            <p class="slogan-subtext">because perfection isn't born out of love, it's forged in frustration, obsession, and an unrelenting pursuit of something better.</p>
         </div>
         <div class="version">v.3</div>
-        <div class="oblique-showcase-wrapper"><div class="oblique-scroller"><span>Graphic Designs --- Software --- Websites --- UI/G --- </span><span>Graphic Designs --- Software --- Websites --- UI/G --- </span></div><div class="oblique-subtext"><h3>If you can imagine it - we can make it.</h3><h2>we're the one she tells you not to worry about..</h2><p>(Open for challenges from any development agencies if you think you can beat us. No you can't, sonny.)</p></div></div>
+        <div class="oblique-showcase-wrapper"><div class="oblique-scroller"><span>Graphic Designs --- Software --- Websites --- UI/G --- </span><span>Graphic Designs --- Software --- Websites --- UI/G --- </span></div><div class="oblique-subtext"><h3>If you can imagine it - we can make it.</h3><h2>we're the one she tells you not to worry about..</h2><p>(Open for challenges from any development agencies if you think you can beat us. No you't, sonny.)</p></div></div>
         <div class="proof-section"><span class="proof-text">Proof</span><div class="proof-arrow"></div></div>
     </div>
 </section>
@@ -52,7 +51,7 @@
             {% endfor %}
         </div>
     </section>
-
+    
     <div class="projects-section-container" id="projects">
         <section class="projects-section">
             <h2 class="section-title">Primary Projects</h2>
@@ -66,14 +65,7 @@
                 </div>
             </div>
             {% endfor %}
-            <div class="show-more-container">
-                {% if primary_projects_count_remaining > 0 %}
-                <a href="{% url 'portfolio:portfolio_all' %}" class="show-more-btn">Show More (+{{ primary_projects_count_remaining }})</a>
-                {% endif %}
-                <a href="{% url 'portfolio:portfolio_all' %}" class="go-to-portfolio-btn">Go to Portfolio</a>
-            </div>
         </section>
-
         <section class="projects-section" style="padding-top: 0;">
             <h2 class="section-title">Frameworks & Secondary Projects</h2>
             {% for project in secondary_projects %}
@@ -86,12 +78,6 @@
                 </div>
             </div>
             {% endfor %}
-            <div class="show-more-container">
-                {% if secondary_projects_count_remaining > 0 %}
-                <a href="{% url 'portfolio:portfolio_all' %}" class="show-more-btn">Show More (+{{ secondary_projects_count_remaining }})</a>
-                {% endif %}
-                <a href="{% url 'portfolio:portfolio_all' %}" class="go-to-portfolio-btn">Go to Portfolio</a>
-            </div>
         </section>
     </div>
 </main>

@@ -7,13 +7,12 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
         return SiteConfiguration.objects.count() == 0
     def has_delete_permission(self, request, obj=None):
         return False
-        
     fieldsets = (
         ('Global Site Identity', {'fields': ('logo',)}),
         ('Theme & Appearance', {'fields': ('enable_dark_mode',)}),
         ('Homepage Hero Section', {'fields': ('hero_image', 'hero_image_opacity', 'hero_image_blur')}),
         ('Footer Configuration', {'fields': ('footer_background_image',)}),
-        ('Contact & Social Media', {'fields': ('email', 'whatsapp', 'instagram', 'facebook', 'linkedin', 'behance', 'discord', 'youtube')}),
+        ('Contact & Social Media', {'fields': ('email', 'phone_number', 'whatsapp', 'instagram', 'facebook', 'linkedin', 'behance', 'discord', 'youtube')}),
     )
 
 @admin.register(OfficeLocation)

@@ -19,7 +19,7 @@ class BlogPost(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=255, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    is_featured = models.BooleanField(default=False, help_text="Check this to feature the post in the homepage carousel.")
+    is_featured = models.BooleanField(default=False, help_text="Check this to feature the post in the Blog page carousel.")
 
     class Meta:
         ordering = ['-published_date']

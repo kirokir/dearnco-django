@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const body = document.body;
 
-    // Function to apply the theme
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             body.classList.add('dark-mode');
@@ -12,19 +11,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem('theme');
-    // Check for OS preference
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Determine initial theme
-    let currentTheme = 'light'; // Default
-    if (body.classList.contains('dark-mode')) { // Check if Django rendered dark-mode class
-        currentTheme = 'dark';
-    }
+    let currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
 
     if (savedTheme) {
         currentTheme = savedTheme;
+    } else if (prefersDark) {
+        currentTheme = 'dark';
     }
     
     applyTheme(currentTheme);
@@ -122,5 +117,39 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }, { threshold: 0.5 });
         statsObserver.observe(statsBar);
+    }
+    
+    // --- WHACK-A-MOLE GAME ---
+    const moleGameFooter = document.querySelector('.mole-game-footer');
+    if (moleGameFooter) {
+        const moles = moleGameFooter.querySelectorAll('.mole');
+        const whatsAppUrl = moleGameFooter.dataset.whatsappUrl;
+
+        if (moles.length > 0) {
+            let lastMole, timeUp = false;
+            function randomTime(min, max) { return Math.round(Math.random() * (max - min) + min); }
+            function randomMole(moles) {
+                const idx = Math.floor(Math.random() * moles.length);
+                const mole = moles[idx];
+                if (mole === lastMole) return randomMole(moles);
+                lastMole = mole;
+                return mole;
+            }
+            function peep() {
+                const time = randomTime(500, 1200);
+                const mole = randomMole(moles);
+                mole.classList.add('up');
+                setTimeout(() => {
+                    mole.classList.remove('up');
+                    if (!timeUp) peep();
+                }, time);
+            }
+            moles.forEach(mole => mole.addEventListener('click', e => {
+                if (e.currentTarget.classList.contains('up') && whatsAppUrl) {
+                    window.open(whatsAppUrl, "_blank");
+                }
+            }));
+            peep();
+        }
     }
 });

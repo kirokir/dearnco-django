@@ -2,6 +2,18 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from core.models import SingletonModel
 
+class OfficeLocation(models.Model):
+    name = models.CharField(max_length=100, help_text="e.g., Headquarters, Design Studio")
+    address = models.CharField(max_length=255)
+    google_maps_link = models.URLField(max_length=500)
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return self.name
+
 class SiteConfiguration(SingletonModel):
     logo = CloudinaryField('logo', null=True, blank=True, help_text="Your site's primary logo. Should be a transparent PNG.")
     hero_image = CloudinaryField('hero_image', null=True, blank=True, help_text="The main background image for the homepage hero section.")
@@ -10,8 +22,6 @@ class SiteConfiguration(SingletonModel):
     enable_dark_mode = models.BooleanField(default=True, help_text="Enable the dark mode theme for the entire site.")
     
     footer_background_image = CloudinaryField('footer_background', null=True, blank=True, help_text="Background image for the footer section.")
-    company_address = models.CharField(max_length=255, blank=True, help_text="e.g., 123 Creative Lane, Digital City, 45678")
-    google_maps_link = models.URLField(max_length=500, blank=True, default="https://share.google/WxcaWdKqqUTiSjRMA")
 
     email = models.EmailField(default="thedearandco@gmail.com")
     whatsapp = models.URLField(max_length=255, blank=True, help_text="e.g., https://wa.me/919846547132")

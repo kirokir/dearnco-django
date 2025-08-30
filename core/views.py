@@ -4,19 +4,39 @@ from portfolio.models import Project
 from blog.models import BlogPost
 from site_settings.models import SiteConfiguration
 
+class Service:
+    def __init__(self, icon, title, description):
+        self.icon = icon
+        self.title = title
+        self.description = description
+
 def home_view(request):
     all_primary = Project.objects.filter(project_type='primary').order_by('display_order')
     all_secondary = Project.objects.filter(project_type='secondary').order_by('display_order')
     
-    recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
+    primary_projects = all_primary[:3]
+    secondary_projects = all_secondary[:3]
+    
+    primary_projects_count = all_primary.count()
+    secondary_projects_count = all_secondary.count()
+    
+    services_data = [
+        Service(icon='saas', title='SaaS Development', description='End-to-end platform creation, from architecture to deployment, built for scalability and user engagement.'),
+        Service(icon='ai', title='AI & Machine Learning', description='Intelligent systems, predictive models, and NLP solutions to unlock data-driven insights and automation.'),
+        Service(icon='mobile', title='Mobile Applications', description='High-performance Android & iOS applications designed for exceptional user experience and market impact.'),
+        Service(icon='algo', title='Custom Algorithms', description='Bespoke Python algorithms for data processing, optimization, and automation tailored to your unique challenges.'),
+        Service(icon='dev', title='Developer Tooling', description='Creating powerful DSLs, linters, and internal tools that accelerate workflows and empower your teams.')
+    ]
 
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2
 
     context = {
-        'primary_projects': all_primary,
-        'secondary_projects': all_secondary,
-        'recent_posts': recent_posts,
+        'primary_projects': primary_projects,
+        'secondary_projects': secondary_projects,
+        'primary_projects_count_remaining': primary_projects_count - 3 if primary_projects_count > 3 else 0,
+        'secondary_projects_count_remaining': secondary_projects_count - 3 if secondary_projects_count > 3 else 0,
+        'services': services_data,
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,
     }

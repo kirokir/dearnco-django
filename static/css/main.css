@@ -330,3 +330,29 @@ body.blog-body-bg { background: var(--dark-section-bg); }
     background-color: var(--content-bg);
     border-color: var(--border-color);
 }
+
+/* --- FLOATING HERO LOGO --- */
+.hero-floating-logo {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    z-index: 20;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.hero-floating-logo.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+/* --- HIDE TOP-LEFT TEXT ON MOBILE --- */
+@media (max-width: 768px) {
+    .top-left {
+        display: none;
+    }
+    .hero-floating-logo {
+        top: 20px;
+        left: 20px;
+    }
+}

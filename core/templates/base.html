@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dear&Co Portfolio{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <header id="sticky-header">
         <a href="{% url 'core:home' %}" class="header-logo-link">
             {% if site_config.logo %}
@@ -39,6 +40,7 @@
         <a href="{% url 'core:home' %}#projects">Work</a>
         <a href="{% url 'core:contact' %}">Contact Us</a>
         <hr>
+        <a href="{% url 'core:faq' %}">FAQ</a>
         <a href="{% url 'core:terms' %}">Terms & Conditions</a>
         <a href="{% url 'core:privacy' %}">Privacy Policy</a>
     </div>
@@ -68,7 +70,7 @@
                 </div>
                 <div class="footer-links">
                     <ul>
-                        <li><a href="#">FAQ</a></li>
+                        <li><a href="{% url 'core:faq' %}">FAQ</a></li>
                         <li><a href="{% url 'core:terms' %}">Terms & Conditions</a></li>
                         <li><a href="{% url 'core:privacy' %}">Privacy Policy</a></li>
                     </ul>
@@ -82,7 +84,7 @@
         <span class="game-indicator-text">↓ Game Below ↓</span>
     </div>
 
-    <footer class="mole-game-footer">
+    <footer class="mole-game-footer" data-whatsapp-url="{% if site_config.whatsapp %}{{ site_config.whatsapp }}{% endif %}">
         <h2 class="mole-game-title">Catch me if you can!</h2>
         <div class="mole-game-container">
             <div class="mole-holes">

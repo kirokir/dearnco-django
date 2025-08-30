@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ | Dear&Co{% endblock %}
+
+{% block content %}
+<main class="static-page-container">
+    <h1>Frequently Asked Questions</h1>
+
+    <div class="faq-item">
+        <h2>What kind of projects do you specialize in?</h2>
+        <p>We specialize in complex, end-to-end digital solutions. This includes custom SaaS (Software-as-a-Service) platforms, applications with AI and Machine Learning components, high-performance mobile apps for iOS and Android, and bespoke websites built on powerful backends like Django. If it requires deep engineering and a creative touch, it's in our wheelhouse.</p>
+    </div>
+
+    <div class="faq-item">
+        <h2>How does your development process work?</h2>
+        <p>Our process is collaborative and transparent. We begin with a deep discovery phase to fully understand your vision and technical requirements. This is followed by architectural design, agile development sprints with regular check-ins, rigorous testing, and finally, a seamless deployment. We believe in partnership, not just being a vendor.</p>
+    </div>
+
+    <div class="faq-item">
+        <h2>What is the typical timeline for a project?</h2>
+        <p>Timelines vary greatly depending on the project's complexity. A custom portfolio website might take a few weeks, while a full-featured SaaS platform can take several months. After our initial discovery call, we provide a detailed project roadmap with clear milestones and a realistic timeline.</p>
+    </div>
+
+    <div class="faq-item">
+        <h2>Do you offer ongoing support and maintenance?</h2>
+        <p>Absolutely. Launching a project is just the beginning. We offer flexible support and maintenance retainers to ensure your application remains secure, up-to-date, and performs optimally as your user base grows. We're here for the long haul.</p>
+    </div>
+
+    <div class="faq-item">
+        <h2>How do I get started?</h2>
+        <p>It all starts with a conversation. Head over to our <a href="{% url 'core:contact' %}">Contact Us</a> page or send us an email directly at <a href="mailto:{{ site_config.email }}">{{ site_config.email }}</a>. We'll set up an initial, no-obligation call to discuss your idea.</p>
+    </div>
+</main>
+{% endblock %}

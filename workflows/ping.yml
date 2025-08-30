@@ -1,0 +1,16 @@
+﻿name: Keep Render Service Alive
+
+on:
+  schedule:
+    # This runs the job automatically every 14 minutes
+    - cron: "*/14 * * * *"
+  workflow_dispatch:
+    # This adds a button in the GitHub Actions tab to run the workflow manually
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Request to Render App
+        run: |
+          curl -sS "https://dearnco-django.onrender.com"

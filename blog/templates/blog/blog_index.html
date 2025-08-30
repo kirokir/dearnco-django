@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}The Growth Playbook | Dear&Co Blog{% endblock %}
+
+{% block content %}
+<main class="static-page-container blog-index-page">
+    <h1>The Blog</h1>
+    <p class="index-subtitle">Here, we share travel tips, destination guides, and stories that inspire your next adventure.</p>
+
+    <div class="blog-filters">
+        <a href="#" class="filter-btn active">All</a>
+        {% for tag in all_tags %}
+        <a href="#" class="filter-btn">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="recent-posts-grid">
+        {% for post in all_posts %}
+        <a href="{% url 'blog:blog_post_detail' post.slug %}" class="post-card">
+            <div class="post-card-image">
+                <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
+            </div>
+            <div class="post-card-content">
+                {% if post.tags.all %}
+                    <span class="post-card-tag">{{ post.tags.all.0.name }}</span>
+                {% endif %}
+                <h4>{{ post.title }}</h4>
+                <p>{{ post.subtitle|truncatewords:20 }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

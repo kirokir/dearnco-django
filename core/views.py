@@ -5,17 +5,27 @@ from blog.models import BlogPost
 from site_settings.models import SiteConfiguration
 
 def home_view(request):
-    all_projects = Project.objects.all().order_by('display_order')
-    primary_projects = all_projects.filter(project_type='primary')
-    secondary_projects = all_projects.filter(project_type='secondary')
-    recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
+    all_primary = Project.objects.filter(project_type='primary').order_by('display_order')
+    all_secondary = Project.objects.filter(project_type='secondary').order_by('display_order')
     
+    primary_projects = all_primary[:3]
+    secondary_projects = all_secondary[:3]
+    
+    primary_projects_count = all_primary.count()
+    secondary_projects_count = all_secondary.count()
+    
+    featured_posts = BlogPost.objects.filter(is_featured=True).order_by('-published_date')
+    recent_posts = BlogPost.objects.filter(is_featured=False).order_by('-published_date')[:6]
+
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2
 
     context = {
         'primary_projects': primary_projects,
         'secondary_projects': secondary_projects,
+        'primary_projects_count_remaining': primary_projects_count - 3 if primary_projects_count > 3 else 0,
+        'secondary_projects_count_remaining': secondary_projects_count - 3 if secondary_projects_count > 3 else 0,
+        'featured_posts': featured_posts,
         'recent_posts': recent_posts,
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,
@@ -39,10 +49,5 @@ def faq_view(request):
     return render(request, 'core/faq.html', {'breadcrumbs': breadcrumbs})
 
 def robots_txt(request):
-    lines = [
-        "User-Agent: *",
-        "Disallow: /admin/",
-        "",
-        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml"
-    ]
+    lines = ["User-Agent: *", "Disallow: /admin/"]
     return HttpResponse("\n".join(lines), content_type="text/plain")

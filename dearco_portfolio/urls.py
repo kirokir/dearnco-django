@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('', include('blog.urls')),
     path('', include('portfolio.urls')),
+    path('', include('agency.urls')),
 ]
 
 # This is the crucial change.

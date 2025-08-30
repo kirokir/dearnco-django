@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Join Us | Dear&Co{% endblock %}
+
+{% block content %}
+<main class="static-page-container join-us-page">
+    <section class="join-us-header">
+        <h1>Do the Best Work of Your Career</h1>
+        <p>We're building a team of relentless problem-solvers who are obsessed with quality and driven by client success. We don't have ping-pong tables, but we do offer work that has a real, measurable impact.</p>
+    </section>
+
+    <section class="open-positions">
+        <h2>Open Positions</h2>
+        <div class="positions-list">
+            {% for position in positions %}
+            <div class="position-card">
+                <div class="position-info">
+                    <h3>{{ position.title }}</h3>
+                    <div class="position-meta">
+                        <span class="meta-tag">{{ position.location_tags }}</span>
+                        <span class="meta-type">{{ position.employment_type }}</span>
+                    </div>
+                </div>
+                <div class="position-action">
+                    <button class="view-details-btn">View Details</button>
+                </div>
+                <div class="position-description">
+                    {{ position.description|safe }}
+                    <a href="mailto:{{ site_config.email }}?subject=Application for {{ position.title }}" class="apply-now-btn">Apply Now</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>There are currently no open positions. Check back soon!</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

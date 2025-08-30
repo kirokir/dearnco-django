@@ -233,3 +233,100 @@ body.blog-body-bg { background: var(--dark-section-bg); }
     color: var(--primary-red);
     font-weight: 700;
 }
+
+/* --- PROJECT IMAGE ALIGNMENT FIX --- */
+.project-card {
+    align-items: center; /* This ensures vertical centering */
+}
+.project-visual {
+    background-color: transparent; /* Remove the grey placeholder background */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    aspect-ratio: auto; /* Allow the container to adapt */
+    min-height: 300px; /* Give it a minimum height to look good */
+}
+.project-visual img {
+    height: 100%; /* Image fills the container height */
+    width: 100%; /* Image fills the container width */
+    object-fit: cover; /* Cover the area, cropping if necessary */
+}
+
+/* --- DARK MODE THEME --- */
+.dark-mode {
+    --bg-color: #121212;
+    --content-bg: #1E1E1E;
+    --primary-red: #FF4136;
+    --light-gray: #555555;
+    --text-dark: #EAEAEA;
+    --text-light: #A9A9A9;
+    --border-color: #333333;
+    --dark-section-bg: #000000;
+}
+.dark-mode #sticky-header {
+    background-color: rgba(30, 30, 30, 0.9);
+    border-bottom-color: var(--border-color);
+}
+.dark-mode .header-logo,
+.dark-mode .header-nav a,
+.dark-mode .header-connect-btn {
+    color: var(--text-dark);
+}
+.dark-mode .header-connect-btn {
+    border-color: var(--text-dark);
+}
+.dark-mode .content-wrapper {
+    background-color: rgba(30, 30, 30, 0.95);
+    border-color: var(--border-color);
+}
+.dark-mode .bg-text {
+    color: #2a2a2a;
+    filter: blur(2px);
+}
+.dark-mode .top-left {
+    color: var(--text-dark);
+}
+.dark-mode .contact-icons a:hover svg {
+    fill: var(--primary-red);
+}
+.dark-mode .final-cta-btn {
+    background-color: #fff;
+    color: #000;
+}
+.dark-mode .main-footer {
+    background: rgba(18, 18, 18, 0.9);
+}
+.dark-mode .footer-left .partner-btn {
+    border-color: var(--text-dark);
+    color: var(--text-dark);
+}
+.dark-mode .footer-links a {
+    color: var(--text-light);
+}
+.dark-mode .footer-copyright {
+    color: var(--text-light);
+    border-top-color: var(--border-color);
+}
+.dark-mode .mole-game-footer {
+    background-color: var(--content-bg);
+}
+.dark-mode .mole-game-title {
+    color: var(--text-dark);
+}
+.dark-mode .breadcrumbs {
+    background-color: var(--content-bg);
+    border-bottom-color: var(--border-color);
+}
+.dark-mode .breadcrumb-current {
+    color: var(--text-dark);
+}
+.dark-mode .static-page-container {
+    background-color: var(--content-bg);
+}
+.dark-mode body.blog-body-bg {
+    background: var(--dark-section-bg);
+}
+.dark-mode .blog-detail-container {
+    background-color: var(--content-bg);
+    border-color: var(--border-color);
+}

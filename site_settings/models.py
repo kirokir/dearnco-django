@@ -15,6 +15,7 @@ class SiteConfiguration(SingletonModel):
     behance = models.URLField(max_length=255, default="https://www.behance.net/dearandco", blank=True)
     discord = models.URLField(max_length=255, default="https://discord.com/users/magenta_35298", blank=True)
     youtube = models.URLField(max_length=255, default="http://www.youtube.com/@DEAR-CO", blank=True)
+    enable_dark_mode = models.BooleanField(default=True, help_text="Enable the dark mode theme for the entire site.")
 
     def __str__(self):
         return "Site Configuration"

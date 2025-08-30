@@ -10,6 +10,7 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
         
     fieldsets = (
         ('Global Site Identity', {'fields': ('logo',)}),
+        ('Theme & Appearance', {'fields': ('enable_dark_mode',)}),
         ('Homepage Hero Section', {'fields': ('hero_image', 'hero_image_opacity', 'hero_image_blur')}),
         ('Contact & Social Media', {'fields': ('email', 'whatsapp', 'instagram', 'facebook', 'linkedin', 'behance', 'discord', 'youtube')}),
     )

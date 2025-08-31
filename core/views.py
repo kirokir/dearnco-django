@@ -16,6 +16,9 @@ def home_view(request):
     primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
     secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
     
+    # RESTORED THIS QUERY
+    recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
+    
     services_data = [
         Service(icon='saas', title='SaaS Development', description='End-to-end platform creation, from architecture to deployment, built for scalability and user engagement.'),
         Service(icon='ai', title='AI & Machine Learning', description='Intelligent systems, predictive models, and NLP solutions to unlock data-driven insights and automation.'),
@@ -35,6 +38,7 @@ def home_view(request):
         'secondary_projects': secondary_projects,
         'services': services_data,
         'bento_items': bento_items,
+        'recent_posts': recent_posts, # ADDED BACK TO CONTEXT
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,
     }

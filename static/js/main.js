@@ -7,35 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const floatingLogo = document.querySelector('.hero-floating-logo');
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     const moleGameFooter = document.querySelector('.mole-game-footer');
-    let deferredPrompt;
-    const installPrompt = document.getElementById('pwa-install-prompt');
-    const installButton = document.getElementById('pwa-install-button');
-    const closePwaButton = document.getElementById('pwa-close-button');
-
-    // --- PWA INSTALL PROMPT ---
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        setTimeout(() => {
-            if (installPrompt) installPrompt.classList.add('visible');
-        }, 5000);
-    });
-    if (installButton) {
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installPrompt.classList.remove('visible');
-            }
-        });
-    }
-    if (closePwaButton) {
-        closePwaButton.addEventListener('click', () => {
-            installPrompt.classList.remove('visible');
-        });
-    }
-
+    const bottomNav = document.getElementById('bottom-nav');
+    
     // --- THEME SWITCHER LOGIC ---
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 
@@ -55,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- STICKY HEADER & FLOATING LOGO LOGIC ---
+    // --- NAVIGATION LOGIC ---
     if (header && heroSection) {
         const heroHeight = heroSection.offsetHeight;
         window.addEventListener('scroll', () => {
@@ -65,77 +38,53 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+    if (bottomNav && heroSection) {
+         window.addEventListener('scroll', () => {
+            bottomNav.classList.toggle('hidden-nav', window.scrollY < window.innerHeight);
+        });
+    }
 
     // ==========================================================================
-    // COMPLETE ANIMATION SYSTEM (Projects + Stats)
+    // RESTORED ANIMATION SYSTEM (FADE-IN + STATS COUNTER)
     // ==========================================================================
-    
-    // 1. Create IntersectionObserver for simple fade-in animations
-    const fadeInObserver = new IntersectionObserver((entries, observer) => {
+    const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // Apply the 'visible' class for the CSS fade-in transition
                 entry.target.classList.add('visible');
+
+                // Specifically check if the target is the stats bar to trigger the counter
+                if (entry.target.id === 'stats-bar') {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(num => {
+                        const target = +num.getAttribute('data-target');
+                        if (parseInt(num.innerText.replace(/,/g, '')) === target) return;
+                        let current = 0;
+                        const duration = 2000;
+                        const increment = target / (duration / 16);
+                        const updateCount = () => {
+                            current += increment;
+                            if (current < target) {
+                                num.innerText = Math.ceil(current).toLocaleString();
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                num.innerText = target.toLocaleString();
+                            }
+                        };
+                        requestAnimationFrame(updateCount);
+                    });
+                }
+                
+                // Stop observing the element once it has been animated
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.15 });
 
-    // 2. Create IntersectionObserver specifically for the stats counter
-    const statsObserver = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const statNumbers = entry.target.querySelectorAll('.stat-number');
-                statNumbers.forEach(num => {
-                    const target = +num.getAttribute('data-target');
-                    if (parseInt(num.innerText.replace(/,/g, '')) === target) return;
-                    let current = 0;
-                    const duration = 2000;
-                    const increment = target / (duration / 16);
-                    const updateCount = () => {
-                        current += increment;
-                        if (current < target) {
-                            num.innerText = Math.ceil(current).toLocaleString();
-                            requestAnimationFrame(updateCount);
-                        } else {
-                            num.innerText = target.toLocaleString();
-                        }
-                    };
-                    requestAnimationFrame(updateCount);
-                });
-                obs.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    // 3. A function to initialize all animation observers on the page
-    const initializeAnimations = () => {
-        document.querySelectorAll('.project-card:not(.visible)').forEach(el => {
-            fadeInObserver.observe(el);
-        });
-
-        const statsBar = document.getElementById('stats-bar');
-        if (statsBar && !statsBar.hasAttribute('data-animated')) {
-            fadeInObserver.observe(statsBar); // Observe for fade-in
-            statsObserver.observe(statsBar);   // Observe for counting
-            statsBar.setAttribute('data-animated', 'true');
-        }
-    };
-
-    // 4. Run it once on initial page load
-    initializeAnimations();
-
-    // 5. Create a MutationObserver to watch for any new elements being added to the page
-    const domObserver = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                // If anything new is added to the page, re-run the animation initializer
-                initializeAnimations();
-            }
-        }
+    // Find all elements that need animation and observe them
+    document.querySelectorAll('.project-card, .stat-item, #stats-bar').forEach(el => {
+        animationObserver.observe(el);
     });
-
-    // 6. Start watching the entire document body for changes
-    domObserver.observe(document.body, { childList: true, subtree: true });
     
     // ==========================================================================
     
@@ -179,6 +128,4 @@ document.addEventListener("DOMContentLoaded", function() {
             peep();
         }
     }
-    
-    // Mobile bottom nav is CSS only, no JS needed
 });

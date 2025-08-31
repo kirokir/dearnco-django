@@ -11,22 +11,20 @@ class Service:
         self.icon = icon
         self.title = title
         self.description = description
-      
-
-class ServiceWorkerView(TemplateView):
-    template_name = 'sw.js'
-    content_type = 'application/javascript'
 
 def home_view(request):
     primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
     secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
+    
     services_data = [
         Service(icon='saas', title='SaaS Development', description='End-to-end platform creation, from architecture to deployment, built for scalability and user engagement.'),
         Service(icon='ai', title='AI & Machine Learning', description='Intelligent systems, predictive models, and NLP solutions to unlock data-driven insights and automation.'),
         Service(icon='mobile', title='Mobile Applications', description='High-performance Android & iOS applications designed for exceptional user experience and market impact.'),
         Service(icon='algo', title='Custom Algorithms', description='Bespoke Python algorithms for data processing, optimization, and automation tailored to your unique challenges.'),
-        Service(icon='dev', title='Developer Tooling', description='Creating powerful DSLs, linters, and internal tools that accelerate workflows and empower your teams.')
+        Service(icon='dev', title='Developer Tooling', description='Creating powerful DSLs, linters, and internal tools that accelerate workflows and empower your teams.'),
+        Service(icon='design', title='Graphic Design', description='Visually compelling brand identities, UI/UX, and marketing materials that capture attention and tell your story.')
     ]
+    
     bento_items = BentoGridItem.objects.all()
 
     site_config = SiteConfiguration.load()
@@ -61,3 +59,7 @@ def faq_view(request):
 def robots_txt(request):
     lines = ["User-Agent: *", "Disallow: /admin/"]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+class ServiceWorkerView(TemplateView):
+    template_name = 'sw.js'
+    content_type = 'application/javascript'

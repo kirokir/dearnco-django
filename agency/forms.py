@@ -1,5 +1,16 @@
 from django import forms
-from .models import StrategyCallLead, AssessmentLead
+from cloudinary.forms import CloudinaryFileField
+from .models import StrategyCallLead, AssessmentLead, Brochure
+
+class BrochureAdminForm(forms.ModelForm):
+    # This custom field explicitly tells Cloudinary to treat the upload as a 'raw' file, like a PDF or ZIP.
+    pdf_file = CloudinaryFileField(
+        required=False,
+        resource_type='raw'
+    )
+    class Meta:
+        model = Brochure
+        fields = '__all__'
 
 class StrategyCallForm(forms.ModelForm):
     class Meta:

@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const header = document.getElementById('sticky-header');
     const heroSection = document.querySelector('.hero-brutalist');
     const floatingLogo = document.querySelector('.hero-floating-logo');
-    const statsBar = document.getElementById('stats-bar');
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     const moleGameFooter = document.querySelector('.mole-game-footer');
     let deferredPrompt;
@@ -68,11 +67,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ==========================================================================
-    // DEFINITIVE FADE-IN ANIMATION FIX (MutationObserver)
+    // COMPLETE ANIMATION SYSTEM (Projects + Stats)
     // ==========================================================================
     
-    // 1. Create a single, reusable IntersectionObserver for animations
-    const animationObserver = new IntersectionObserver((entries, observer) => {
+    // 1. Create IntersectionObserver for simple fade-in animations
+    const fadeInObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
@@ -81,26 +80,61 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }, { threshold: 0.15 });
 
-    // 2. A function to find and observe all animatable elements currently on the page
-    const observeAnimatableElements = () => {
-        document.querySelectorAll('.project-card:not(.visible), .stat-item:not(.visible)').forEach(el => {
-            animationObserver.observe(el);
+    // 2. Create IntersectionObserver specifically for the stats counter
+    const statsObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statNumbers = entry.target.querySelectorAll('.stat-number');
+                statNumbers.forEach(num => {
+                    const target = +num.getAttribute('data-target');
+                    if (parseInt(num.innerText.replace(/,/g, '')) === target) return;
+                    let current = 0;
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
+                    const updateCount = () => {
+                        current += increment;
+                        if (current < target) {
+                            num.innerText = Math.ceil(current).toLocaleString();
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            num.innerText = target.toLocaleString();
+                        }
+                    };
+                    requestAnimationFrame(updateCount);
+                });
+                obs.unobserve(entry.target);
+            }
         });
+    }, { threshold: 0.5 });
+
+    // 3. A function to initialize all animation observers on the page
+    const initializeAnimations = () => {
+        document.querySelectorAll('.project-card:not(.visible)').forEach(el => {
+            fadeInObserver.observe(el);
+        });
+
+        const statsBar = document.getElementById('stats-bar');
+        if (statsBar && !statsBar.hasAttribute('data-animated')) {
+            fadeInObserver.observe(statsBar); // Observe for fade-in
+            statsObserver.observe(statsBar);   // Observe for counting
+            statsBar.setAttribute('data-animated', 'true');
+        }
     };
 
-    // 3. Run it once on initial page load
-    observeAnimatableElements();
+    // 4. Run it once on initial page load
+    initializeAnimations();
 
-    // 4. Create a MutationObserver to watch for new elements being added to the page
+    // 5. Create a MutationObserver to watch for any new elements being added to the page
     const domObserver = new MutationObserver((mutationsList) => {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                observeAnimatableElements();
+                // If anything new is added to the page, re-run the animation initializer
+                initializeAnimations();
             }
         }
     });
 
-    // 5. Start watching the entire body for changes
+    // 6. Start watching the entire document body for changes
     domObserver.observe(document.body, { childList: true, subtree: true });
     
     // ==========================================================================

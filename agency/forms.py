@@ -3,10 +3,11 @@ from cloudinary.forms import CloudinaryFileField
 from .models import StrategyCallLead, AssessmentLead, Brochure
 
 class BrochureAdminForm(forms.ModelForm):
-    # This custom field explicitly tells Cloudinary to treat the upload as a 'raw' file, like a PDF or ZIP.
+    # This field no longer needs special parameters.
+    # The 'resource_type' is now correctly handled by the CloudinaryField in the model.
     pdf_file = CloudinaryFileField(
         required=False,
-        resource_type='raw'
+        label="Brochure PDF"
     )
     class Meta:
         model = Brochure

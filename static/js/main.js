@@ -2,19 +2,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- THEME SWITCHER LOGIC ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const body = document.body;
-
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 
         else { body.classList.remove('dark-mode'); }
     };
-
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     let initialTheme = document.body.classList.contains('dark-mode-default') ? 'dark' : 'light';
     if (savedTheme) { initialTheme = savedTheme; } 
     else if (prefersDark) { initialTheme = 'dark'; }
     applyTheme(initialTheme);
-
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
             const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';

@@ -1,4 +1,60 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // --- CHATBOT LOGIC ---
+    const chatPopupBtn = document.getElementById('chat-popup');
+    const chatWidget = document.getElementById('chat-widget');
+    const closeChatWidgetBtn = document.getElementById('close-chat-widget');
+    const chatInput = document.getElementById('chat-input');
+    const answerArea = document.getElementById('chat-answer-area');
+    const bubblesContainer = document.querySelector('.faq-bubbles');
+    const autocompleteList = document.getElementById('autocomplete-list');
+    
+    let qaData = [];
+    document.querySelectorAll('.faq-bubble').forEach(bubble => {
+        qaData.push({
+            keyword: bubble.textContent,
+            question: bubble.dataset.question,
+            answer: bubble.dataset.answer,
+        });
+    });
+
+    if (chatPopupBtn) {
+        chatPopupBtn.addEventListener('click', () => chatWidget.classList.toggle('visible'));
+    }
+    if (closeChatWidgetBtn) {
+        closeChatWidgetBtn.addEventListener('click', () => chatWidget.classList.remove('visible'));
+    }
+    
+    bubblesContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('faq-bubble')) {
+            answerArea.innerHTML = `<p class="bot-answer">${e.target.dataset.answer}</p>`;
+            chatInput.value = '';
+            autocompleteList.innerHTML = '';
+        }
+    });
+
+    chatInput.addEventListener('input', () => {
+        const query = chatInput.value.toLowerCase();
+        autocompleteList.innerHTML = '';
+        if (query.length > 1) {
+            const matches = qaData.filter(item => item.question.toLowerCase().includes(query));
+            matches.forEach(match => {
+                const item = document.createElement('div');
+                item.classList.add('autocomplete-item');
+                item.textContent = match.question;
+                item.addEventListener('click', () => {
+                    chatInput.value = match.question;
+                    answerArea.innerHTML = `<p class="bot-answer">${match.answer}</p>`;
+                    autocompleteList.innerHTML = '';
+                });
+                autocompleteList.appendChild(item);
+            });
+        }
+    });
+
+    // --- ALL OTHER JS ---
+    // (All other JS for theme switcher, hamburger, sticky header, etc. goes here)
+});
+document.addEventListener("DOMContentLoaded", function() {
     // --- THEME SWITCHER LOGIC ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const body = document.body;

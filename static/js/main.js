@@ -2,20 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- CACHE DOM ELEMENTS ---
     const body = document.body;
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const mobileNav = document.getElementById('mobile-nav');
     const header = document.getElementById('sticky-header');
     const heroSection = document.querySelector('.hero-brutalist');
     const floatingLogo = document.querySelector('.hero-floating-logo');
     const statsBar = document.getElementById('stats-bar');
     const scrollToTopBtn = document.getElementById('scroll-to-top');
-    const chatPopupBtn = document.getElementById('chat-popup');
-    const chatWidget = document.getElementById('chat-widget');
-    const closeChatWidgetBtn = document.getElementById('close-chat-widget');
-    const chatInput = document.getElementById('chat-input');
-    const answerArea = document.getElementById('chat-answer-area');
-    const bubblesContainer = document.querySelector('.faq-bubbles');
-    const autocompleteList = document.getElementById('autocomplete-list');
     const moleGameFooter = document.querySelector('.mole-game-footer');
     let deferredPrompt;
     const installPrompt = document.getElementById('pwa-install-prompt');
@@ -30,18 +21,16 @@ document.addEventListener("DOMContentLoaded", function() {
             if (installPrompt) installPrompt.classList.add('visible');
         }, 5000);
     });
-
     if (installButton) {
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
+                await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 installPrompt.classList.remove('visible');
             }
         });
     }
-
     if (closePwaButton) {
         closePwaButton.addEventListener('click', () => {
             installPrompt.classList.remove('visible');
@@ -66,23 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
             localStorage.setItem('theme', newTheme);
         });
     }
-
-    // --- HAMBURGER MENU LOGIC ---
-    if (hamburgerBtn && mobileNav) {
-        hamburgerBtn.addEventListener('click', () => {
-            const isOpen = hamburgerBtn.classList.toggle('open');
-            mobileNav.classList.toggle('open');
-            body.style.overflow = isOpen ? 'hidden' : '';
-        });
-        mobileNav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburgerBtn.classList.remove('open');
-                mobileNav.classList.remove('open');
-                body.style.overflow = '';
-            });
-        });
-    }
-
+    
     // --- STICKY HEADER & FLOATING LOGO LOGIC ---
     if (header && heroSection) {
         const heroHeight = heroSection.offsetHeight;
@@ -94,12 +67,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // --- FADE-IN ANIMATIONS ---
-    const observer = new IntersectionObserver((entries) => {
+    // --- FADE-IN ANIMATIONS (IMPROVED) ---
+    const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                obs.unobserve(entry.target); // Stop observing after it's visible
             }
         });
     }, { threshold: 0.15 });
@@ -145,48 +118,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- CHATBOT LOGIC ---
-    if (chatPopupBtn && chatWidget && closeChatWidgetBtn) {
-        let qaData = [];
-        document.querySelectorAll('.faq-bubble').forEach(bubble => {
-            qaData.push({
-                keyword: bubble.textContent,
-                question: bubble.dataset.question,
-                answer: bubble.dataset.answer,
-            });
-        });
-
-        chatPopupBtn.addEventListener('click', () => chatWidget.classList.toggle('visible'));
-        closeChatWidgetBtn.addEventListener('click', () => chatWidget.classList.remove('visible'));
-        
-        bubblesContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('faq-bubble')) {
-                answerArea.innerHTML = `<p class="bot-answer">${e.target.dataset.answer}</p>`;
-                chatInput.value = '';
-                autocompleteList.innerHTML = '';
-            }
-        });
-
-        chatInput.addEventListener('input', () => {
-            const query = chatInput.value.toLowerCase();
-            autocompleteList.innerHTML = '';
-            if (query.length > 1) {
-                const matches = qaData.filter(item => item.question.toLowerCase().includes(query));
-                matches.forEach(match => {
-                    const item = document.createElement('div');
-                    item.classList.add('autocomplete-item');
-                    item.textContent = match.question;
-                    item.addEventListener('click', () => {
-                        chatInput.value = match.question;
-                        answerArea.innerHTML = `<p class="bot-answer">${match.answer}</p>`;
-                        autocompleteList.innerHTML = '';
-                    });
-                    autocompleteList.appendChild(item);
-                });
-            }
-        });
-    }
-    
     // --- MOLE GAME ---
     if (moleGameFooter) {
         const moles = moleGameFooter.querySelectorAll('.mole');
@@ -216,4 +147,6 @@ document.addEventListener("DOMContentLoaded", function() {
             peep();
         }
     }
+    
+    // Mobile bottom nav is CSS only, no JS needed
 });

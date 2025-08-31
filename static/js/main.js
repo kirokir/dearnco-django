@@ -71,12 +71,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // DEFINITIVE FADE-IN ANIMATION FIX (MutationObserver)
     // ==========================================================================
     
-    // 1. Create a single, reusable IntersectionObserver
+    // 1. Create a single, reusable IntersectionObserver for animations
     const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target); // Stop watching this element once it's visible
+                observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.15 });
@@ -92,23 +92,18 @@ document.addEventListener("DOMContentLoaded", function() {
     observeAnimatableElements();
 
     // 4. Create a MutationObserver to watch for new elements being added to the page
-    const mutationCallback = (mutationsList, observer) => {
+    const domObserver = new MutationObserver((mutationsList) => {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                // If new nodes were added, re-run our function to find and observe them
                 observeAnimatableElements();
             }
         }
-    };
-    const domObserver = new MutationObserver(mutationCallback);
+    });
 
     // 5. Start watching the entire body for changes
     domObserver.observe(document.body, { childList: true, subtree: true });
     
     // ==========================================================================
-
-    // --- STATS COUNTER (Works with the above observer) ---
-    // (This code remains the same but will now correctly trigger for dynamically loaded stat bars)
     
     // --- FLOATING WIDGETS ---
     if (scrollToTopBtn) {

@@ -67,45 +67,48 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // --- FADE-IN ANIMATIONS (IMPROVED) ---
-    const observer = new IntersectionObserver((entries, obs) => {
+    // ==========================================================================
+    // DEFINITIVE FADE-IN ANIMATION FIX (MutationObserver)
+    // ==========================================================================
+    
+    // 1. Create a single, reusable IntersectionObserver
+    const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                obs.unobserve(entry.target); // Stop observing after it's visible
+                observer.unobserve(entry.target); // Stop watching this element once it's visible
             }
         });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.project-card, .stat-item').forEach(el => observer.observe(el));
 
-    // --- STATS COUNTER ---
-    if (statsBar) {
-        new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach(num => {
-                        const target = +num.getAttribute('data-target');
-                        if (parseInt(num.innerText.replace(/,/g, '')) === target) return;
-                        let current = 0;
-                        const duration = 2000;
-                        const increment = target / (duration / 16);
-                        const updateCount = () => {
-                            current += increment;
-                            if (current < target) {
-                                num.innerText = Math.ceil(current).toLocaleString();
-                                requestAnimationFrame(updateCount);
-                            } else {
-                                num.innerText = target.toLocaleString();
-                            }
-                        };
-                        requestAnimationFrame(updateCount);
-                    });
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 }).observe(statsBar);
-    }
+    // 2. A function to find and observe all animatable elements currently on the page
+    const observeAnimatableElements = () => {
+        document.querySelectorAll('.project-card:not(.visible), .stat-item:not(.visible)').forEach(el => {
+            animationObserver.observe(el);
+        });
+    };
+
+    // 3. Run it once on initial page load
+    observeAnimatableElements();
+
+    // 4. Create a MutationObserver to watch for new elements being added to the page
+    const mutationCallback = (mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // If new nodes were added, re-run our function to find and observe them
+                observeAnimatableElements();
+            }
+        }
+    };
+    const domObserver = new MutationObserver(mutationCallback);
+
+    // 5. Start watching the entire body for changes
+    domObserver.observe(document.body, { childList: true, subtree: true });
+    
+    // ==========================================================================
+
+    // --- STATS COUNTER (Works with the above observer) ---
+    // (This code remains the same but will now correctly trigger for dynamically loaded stat bars)
     
     // --- FLOATING WIDGETS ---
     if (scrollToTopBtn) {

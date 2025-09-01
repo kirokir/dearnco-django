@@ -46,7 +46,7 @@
             {% endfor %}
         </div>
     </section>
-
+    
     <section class="engineering-next-section">
         <h2>Engineering <span class="highlight">what's</span> Next</h2>
     </section>
@@ -74,7 +74,14 @@
                 </div>
             </div>
             {% endfor %}
+            <div class="show-more-container">
+                {% if primary_projects_count_remaining > 0 %}
+                <a href="{% url 'portfolio:portfolio_all' %}" class="show-more-btn">Show More (+{{ primary_projects_count_remaining }})</a>
+                {% endif %}
+                <a href="{% url 'portfolio:portfolio_all' %}" class="go-to-portfolio-btn">View All Projects</a>
+            </div>
         </section>
+
         <section class="projects-section" style="padding-top: 0;">
             <h2 class="section-title">Frameworks & Secondary Projects</h2>
             {% for project in secondary_projects %}
@@ -87,6 +94,12 @@
                 </div>
             </div>
             {% endfor %}
+            <div class="show-more-container">
+                {% if secondary_projects_count_remaining > 0 %}
+                <a href="{% url 'portfolio:portfolio_all' %}" class="show-more-btn">Show More (+{{ secondary_projects_count_remaining }})</a>
+                {% endif %}
+                <a href="{% url 'portfolio:portfolio_all' %}" class="go-to-portfolio-btn">View All Projects</a>
+            </div>
         </section>
     </div>
 </main>

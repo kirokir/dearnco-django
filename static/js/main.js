@@ -8,7 +8,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     const moleGameFooter = document.querySelector('.mole-game-footer');
     const bottomNav = document.getElementById('bottom-nav');
-    
+    let deferredPrompt;
+    const installPrompt = document.getElementById('pwa-install-prompt');
+    const installButton = document.getElementById('pwa-install-button');
+    const closePwaButton = document.getElementById('pwa-close-button');
+
+    // --- PWA INSTALL PROMPT ---
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => {
+            if (installPrompt) installPrompt.classList.add('visible');
+        }, 5000);
+    });
+    if (installButton) {
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installPrompt.classList.remove('visible');
+            }
+        });
+    }
+    if (closePwaButton) {
+        closePwaButton.addEventListener('click', () => {
+            installPrompt.classList.remove('visible');
+        });
+    }
+
     // --- THEME SWITCHER LOGIC ---
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 
@@ -28,32 +56,30 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- NAVIGATION LOGIC ---
-    if (header && heroSection) {
+    // --- NAVIGATION LOGIC (STICKY HEADER, FLOATING LOGO, BOTTOM NAV) ---
+    if (heroSection) {
         const heroHeight = heroSection.offsetHeight;
         window.addEventListener('scroll', () => {
-            header.classList.toggle('visible', window.scrollY > heroHeight);
+            if(header) {
+                header.classList.toggle('visible', window.scrollY > heroHeight);
+            }
             if (floatingLogo) {
                 floatingLogo.classList.toggle('hide', window.scrollY > 50);
             }
+            if (bottomNav) {
+                bottomNav.classList.toggle('hidden-nav', window.scrollY < heroHeight);
+            }
         });
-    }
-    if (bottomNav && heroSection) {
-         window.addEventListener('scroll', () => {
-            bottomNav.classList.toggle('hidden-nav', window.scrollY < window.innerHeight);
-        });
+    } else if (bottomNav) {
+        bottomNav.classList.remove('hidden-nav');
     }
 
-    // ==========================================================================
-    // RESTORED ANIMATION SYSTEM (FADE-IN + STATS COUNTER)
-    // ==========================================================================
+    // --- ANIMATION OBSERVER SYSTEM ---
     const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Apply the 'visible' class for the CSS fade-in transition
                 entry.target.classList.add('visible');
-
-                // Specifically check if the target is the stats bar to trigger the counter
+                
                 if (entry.target.id === 'stats-bar') {
                     const statNumbers = entry.target.querySelectorAll('.stat-number');
                     statNumbers.forEach(num => {
@@ -74,19 +100,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         requestAnimationFrame(updateCount);
                     });
                 }
-                
-                // Stop observing the element once it has been animated
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.15 });
 
-    // Find all elements that need animation and observe them
     document.querySelectorAll('.project-card, .stat-item, #stats-bar').forEach(el => {
         animationObserver.observe(el);
     });
-    
-    // ==========================================================================
     
     // --- FLOATING WIDGETS ---
     if (scrollToTopBtn) {

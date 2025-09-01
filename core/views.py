@@ -13,9 +13,15 @@ class Service:
         self.description = description
 
 def home_view(request):
-    primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
-    secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
+    all_primary = Project.objects.filter(project_type='primary').order_by('display_order')
+    all_secondary = Project.objects.filter(project_type='secondary').order_by('display_order')
     
+    primary_projects = all_primary[:5]
+    secondary_projects = all_secondary[:5]
+    
+    primary_projects_count = all_primary.count()
+    secondary_projects_count = all_secondary.count()
+
     recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
     
     services_data = [
@@ -35,6 +41,8 @@ def home_view(request):
     context = {
         'primary_projects': primary_projects,
         'secondary_projects': secondary_projects,
+        'primary_projects_count_remaining': primary_projects_count - 5 if primary_projects_count > 5 else 0,
+        'secondary_projects_count_remaining': secondary_projects_count - 5 if secondary_projects_count > 5 else 0,
         'services': services_data,
         'bento_items': bento_items,
         'recent_posts': recent_posts,

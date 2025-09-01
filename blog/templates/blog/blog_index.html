@@ -4,8 +4,33 @@
 
 {% block content %}
 <main class="static-page-container blog-index-page">
-    <h1>The Blog</h1>
-    <p class="index-subtitle">Here, we share travel tips, destination guides, and stories that inspire your next adventure.</p>
+    {% if featured_posts %}
+    <div class="swiper featured-posts-slider">
+        <div class="swiper-wrapper">
+            {% for post in featured_posts %}
+            <div class="swiper-slide featured-post-slide">
+                <a href="{% url 'blog:blog_post_detail' post.slug %}" class="featured-post-link">
+                    <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
+                    <div class="featured-post-overlay"></div>
+                    <div class="featured-post-content">
+                        <div class="post-meta">
+                            {% if post.author.profile.image %}<img src="{{ post.author.profile.image.url }}" class="author-avatar">{% endif %}
+                            <span class="author-name">{{ post.author.get_full_name|default:post.author.username }}</span>
+                            <span class="post-date">{{ post.published_date|date:"d M Y" }}</span>
+                        </div>
+                        <h3>{{ post.title }}</h3>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+    {% endif %}
+
+    <h1>Blog</h1>
+    <p class="index-subtitle">Here, we share tips, destination guides, and stories that inspire your next adventure.</p>
 
     <div class="blog-filters">
         <a href="#" class="filter-btn active">All</a>

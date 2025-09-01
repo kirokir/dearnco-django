@@ -1097,3 +1097,83 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
         height: 300px;
     }
 }
+/* ==========================================================================
+   FINAL UI POLISH: NAVIGATION UNIFICATION
+   ========================================================================== */
+
+/* Hide the old top-right hamburger menu on all screen sizes */
+#hamburger-btn {
+    display: none !important;
+}
+
+/* Ensure the old sticky header's nav links are hidden on mobile */
+@media (max-width: 768px) {
+    #sticky-header .header-nav,
+    #sticky-header .header-buttons {
+        display: none;
+    }
+}
+
+/* --- NEW Bottom Nav (Desktop & Mobile) --- */
+#bottom-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--text-dark);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 999px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bottom-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: var(--light-gray);
+    font-weight: 500;
+}
+.bottom-nav-item:hover { color: #fff; }
+.bottom-nav-item.contact-btn { background-color: #8B5CF6; color: #fff; border-radius: 999px; }
+.bottom-nav-icon { width: 24px; height: 24px; }
+.bottom-nav-icon svg { width: 100%; height: 100%; }
+.bottom-nav-text { font-size: 1rem; }
+
+.dark-mode #bottom-nav { background-color: #2D3748; }
+
+/* Mobile-specific styles for the bottom nav */
+@media (max-width: 768px) {
+    #bottom-nav {
+        width: 100%;
+        bottom: 0;
+        border-radius: 0;
+        padding: 0.5rem 0;
+    }
+    .bottom-nav-item {
+        flex-direction: column;
+        flex: 1;
+        gap: 0.25rem;
+        padding: 0.5rem 0;
+    }
+    .bottom-nav-text {
+        font-size: 0.7rem;
+    }
+    .bottom-nav-icon {
+        width: 28px; /* Slightly larger icon on mobile */
+        height: 28px;
+    }
+    .bottom-nav-item.contact-btn { background: none; }
+    .bottom-nav-item.contact-btn .bottom-nav-text { color: #8B5CF6; }
+
+    main, .content-showcase {
+        padding-bottom: 80px; /* Prevent content from being hidden by bottom nav */
+    }
+}

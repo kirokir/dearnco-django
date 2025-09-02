@@ -1,28 +1,37 @@
 #!/usr/bin/env bash
-# Exit immediately if a command exits with a non-zero status.
+# Exit on error
 set -o errexit
 
-echo "--- STARTING BUILD PROCESS ---"
-
 # Install dependencies
-echo "--- Installing packages ---"
 pip install -r requirements.txt
 
-# Create migration files. This is crucial.
-# If this command says "No changes detected", it's okay.
-echo "--- Creating migrations ---"
-python manage.py makemigrations
-
-# Apply database migrations. The --no-input flag is important for non-interactive environments.
-echo "--- Applying database migrations ---"
-python manage.py migrate --no-input
-
-# Create the superuser
-echo "--- Ensuring superuser exists ---"
-python manage.py createsu
-
 # Collect static files
-echo "--- Collecting static files ---"
-python manage.py collectstatic --no-input --clear
+python manage.py collectstatic --no-input
 
-echo "--- BUILD PROCESS COMPLETED ---"
+# Apply database migrations
+python manage.py migrate
+
+# Create a superuser from environment variables if it doesn't exist
+# This command is part of a custom management command you should create.
+# Since one wasn't provided, we will use a simple Python script approach.
+
+cat <<EOF | python manage.py shell
+import os
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+username = os.environ.get('DJANGO_SUPERUSER_USERNAME')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+
+if username and email and password:
+    if not User.objects.filter(username=username).exists():
+        print(f"Creating superuser {username}")
+        User.objects.create_superuser(username=username, email=email, password=password)
+    else:
+        print(f"Superuser {username} already exists.")
+else:
+    print("Superuser environment variables not set. Skipping creation.")
+
+EOF

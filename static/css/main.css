@@ -1401,3 +1401,95 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
     font-size: 0.9rem;
     opacity: 0.8;
 }
+:root {
+    --bg-color: #F3F4F6; --content-bg: #FFFFFF; --primary-red: #EF4444;
+    --light-gray: #9CA3AF; --text-dark: #111827; --text-light: #4B5563;
+    --border-color: #E5E7EB; --dark-section-bg: #111827; --handwritten-font: 'Caveat', cursive;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+    scroll-behavior: smooth;
+    overflow-x: hidden !important;
+    position: relative;
+}
+body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-dark); }
+
+/* --- Headers (Sticky and Mobile) --- */
+#sticky-header {
+    position: fixed; top: 0; left: 0; width: 100%; display: flex;
+    justify-content: space-between; align-items: center; padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color); z-index: 999;
+    opacity: 0; transform: translateY(-100%);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+}
+#sticky-header.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.header-logo-link { display: flex; align-items: center; text-decoration: none; color: inherit; }
+.site-logo { height: 30px; width: auto; }
+.header-logo { font-weight: 900; }
+.header-nav { display: flex; gap: 1.5rem; }
+.header-nav a { text-decoration: none; color: var(--text-light); font-weight: 600; }
+.header-nav a:hover { color: var(--text-dark); }
+.header-buttons { display: flex; align-items: center; gap: 0.75rem; }
+.header-btn { padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+.btn-secondary { background-color: #e5e7eb; color: #1f2937; }
+.btn-primary { background-color: #f59e0b; color: #1f2937; }
+.header-join-btn { font-weight: 600; text-decoration: none; color: var(--text-dark); }
+#hamburger-btn, #mobile-nav { display: none; }
+
+/* --- Hero Section --- */
+.hero-brutalist { height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; padding: 2rem; position: relative; overflow: hidden; }
+.content-wrapper { position: relative; width: 100%; max-width: 1400px; height: 100%; max-height: 800px; background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
+/* ... (all other original hero styles remain unchanged) ... */
+
+/* --- Main Content Sections --- */
+.content-showcase { background-color: var(--bg-color); }
+.services-section-restored { background-color: var(--content-bg); padding: 100px 5%; border-bottom: 1px solid var(--border-color); }
+.services-grid-restored { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+/* ... (all other original content styles remain unchanged) ... */
+.engineering-next-section { background-color: var(--dark-section-bg); color: white; padding: 100px 5%; text-align: center; }
+.engineering-next-section h2 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; }
+.engineering-next-section .highlight { font-style: italic; font-weight: 400; color: #9CA3AF; }
+.stats-bar { background-color: var(--content-bg); padding: 60px 5%; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px; border-bottom: 1px solid var(--border-color); }
+/* ... (all other original stat and project styles remain unchanged) ... */
+.project-card, .stat-item { opacity: 0; visibility: hidden; transform: translateY(50px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.project-card.visible, .stat-item.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* --- Persistent Bottom Nav (Desktop & Mobile) --- */
+#bottom-nav {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); background-color: var(--text-dark);
+    color: #fff; padding: 0.5rem; border-radius: 999px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+/* ... (all other bottom-nav styles remain unchanged) ... */
+
+/* --- Footer and Game --- */
+.main-footer-wrapper { padding: 50px 20px; background-size: cover; background-position: center; background-attachment: fixed; position: relative; }
+.footer-overlay { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); z-index: 1; }
+.main-footer { max-width: 1200px; margin: 0 auto; padding: 50px; background: rgba(233, 231, 231, 0.9); backdrop-filter: blur(15px); border-radius: 20px; display: grid; grid-template-columns: 2fr 3fr 1fr; gap: 2rem; align-items: center; position: relative; z-index: 2; }
+/* ... (all other original footer and game styles remain unchanged) ... */
+.join-us-btn { display: inline-block; margin-top: 1rem; margin-left: 1rem; text-decoration: none; font-weight: 700; color: var(--primary-red); }
+
+/* --- Floating Widgets --- */
+.floating-widgets { position: fixed; bottom: 90px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 1rem; }
+/* ... (all other floating widget styles remain unchanged) ... */
+
+/* --- Dark Mode Overrides --- */
+.dark-mode { --bg-color: #121212; --content-bg: #1E1E1E; /* ... */ }
+/* ... (all other dark mode styles remain unchanged) ... */
+
+/* --- Responsive Overrides --- */
+@media (max-width: 768px) {
+    #sticky-header { display: none !important; }
+    #bottom-nav { width: 100%; bottom: 0; border-radius: 0; padding: 0.5rem 0; }
+    .bottom-nav-item { flex-direction: column; flex: 1; gap: 0.25rem; padding: 0.5rem 0; }
+    .bottom-nav-text { font-size: 0.7rem; }
+    .bottom-nav-icon { display: block; }
+    .bottom-nav-item.contact-btn { background: none; }
+    .bottom-nav-item.contact-btn .bottom-nav-text { color: #8B5CF6; }
+    .floating-widgets { display: none; }
+    main, .content-showcase { padding-bottom: 80px; }
+    /* ... (all other mobile override styles remain unchanged) ... */
+}

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views.decorators.cache import cache_page
+from django.utils import timezone # Import timezone
 from portfolio.models import Project
 from blog.models import BlogPost
 from agency.models import BentoGridItem, ChatbotQA
@@ -9,11 +10,13 @@ import random
 import json
 
 def home_view(request):
-    all_projects = Project.objects.all().order_by('display_order') # CORRECTED FIELD NAME
+    all_projects = Project.objects.all().order_by('display_order')
     primary_projects = [p for p in all_projects if p.project_type == 'primary']
     secondary_projects = [p for p in all_projects if p.project_type == 'secondary']
 
-    all_posts = BlogPost.objects.select_related('author__profile').prefetch_related('tags').filter(is_published=True).order_by('-published_date')
+    # CORRECTED FILTER: Use published_date__lte instead of is_published
+    all_posts = BlogPost.objects.select_related('author__profile').prefetch_related('tags').filter(published_date__lte=timezone.now()).order_by('-published_date')
+    
     featured_posts = list(all_posts.filter(is_featured=True))
     random.shuffle(featured_posts)
     recent_posts = all_posts.filter(is_featured=False)[:6]

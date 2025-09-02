@@ -9,7 +9,7 @@ import random
 import json
 
 def home_view(request):
-    all_projects = Project.objects.all().order_by('order')
+    all_projects = Project.objects.all().order_by('display_order') # CORRECTED FIELD NAME
     primary_projects = [p for p in all_projects if p.project_type == 'primary']
     secondary_projects = [p for p in all_projects if p.project_type == 'secondary']
 

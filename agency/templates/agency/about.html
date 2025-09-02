@@ -26,31 +26,6 @@
     </div>
 </section>
 
-<section class="join-us-section">
-    <div class="container">
-        <h2 class="section-title">DO THE BEST WORK OF YOUR CAREER</h2>
-        <div class="open-positions">
-            {% for job in job_positions %}
-            <div class="job-card">
-                <div class="job-info">
-                    <h4>{{ job.title }}</h4>
-                    <span class="job-location">{{ job.location_tags }}</span>
-                    <span class="job-type">{{ job.employment_type }}</span>
-                </div>
-                <a href="#" class="view-details-btn">View Details</a>
-            </div>
-            {% empty %}
-            <p style="text-align: center;">There are no open positions at this time. Check back soon!</p>
-            {% endfor %}
-        </div>
-        <div class="perfect-fit-callout">
-            <h4>Don't see the perfect fit?</h4>
-            <p>We're always looking for exceptional talent. If you believe in our mission, we want to hear from you.</p>
-            <a href="#" class="get-in-touch-btn">Get in Touch</a>
-        </div>
-    </div>
-</section>
-
 <section class="contact-form-section modern-form">
     <div class="container">
         <h2 class="section-title">LET'S CREATE SOMETHING AMAZING</h2>

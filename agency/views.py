@@ -1,16 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import StrategyCallLead, AssessmentLead, Brochure, JobPosition
-from portfolio.models import TeamMember # CORRECTED IMPORT PATH
+from portfolio.models import TeamMember
 
 def about_view(request):
+    """
+    Handles the logic for the About page, displaying team members.
+    """
     team_members = TeamMember.objects.all().order_by('order')
-    job_positions = JobPosition.objects.filter(is_active=True).order_by('created_at')
     context = {
         'team_members': team_members,
-        'job_positions': job_positions,
     }
     return render(request, 'agency/about.html', context)
+
+def join_us_view(request):
+    """
+    Handles the logic for the Join Us/Careers page, displaying open job positions.
+    """
+    job_positions = JobPosition.objects.filter(is_active=True).order_by('created_at')
+    context = {
+        'job_positions': job_positions,
+    }
+    return render(request, 'agency/join_us.html', context)
 
 def contact_submit_view(request):
     if request.method == 'POST':

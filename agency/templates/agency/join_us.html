@@ -1,39 +1,35 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 
 {% block title %}Join Us | Dear&Co{% endblock %}
 
 {% block content %}
-<main class="static-page-container join-us-page">
-    <section class="join-us-header">
-        <h1>Do the Best Work of Your Career</h1>
-        <p>We're building a team of relentless problem-solvers who are obsessed with quality and driven by client success. We don't have ping-pong tables, but we do offer work that has a real, measurable impact.</p>
-    </section>
-
-    <section class="open-positions">
-        <h2>Open Positions</h2>
-        <div class="positions-list">
-            {% for position in positions %}
-            <div class="position-card">
-                <div class="position-info">
-                    <h3>{{ position.title }}</h3>
-                    <div class="position-meta">
-                        <span class="meta-tag">{{ position.location_tags }}</span>
-                        <span class="meta-type">{{ position.employment_type }}</span>
-                    </div>
+<section class="join-us-section">
+    <div class="container">
+        <h2 class="section-title">DO THE BEST WORK OF YOUR CAREER</h2>
+        <p class="section-subtitle">We're building a team of relentless problem-solvers who are obsessed with quality and driven by client success. We don’t have ping-pong tables, but we do offer work that has a real, measurable impact.</p>
+        
+        <h3 class="positions-heading">Open Positions</h3>
+        <div class="open-positions">
+            {% for job in job_positions %}
+            <div class="job-card">
+                <div class="job-info">
+                    <h4>{{ job.title }}</h4>
+                    <span class="job-location">{{ job.location_tags }}</span>
+                    <span class="job-type">{{ job.employment_type }}</span>
                 </div>
-                <div class="position-action">
-                    <button class="view-details-btn">View Details</button>
-                </div>
-                <div class="position-description">
-                    {{ position.description|safe }}
-                    <a href="mailto:{{ site_config.email }}?subject=Application for {{ position.title }}" class="apply-now-btn">Apply Now</a>
-                </div>
+                <a href="#" class="view-details-btn">View Details</a>
             </div>
             {% empty %}
-            <p>There are currently no open positions. Check back soon!</p>
+            <p style="text-align: center;">There are no open positions at this time. Check back soon!</p>
             {% endfor %}
         </div>
-    </section>
-</main>
+        
+        <div class="perfect-fit-callout">
+            <h4>Don't see the perfect fit?</h4>
+            <p>We're always looking for exceptional talent. If you believe in our mission and think you can contribute, we want to hear from you. Send your resume and a brief note on why you'd be a great addition to our team.</p>
+            <a href="mailto:{{ site_config.email }}" class="get-in-touch-btn">Get in Touch</a>
+        </div>
+    </div>
+</section>
 {% endblock %}

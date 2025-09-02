@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import StrategyCallLead, AssessmentLead, Brochure, TeamMember, JobPosition
+from .models import StrategyCallLead, AssessmentLead, Brochure, JobPosition
+from portfolio.models import TeamMember # CORRECTED IMPORT PATH
 
 def about_view(request):
     team_members = TeamMember.objects.all().order_by('order')

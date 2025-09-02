@@ -8,43 +8,38 @@ document.addEventListener("DOMContentLoaded", function() {
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     const moleGameFooter = document.querySelector('.mole-game-footer');
     const bottomNav = document.getElementById('bottom-nav');
+    const chatPopupBtn = document.getElementById('chat-popup');
+    const chatWidget = document.getElementById('chat-widget');
+    const closeChatWidgetBtn = document.getElementById('close-chat-widget');
     let deferredPrompt;
     const installPrompt = document.getElementById('pwa-install-prompt');
     const installButton = document.getElementById('pwa-install-button');
     const closePwaButton = document.getElementById('pwa-close-button');
 
-       // --- PWA INSTALL PROMPT ---
-    let deferredPrompt;
-    const installPrompt = document.getElementById('pwa-install-prompt');
-    const installButton = document.getElementById('pwa-install-button');
-    const closePwaButton = document.getElementById('pwa-close-button');
-
+    // --- PWA INSTALL PROMPT ---
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Show the prompt after a short delay to not be intrusive
         setTimeout(() => {
             if (installPrompt) installPrompt.classList.add('visible');
-        }, 5000); // 5-second delay
+        }, 5000);
     });
-
     if (installButton) {
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 await deferredPrompt.userChoice;
-                deferredPrompt = null; // We can only use it once.
+                deferredPrompt = null;
                 installPrompt.classList.remove('visible');
             }
         });
     }
-
     if (closePwaButton) {
         closePwaButton.addEventListener('click', () => {
             installPrompt.classList.remove('visible');
         });
-    } 
-    
+    }
+
     // --- THEME SWITCHER LOGIC ---
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 
@@ -64,12 +59,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- NAVIGATION LOGIC (STICKY HEADER, FLOATING LOGO, BOTTOM NAV) ---
+    // --- NAVIGATION LOGIC ---
     if (heroSection) {
-        // We are on the homepage
         const heroHeight = heroSection.offsetHeight;
-        const navAppearPoint = heroHeight / 2;
-
         window.addEventListener('scroll', () => {
             if(header) {
                 header.classList.toggle('visible', window.scrollY > heroHeight);
@@ -78,15 +70,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 floatingLogo.classList.toggle('hide', window.scrollY > 50);
             }
             if (bottomNav) {
-                bottomNav.classList.toggle('hidden-nav', window.scrollY < navAppearPoint);
+                bottomNav.classList.toggle('hidden-nav', window.scrollY < (heroHeight / 2));
             }
         });
     } else if (bottomNav) {
-        // If not on the homepage, the nav should start visible.
         bottomNav.classList.remove('hidden-nav');
     }
 
-    // --- ANIMATION OBSERVER SYSTEM ---
+    // --- DEFINITIVE ANIMATION OBSERVER (PROJECTS + STATS) ---
     const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -130,6 +121,11 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    }
+    
+    if (chatPopupBtn && chatWidget && closeChatWidgetBtn) {
+        chatPopupBtn.addEventListener('click', () => chatWidget.classList.toggle('visible'));
+        closeChatWidgetBtn.addEventListener('click', () => chatWidget.classList.remove('visible'));
     }
     
     // --- MOLE GAME ---

@@ -19,6 +19,17 @@ class StrategyCallLead(models.Model):
         verbose_name_plural = "Strategy Call Leads"
         ordering = ['-submitted_at']
 
+class AssessmentLead(models.Model):
+    email = models.EmailField(unique=True)
+    downloaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name_plural = "Assessment Leads"
+        ordering = ['-downloaded_at']
+
 class Brochure(SingletonModel):
     title = models.CharField(max_length=200, default="Our Free Brochure")
     pdf_file = CloudinaryField(resource_type='raw', null=True, blank=True, help_text="Upload the brochure PDF file here.")

@@ -3,125 +3,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>{% block title %}Dear&Co Portfolio{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dear&Co | Digital Agency{% endblock %}</title>
+    <meta name="description" content="{{ site_config.meta_description }}">
+    <meta name="keywords" content="{{ site_config.meta_keywords }}">
+    <meta name="author" content="Dear&Co">
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
+    <link rel="apple-touch-icon" href="{% static 'img/icon-192x192.png' %}">
     <link rel="manifest" href="{% static 'manifest.json' %}">
-    <meta name="theme-color" content="#111827">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="{% if site_config.enable_dark_mode %}dark-mode-default{% endif %} {% block body_class %}{% endblock %}">
-    
+<body class="{{ body_class }}">
+
     <header id="sticky-header">
-        <a href="{% url 'core:home' %}" class="header-logo-link">
-            {% if site_config.logo %}
-                <img src="{{ site_config.logo.url }}" alt="Dear&Co Logo" class="site-logo">
-            {% else %}
-                <div class="header-logo">Dear&Co</div>
-            {% endif %}
-        </a>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'agency:about' %}">About</a>
+            <a href="{% url 'blog_index' %}">Blog</a>
+            <a href="#">Work</a>
+            <a href="#" class="cta-button">Let's talk</a>
+        </nav>
     </header>
 
-    {% if not is_homepage %}
-        {% include "core/breadcrumbs.html" %}
-    {% endif %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
-    {% block content %}{% endblock %}
-    
-    <div id="pwa-install-prompt" class="pwa-prompt">
-        <p>Get the full Dear&Co experience. Add our app to your home screen!</p>
-        <button id="pwa-install-button">Install App</button>
-        <button id="pwa-close-button">&times;</button>
-    </div>
-
-    <footer class="main-footer-wrapper" style="{% if site_config.footer_background_image %}background-image: url('{{ site_config.footer_background_image.url }}');{% endif %}">
-        <div class="footer-overlay"></div>
-        <div class="main-footer">
-            <div class="footer-column footer-left">
-                <h2>Your next project starts here.</h2>
-                <a href="mailto:{{ site_config.email }}?subject=I would like to be a partner" class="partner-btn">Become a Partner →</a>
+    <footer class="site-footer" style="background-image: url('{{ site_config.footer_background_image.url }}');">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Your next project starts here.</h3>
+                <a href="#" class="footer-cta">Become a Partner →</a>
             </div>
-            <div class="footer-column footer-links-container">
-                <div class="footer-links">
-                    <ul>
-                        <li><a href="{% url 'blog:blog_index' %}">Blog</a></li>
-                        <li><a href="{% url 'portfolio:team' %}">Our Team</a></li>
-                        <li><a href="{% url 'portfolio:portfolio_all' %}">Portfolio</a></li>
-                        <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <ul>
-                        <li><a href="{% url 'core:faq' %}">FAQ</a></li>
-                        <li><a href="{% url 'core:terms' %}">Terms & Conditions</a></li>
-                        <li><a href="{% url 'core:privacy' %}">Privacy Policy</a></li>
-                    </ul>
-                </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="{% url 'agency:about' %}">Our Team</a></li>
+                    <li><a href="#">Portfolio</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
             </div>
-            <div class="footer-column footer-right">
-                 <div class="footer-locations">
+            <div class="footer-column">
+                <h4>Connect</h4>
+                <address>
                     {% for location in office_locations %}
-                    <a href="{{ location.google_maps_link }}" target="_blank" class="footer-address">{{ location.address }}</a>
+                        <a href="{{ location.google_maps_link }}" target="_blank" rel="noopener">{{ location.address }}</a><br>
                     {% endfor %}
+                </address>
+                <div class="footer-socials">
+                    <a href="mailto:{{ site_config.email }}">Email</a>
+                    <a href="https://wa.me/{{ site_config.whatsapp }}" target="_blank" rel="noopener">WhatsApp</a>
+                    <a href="{{ site_config.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
                 </div>
-                <p class="footer-copyright">All rights reserved © 2025</p>
             </div>
-            <div class="footer-bg-logo">DEAR&CO</div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} Dear&Co. All rights reserved.</p>
         </div>
     </footer>
     
-    <div class="game-indicator">
-        <span class="game-indicator-text">↓ Game Below ↓</span>
-    </div>
-
-    <footer class="mole-game-footer" data-whatsapp-url="{% if site_config.whatsapp %}{{ site_config.whatsapp }}{% endif %}">
-        <h2 class="mole-game-title">Catch me if you can!</h2>
-        <div class="mole-game-container">
-            <div class="mole-holes">
-                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
-                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
-                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
-            </div>
+    <div id="game-indicator">Game Below</div>
+    <footer id="game-footer">
+        <h2>CATCH ME IF YOU CAN!</h2>
+        <div class="game-area">
+            <div class="hole"><div class="mole"></div></div>
+            <div class="hole"><div class="mole"></div></div>
+            <div class="hole"><div class="mole"></div></div>
+            <div class="hole"><div class="mole"></div></div>
+            <div class="hole"><div class="mole"></div></div>
+            <div class="hole"><div class="mole"></div></div>
         </div>
     </footer>
 
+    <div class="floating-widgets">
+        <button id="scrollToTopBtn" title="Go to top">↑</button>
+        <a href="https://wa.me/{{ site_config.whatsapp }}" id="whatsapp-widget" target="_blank" rel="noopener">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--icomoon-free" preserveAspectRatio="xMidYMid meet"><path d="M22.339 17.445c-.275-.138-1.625-.802-1.877-.893-.252-.091-.436-.138-.62.138-.184.275-.709.893-.87.1.069-.184.368-.46.62-.751s.169-.552.252-.921.042-1.688-.237-1.877c-.275-.184-.62-.184-.87-.184-.252 0-1.65.62-2.884 2.884-1.234 2.264-1.234 2.884-1.234 2.884s-1.107-.123-2.222-.656c-2.45-1.173-3.088-2.529-3.088-2.529s-1.107 1.481.275 3.315c1.382 1.833 2.222 3.447 3.447 4.562s2.529 1.107 4.562 1.107c2.033 0 3.315-1.107 3.315-1.107s.275-2.222.138-2.529c-.138-.308-.308-.436-.656-.436h-.436zm-6.339 14.555c-8.835 0-16-7.165-16-16s7.165-16 16-16 16 7.165 16 16-7.165 16-16 16zm0-30c-7.73 0-14 6.27-14 14s6.27 14 14 14 14-6.27 14-14-6.27-14-14-14z" fill="currentColor"></path></svg>
+        </a>
+        <button id="chatbot-toggle">
+             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="currentColor"></path></svg>
+        </button>
+        <button id="darkModeToggle">🌙</button>
+    </div>
+
+    <div id="pwa-install-prompt" class="pwa-prompt" style="display: none;">
+        <p>Add Dear&Co to your Home Screen?</p>
+        <button id="pwa-install-button">Install</button>
+        <button id="pwa-dismiss-button">Later</button>
+    </div>
+
+    <div id="chatbot-window" style="display: none;">
+        <div class="chatbot-header">
+            <h3>Dear Bot</h3>
+            <button id="close-chatbot">&times;</button>
+        </div>
+        <div class="chatbot-body">
+            <div id="chatbot-messages"></div>
+        </div>
+        <div class="chatbot-footer">
+            <input type="text" id="chatbot-input" placeholder="Ask a question...">
+            <button id="chatbot-send">Send</button>
+        </div>
+    </div>
+    
     <nav id="bottom-nav">
-        <a href="{% url 'core:home' %}" class="bottom-nav-item">
-            <div class="bottom-nav-icon"><!-- Home SVG --></div>
-            <span class="bottom-nav-text">Home</span>
-        </a>
-        <a href="{% url 'agency:about' %}" class="bottom-nav-item">
-            <div class="bottom-nav-icon"><!-- About SVG --></div>
-            <span class="bottom-nav-text">About</span>
-        </a>
-        <a href="{% url 'blog:blog_index' %}" class="bottom-nav-item">
-            <div class="bottom-nav-icon"><!-- Blog SVG --></div>
-            <span class="bottom-nav-text">Blog</span>
-        </a>
-        <a href="{% url 'portfolio:portfolio_all' %}" class="bottom-nav-item">
-             <div class="bottom-nav-icon"><!-- Work SVG --></div>
-            <span class="bottom-nav-text">Work</span>
-        </a>
-        <a href="tel:{{ site_config.phone_number }}" class="bottom-nav-item contact-btn">
-            <div class="bottom-nav-icon"><!-- Let's Talk SVG --></div>
-            <span class="bottom-nav-text">Let's talk</span>
-        </a>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'agency:about' %}">About</a>
+        <a href="{% url 'blog_index' %}">Blog</a>
+        <a href="#">Work</a>
+        <a href="#" class="cta">Let's Talk</a>
     </nav>
     
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js');
+                navigator.serviceWorker.register("{% url 'sw' %}")
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
             });
         }
     </script>
-    <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

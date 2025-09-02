@@ -1,59 +1,57 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
+{% load static %}
 
-{% block title %}The Growth Playbook | Dear&Co Blog{% endblock %}
+{% block title %}Blog | Dear&Co{% endblock %}
 
 {% block content %}
-<main class="static-page-container blog-index-page">
-    {% if featured_posts %}
-    <div class="swiper featured-posts-slider">
-        <div class="swiper-wrapper">
-            {% for post in featured_posts %}
-            <div class="swiper-slide featured-post-slide">
-                <a href="{% url 'blog:blog_post_detail' post.slug %}" class="featured-post-link">
-                    <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
-                    <div class="featured-post-overlay"></div>
-                    <div class="featured-post-content">
-                        <div class="post-meta">
-                            {% if post.author.profile.image %}<img src="{{ post.author.profile.image.url }}" class="author-avatar">{% endif %}
-                            <span class="author-name">{{ post.author.get_full_name|default:post.author.username }}</span>
-                            <span class="post-date">{{ post.published_date|date:"d M Y" }}</span>
+<section class="blog-hero">
+    <div class="container">
+        <h1>The Growth Playbook</h1>
+        <p>Insights, strategies, and stories from the forefront of digital innovation.</p>
+    </div>
+</section>
+
+<section class="blog-main">
+    <div class="container">
+        {% if featured_posts %}
+        <div class="featured-spotlight">
+            {% with featured_posts.0 as post %}
+            <a href="{{ post.get_absolute_url }}" class="featured-card">
+                <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
+                <div class="overlay-content">
+                    <span class="tag">Featured</span>
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.subtitle }}</p>
+                </div>
+            </a>
+            {% endwith %}
+        </div>
+        {% endif %}
+        
+        <div class="tag-filters">
+            <button class="tag-filter active" data-tag="all">All</button>
+            {% for tag in all_tags %}
+            <button class="tag-filter" data-tag="{{ tag.name|slugify }}">{{ tag.name }}</button>
+            {% endfor %}
+        </div>
+        
+        <div class="blog-grid">
+            {% for post in non_featured_posts %}
+            <div class="blog-card-wrapper animate-on-scroll" data-tags="{% for tag in post.tags.all %}{{ tag.name|slugify }},{% endfor %}">
+                 <a href="{{ post.get_absolute_url }}" class="blog-card">
+                    <img src="{{ post.header_image.url }}" alt="{{ post.title }}" class="card-img">
+                    <div class="card-content">
+                        <h4>{{ post.title }}</h4>
+                        <p>{{ post.subtitle }}</p>
+                        <div class="author-info">
+                            <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name }}">
+                            <span>{{ post.author.get_full_name }} &bull; {{ post.published_date|date:"M d, Y" }}</span>
                         </div>
-                        <h3>{{ post.title }}</h3>
                     </div>
                 </a>
             </div>
             {% endfor %}
         </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
     </div>
-    {% endif %}
-
-    <h1>Blog</h1>
-    <p class="index-subtitle">Here, we share tips, destination guides, and stories that inspire your next adventure.</p>
-
-    <div class="blog-filters">
-        <a href="#" class="filter-btn active">All</a>
-        {% for tag in all_tags %}
-        <a href="#" class="filter-btn">{{ tag.name }}</a>
-        {% endfor %}
-    </div>
-
-    <div class="recent-posts-grid">
-        {% for post in all_posts %}
-        <a href="{% url 'blog:blog_post_detail' post.slug %}" class="post-card">
-            <div class="post-card-image">
-                <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
-            </div>
-            <div class="post-card-content">
-                {% if post.tags.all %}
-                    <span class="post-card-tag">{{ post.tags.all.0.name }}</span>
-                {% endif %}
-                <h4>{{ post.title }}</h4>
-                <p>{{ post.subtitle|truncatewords:20 }}</p>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-</main>
+</section>
 {% endblock %}

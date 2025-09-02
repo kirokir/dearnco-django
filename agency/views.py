@@ -1,32 +1,47 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import JobPosition, Brochure, ChatbotQA
-from .forms import StrategyCallForm, AssessmentForm
+from .models import StrategyCallLead, AssessmentLead, Brochure, TeamMember, JobPosition
 
 def about_view(request):
-    strategy_form = StrategyCallForm()
-    brochure = Brochure.load()
-    
-    if 'strategy_form_submit' in request.POST:
-        strategy_form = StrategyCallForm(request.POST)
-        if strategy_form.is_valid():
-            strategy_form.save()
-            messages.success(request, "Thank you! We've received your request and will be in touch shortly.")
-            return redirect('agency:about')
-
-    breadcrumbs = [{'name': 'About Us'}]
+    team_members = TeamMember.objects.all().order_by('order')
+    job_positions = JobPosition.objects.filter(is_active=True).order_by('created_at')
     context = {
-        'breadcrumbs': breadcrumbs,
-        'strategy_form': strategy_form,
-        'brochure': brochure,
+        'team_members': team_members,
+        'job_positions': job_positions,
     }
     return render(request, 'agency/about.html', context)
 
-def join_us_view(request):
-    active_positions = JobPosition.objects.filter(is_active=True)
-    breadcrumbs = [{'name': 'Join Us'}]
-    context = {
-        'breadcrumbs': breadcrumbs,
-        'positions': active_positions,
-    }
-    return render(request, 'agency/join_us.html', context)
+def contact_submit_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        service = request.POST.get('service')
+        message_text = request.POST.get('message')
+
+        if name and email and message_text:
+            StrategyCallLead.objects.create(
+                name=name,
+                email=email,
+                interest=service,
+                message=message_text
+            )
+            messages.success(request, "Thank you! Your message has been received. We'll be in touch shortly.")
+        else:
+            messages.error(request, "Please fill out all required fields.")
+        return redirect('agency:about')
+    return redirect('agency:about')
+
+def brochure_download_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            AssessmentLead.objects.create(email=email)
+            brochure = Brochure.objects.first()
+            if brochure:
+                return redirect(brochure.pdf_file.url)
+            else:
+                messages.error(request, "Sorry, the brochure is currently unavailable.")
+                return redirect('agency:about')
+        else:
+            messages.error(request, "Please provide a valid email address.")
+    return redirect('agency:about')

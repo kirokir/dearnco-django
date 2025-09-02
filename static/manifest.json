@@ -1,11 +1,11 @@
 {
-  "name": "Dear&Co",
+  "name": "Dear&Co Digital Agency",
   "short_name": "Dear&Co",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#E9E7E7",
-  "theme_color": "#111827",
-  "description": "A dynamic portfolio and agency website for Dear&Co.",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a2e",
+  "description": "A digital agency focused on building things that matter.",
   "icons": [
     {
       "src": "/static/img/icon-192x192.png",

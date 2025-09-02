@@ -1,11 +1,9 @@
-// A simple service worker for basic offline functionality (cache-first strategy)
 const CACHE_NAME = 'dearco-cache-v1';
 const urlsToCache = [
   '/',
   '/static/css/main.css',
   '/static/js/main.js',
   '/static/img/favicon.png',
-  // Add other critical static assets here
 ];
 
 self.addEventListener('install', event => {
@@ -26,6 +24,7 @@ self.addEventListener('fetch', event => {
           return response;
         }
         return fetch(event.request);
-      })
+      }
+    )
   );
 });

@@ -1,114 +1,159 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 
+{% block title %}Dear&Co | Home{% endblock %}
+
 {% block content %}
-<section class="hero-brutalist">
-    {% if site_config.hero_image %}
-    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
-    {% endif %}
-    <div class="content-wrapper">
-        <div class="hero-floating-logo">
-            {% if site_config.logo %}
-                <img src="{{ site_config.logo.url }}" alt="Dear&Co Logo" class="site-logo">
-            {% else %}
-                <div class="header-logo">Dear&Co</div>
-            {% endif %}
+<section class="hero">
+    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ site_config.hero_image_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
+    <div class="hero-content">
+        <div class="logo-container">
+            <img src="{{ site_config.logo.url }}" alt="Dear&Co Logo" id="floating-logo">
         </div>
-        <span class="bg-text bg-dearco">DEAR&CO</span>
-        <span class="bg-text bg-c25">©'25</span>
-        <div class="vertical-line"></div>
-        <div class="main-heading"><h1>let's build<br>something<br>that matters.</h1><p>[ available for all projects ]</p></div>
-        <div class="contact-section">
-            <p class="contact-title">hit us on</p>
-            <div class="contact-icons">
-                {% if site_config.whatsapp %}<a href="{{ site_config.whatsapp }}" target="_blank" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.31 20.62C8.75 21.41 10.36 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.04 3.67C16.56 3.67 20.28 7.39 20.28 11.91C20.28 16.43 16.56 20.15 12.04 20.15C10.46 20.15 8.96 19.74 7.64 19L7.14 18.71L4.23 19.5L5.03 16.71L4.72 16.2C3.96 14.91 3.56 13.44 3.56 11.91C3.56 7.39 7.28 3.67 12.04 3.67M17.34 14.6C17.13 15.11 16.13 15.62 15.65 15.67C15.17 15.71 14.54 15.73 14.12 15.58C13.7 15.42 13.06 15.21 12.2 14.45C10.93 13.33 10.2 11.91 10.04 11.66C9.88 11.41 9.25 10.58 9.25 9.87C9.25 9.16 9.49 8.92 9.69 8.72C9.89 8.52 10.12 8.4 10.32 8.4C10.52 8.4 10.71 8.4 10.87 8.4C11.02 8.4 11.19 8.37 11.39 8.87C11.58 9.37 12.03 10.53 12.08 10.63C12.12 10.73 12.17 10.85 12.1 10.95C12.03 11.05 11.98 11.1 11.83 11.25C11.68 11.41 11.55 11.53 11.43 11.66C11.31 11.78 11.16 11.94 11.31 12.21C11.47 12.49 11.92 13.11 12.56 13.68C13.38 14.41 13.97 14.68 14.17 14.83C14.37 14.98 14.53 14.96 14.68 14.81C14.83 14.66 15.17 14.21 15.32 14C15.47 13.79 15.62 13.74 15.82 13.84C16.02 13.94 16.89 14.39 17.09 14.49C17.29 14.59 17.44 14.64 17.34 14.6Z" /></svg></a>{% endif %}
-                {% if site_config.instagram %}<a href="{{ site_config.instagram }}" target="_blank" title="Instagram"><svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg></a>{% endif %}
+        <div class="hero-main-text">
+            <h1>let's build<br>something<br>that matters.</h1>
+            <p>[ available for all projects ]</p>
+        </div>
+        <div class="hero-side-text">
+            <p class="rotated-text">
+                Designs --- Software --- Websites --- UI/UX --- Graphics
+            </p>
+        </div>
+        <div class="hero-contact-info">
+            <p>hit us on</p>
+            <div class="social-icons">
+                <a href="https://wa.me/{{ site_config.whatsapp }}"><img src="{% static 'img/whatsapp-icon-grey.svg' %}" alt="WhatsApp"></a>
+                <a href="{{ site_config.instagram_url }}"><img src="{% static 'img/instagram-icon-grey.svg' %}" alt="Instagram"></a>
             </div>
         </div>
-        <div class="bottom-slogan">
-            <div class="slogan-main">made with&nbsp;<span class="static-char">l</span><div class="scrolling-a-container"><span class="scrolling-a-text">aaaaaaaaaaaaaaaa</span></div><span class="static-char">v</span></div>
+        <div class="hero-footer-text">
+            <p>made with <span class="love">l<span class="animated-a">aaaaaaa</span>v</span></p>
         </div>
-        <div class="version">v.3</div>
-        <div class="oblique-showcase-wrapper"><div class="oblique-scroller"><span>Graphic Designs --- Software --- Websites --- UI/G --- </span><span>Graphic Designs --- Software --- Websites --- UI/G --- </span></div><div class="oblique-subtext"><h3>If you can imagine it - we can make it.</h3><h2>we're the one she tells you not to worry about..</h2><p>(Open for challenges from any development agencies if you think you can beat us. No you can't, sonny.)</p></div></div>
-        <div class="proof-section"><span class="proof-text">Proof</span><div class="proof-arrow"></div></div>
+        <div class="vertical-line"></div>
     </div>
 </section>
 
-<main class="content-showcase">
-    <section class="services-section-restored">
-        <div class="services-grid-restored">
-            {% for service in services %}
-            <div class="service-card-restored">
-                <div class="service-icon-restored icon-{{ service.icon }}"></div>
-                <h3>{{ service.title }}</h3>
-                <p>{{ service.description }}</p>
-            </div>
-            {% endfor %}
+<section class="services-snapshot">
+    <div class="container">
+        {% for service in services %}
+        <div class="service-card animate-on-scroll">
+            <div class="service-icon"><i class="icon-{{ service.icon }}"></i></div>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+            <a href="#">Read more ›</a>
         </div>
-    </section>
-    
-    <section class="engineering-next-section">
-        <h2>Engineering <span class="highlight">what's</span> Next</h2>
-    </section>
-    
-    <section class="stats-bar" id="stats-bar">
-        <div class="stat-item"><span class="stat-number" data-target="120000">0</span>+<p class="stat-label">Lines of Code</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="2200">0</span>+<p class="stat-label">Hours of Work</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="14">0</span>+<p class="stat-label">Languages</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="3">0</span>+<p class="stat-label">Countries</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="50">0</span>+<p class="stat-label">APIs & Automations</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="3">0</span>+<p class="stat-label">AI Apps & 1 Framework</p></div>
-    </section>
-
-    <section class="services-section" id="blog-preview">
-        <div class="section-header-linkable">
-            <h2 class="section-title" style="font-size: 3rem; margin-bottom: 60px;">Latest from the Blog</h2>
-            <a href="{% url 'blog:blog_index' %}" class="view-all-link">View All Posts →</a>
-        </div>
-        <div class="services-grid">
-            {% for post in recent_posts %}
-            <div class="service-card" style="flex-basis: 22%; text-align: left;">
-                <a href="{% url 'blog:blog_post_detail' post.slug %}" target="_blank">
-                    <img src="{{ post.header_image.url }}" alt="{{ post.title }}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-bottom: 1rem;">
-                </a>
-                <h3 style="font-size: 1.2rem;">{{ post.title }}</h3>
-                <p style="margin-bottom: 1rem;">{{ post.subtitle|truncatewords:15 }}</p>
-                <a href="{% url 'blog:blog_post_detail' post.slug %}" target="_blank" style="font-weight: 700;">Read more →</a>
-            </div>
-            {% empty %}
-                <p>No blog posts yet. Check back soon!</p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <div class="projects-section-container" id="projects">
-        <svg id="connector-svg"></svg>
-        <section class="projects-section">
-            <h2 class="section-title">Primary Projects</h2>
-            {% for project in primary_projects %}
-            <div class="project-card primary">
-                <a href="{{ project.project_url|default:'#' }}" target="_blank" class="project-visual"><img src="{{ project.image.url }}" alt="{{ project.title }}"></a>
-                <div class="project-info">
-                    <h3>{{ project.title }}</h3>
-                    <p>{{ project.description }}</p>
-                    <a href="{{ project.project_url }}" target="_blank" class="project-go-link">Go →</a>
-                </div>
-            </div>
-            {% endfor %}
-        </section>
-        <section class="projects-section" style="padding-top: 0;">
-            <h2 class="section-title">Frameworks & Secondary Projects</h2>
-            {% for project in secondary_projects %}
-            <div class="project-card secondary">
-                <a href="{{ project.project_url|default:'#' }}" target="_blank" class="project-visual"><img src="{{ project.image.url }}" alt="{{ project.title }}"></a>
-                <div class="project-info">
-                    <h3>{{ project.title }}</h3>
-                    <p>{{ project.description }}</p>
-                    <a href="{{ project.project_url }}" target="_blank" class="project-go-link">Go →</a>
-                </div>
-            </div>
-            {% endfor %}
-        </section>
+        {% endfor %}
     </div>
-</main>
+</section>
+
+<section class="primary-projects">
+    <h2 class="section-title">PRIMARY PROJECTS</h2>
+    <div class="projects-container" id="primary-projects-container">
+        {% for project in primary_projects %}
+        <div class="project-card primary animate-on-scroll" data-order="{{ forloop.counter0 }}">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <a href="{{ project.project_url }}" target="_blank" rel="noopener">Go →</a>
+        </div>
+        {% endfor %}
+    </div>
+    <svg id="connector-svg"></svg>
+</section>
+
+<section class="secondary-projects">
+    <div class="container">
+        <h2 class="section-title" style="color: #333;">SECONDARY PROJECTS</h2>
+        <div class="secondary-projects-grid">
+            {% for project in secondary_projects %}
+            <div class="project-card secondary animate-on-scroll">
+                <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                <div class="card-content">
+                    <h4>{{ project.title }}</h4>
+                    <p>{{ project.description|truncatewords:15 }}</p>
+                    <a href="{{ project.project_url }}" target="_blank" rel="noopener">View Project</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="engineering-next">
+    <div class="container">
+        <h2>Engineering <span>what's Next</span></h2>
+    </div>
+</section>
+
+<section class="stats-bar">
+    <div class="container">
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="120000">0</h3>
+            <p>Lines of Code</p>
+        </div>
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="2200">0</h3>
+            <p>Hours of Work</p>
+        </div>
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="14">0</h3>
+            <p>Languages</p>
+        </div>
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="3">0</h3>
+            <p>Countries</p>
+        </div>
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="50">0</h3>
+            <p>APIs & Automations</p>
+        </div>
+        <div class="stat-item animate-on-scroll">
+            <h3 class="counter" data-target="3">0</h3>
+            <p>AI Apps & 1 Framework</p>
+        </div>
+    </div>
+</section>
+
+<section class="growth-playbook">
+    <h2 class="section-title">LATEST FROM THE BLOG</h2>
+    <div class="container">
+        {% if featured_posts %}
+        <div class="swiper-container featured-posts-slider">
+            <div class="swiper-wrapper">
+                {% for post in featured_posts %}
+                <div class="swiper-slide">
+                    <a href="{{ post.get_absolute_url }}" class="blog-card featured">
+                        <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
+                        <div class="card-content">
+                            <span class="tag">{{ post.tags.first.name|default:'Featured' }}</span>
+                            <h4>{{ post.title }}</h4>
+                            <p>{{ post.subtitle }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        {% endif %}
+        <div class="recent-posts-grid">
+            {% for post in recent_posts %}
+            <div class="blog-card-wrapper animate-on-scroll">
+                <a href="{{ post.get_absolute_url }}" class="blog-card recent">
+                    <div class="card-content">
+                        <span class="tag">{{ post.tags.first.name|default:'Update' }}</span>
+                        <h4>{{ post.title }}</h4>
+                        <p>{{ post.subtitle }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script id="chatbot-data" type="application/json">
+    {{ chatbot_qas_json|safe }}
+</script>
 {% endblock %}

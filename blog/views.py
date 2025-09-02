@@ -23,5 +23,6 @@ def blog_post_detail_view(request, slug):
     context = {
         'post': post,
         'breadcrumbs': breadcrumbs,
+        'body_class': 'blog-body-bg',
     }
     return render(request, 'blog/blog_post_detail.html', context)

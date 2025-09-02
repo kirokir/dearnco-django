@@ -13,30 +13,38 @@ document.addEventListener("DOMContentLoaded", function() {
     const installButton = document.getElementById('pwa-install-button');
     const closePwaButton = document.getElementById('pwa-close-button');
 
-    // --- PWA INSTALL PROMPT ---
+       // --- PWA INSTALL PROMPT ---
+    let deferredPrompt;
+    const installPrompt = document.getElementById('pwa-install-prompt');
+    const installButton = document.getElementById('pwa-install-button');
+    const closePwaButton = document.getElementById('pwa-close-button');
+
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        // Show the prompt after a short delay to not be intrusive
         setTimeout(() => {
             if (installPrompt) installPrompt.classList.add('visible');
-        }, 5000);
+        }, 5000); // 5-second delay
     });
+
     if (installButton) {
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 await deferredPrompt.userChoice;
-                deferredPrompt = null;
+                deferredPrompt = null; // We can only use it once.
                 installPrompt.classList.remove('visible');
             }
         });
     }
+
     if (closePwaButton) {
         closePwaButton.addEventListener('click', () => {
             installPrompt.classList.remove('visible');
         });
-    }
-
+    } 
+    
     // --- THEME SWITCHER LOGIC ---
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 

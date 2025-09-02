@@ -13,16 +13,11 @@ class Service:
         self.description = description
 
 def home_view(request):
-    primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')[:5]
-    secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')[:5]
+    primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
+    secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
     
-    primary_projects_count = Project.objects.filter(project_type='primary').count()
-    secondary_projects_count = Project.objects.filter(project_type='secondary').count()
+    recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
     
-    # NEW LOGIC: Fetch 3 featured posts, and recent non-featured posts
-    featured_posts = BlogPost.objects.filter(is_featured=True).order_by('-published_date')[:3]
-    recent_posts = BlogPost.objects.filter(is_featured=False).order_by('-published_date')[:6]
-
     services_data = [
         Service(icon='saas', title='SaaS Development', description='End-to-end platform creation, from architecture to deployment, built for scalability and user engagement.'),
         Service(icon='ai', title='AI & Machine Learning', description='Intelligent systems, predictive models, and NLP solutions to unlock data-driven insights and automation.'),
@@ -32,19 +27,13 @@ def home_view(request):
         Service(icon='design', title='Graphic Design', description='Visually compelling brand identities, UI/UX, and marketing materials that capture attention and tell your story.')
     ]
     
-    bento_items = BentoGridItem.objects.all()
-
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2
 
     context = {
         'primary_projects': primary_projects,
         'secondary_projects': secondary_projects,
-        'primary_projects_count_remaining': primary_projects_count - 5 if primary_projects_count > 5 else 0,
-        'secondary_projects_count_remaining': secondary_projects_count - 5 if secondary_projects_count > 5 else 0,
         'services': services_data,
-        'bento_items': bento_items,
-        'featured_posts': featured_posts,
         'recent_posts': recent_posts,
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,

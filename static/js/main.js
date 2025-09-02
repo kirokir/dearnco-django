@@ -13,38 +13,30 @@ document.addEventListener("DOMContentLoaded", function() {
     const installButton = document.getElementById('pwa-install-button');
     const closePwaButton = document.getElementById('pwa-close-button');
 
-       // --- PWA INSTALL PROMPT ---
-    let deferredPrompt;
-    const installPrompt = document.getElementById('pwa-install-prompt');
-    const installButton = document.getElementById('pwa-install-button');
-    const closePwaButton = document.getElementById('pwa-close-button');
-
+    // --- PWA INSTALL PROMPT ---
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Show the prompt after a short delay to not be intrusive
         setTimeout(() => {
             if (installPrompt) installPrompt.classList.add('visible');
-        }, 5000); // 5-second delay
+        }, 5000);
     });
-
     if (installButton) {
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 await deferredPrompt.userChoice;
-                deferredPrompt = null; // We can only use it once.
+                deferredPrompt = null;
                 installPrompt.classList.remove('visible');
             }
         });
     }
-
     if (closePwaButton) {
         closePwaButton.addEventListener('click', () => {
             installPrompt.classList.remove('visible');
         });
-    } 
-    
+    }
+
     // --- THEME SWITCHER LOGIC ---
     const applyTheme = (theme) => {
         if (theme === 'dark') { body.classList.add('dark-mode'); } 
@@ -64,28 +56,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- NAVIGATION LOGIC (STICKY HEADER, FLOATING LOGO, BOTTOM NAV) ---
-    if (heroSection) {
-        // We are on the homepage
+    // --- NAVIGATION LOGIC ---
+    if (header && heroSection) {
         const heroHeight = heroSection.offsetHeight;
-        const navAppearPoint = heroHeight / 2;
-
         window.addEventListener('scroll', () => {
-            if(header) {
-                header.classList.toggle('visible', window.scrollY > heroHeight);
-            }
+            header.classList.toggle('visible', window.scrollY > heroHeight);
             if (floatingLogo) {
                 floatingLogo.classList.toggle('hide', window.scrollY > 50);
             }
-            if (bottomNav) {
-                bottomNav.classList.toggle('hidden-nav', window.scrollY < navAppearPoint);
-            }
         });
-    } else if (bottomNav) {
-        // If not on the homepage, the nav should start visible.
-        bottomNav.classList.remove('hidden-nav');
     }
-
+    
     // --- ANIMATION OBSERVER SYSTEM ---
     const animationObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {

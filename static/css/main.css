@@ -773,3 +773,126 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
         display: flex; /* Ensure it shows on mobile */
     }
 }
+/* ==========================================================================
+   FINAL MOBILE UI POLISH & RESTORATION (ADDITIONS)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+
+    /* --- Service Section 3x3 Grid on Mobile --- */
+    /* This changes the grid to be 2 columns for better readability than 3x3 */
+    .services-grid-restored {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem 1.5rem; /* More vertical space */
+    }
+    .service-card-restored {
+        text-align: center;
+    }
+    .service-icon-restored {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .service-card-restored p {
+        /* Hiding the long description to fit the 3x3 concept */
+        display: none;
+    }
+    .service-card-restored h3 {
+        font-size: 0.9rem;
+    }
+
+    /* --- Footer Congestion Fix on Mobile --- */
+    .main-footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 2rem;
+    }
+    .footer-left, 
+    .footer-right,
+    .footer-column {
+        text-align: center;
+    }
+    .footer-links-container {
+        justify-content: space-around;
+        gap: 2rem;
+        margin: 2.5rem 0;
+        width: 100%;
+        display: flex;
+    }
+    .footer-right {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+    .partner-btn {
+        margin-bottom: 0.5rem;
+    }
+    .footer-locations {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    /* --- About & Join Us Page Layout Fixes on Mobile --- */
+    .principles-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .position-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .position-action {
+        width: 100%;
+    }
+    .view-details-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+/* ==========================================================================
+   FINAL MOBILE HERO POLISH
+   ========================================================================== */
+
+@media (max-width: 768px) {
+
+    /* --- Center Hero Content --- */
+    .main-heading,
+    .contact-section,
+    .bottom-slogan,
+    .proof-section {
+        /* Remove absolute positioning and center all hero text blocks */
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        text-align: center;
+        width: 100%;
+        max-width: 100%;
+        margin: 2.5rem auto; /* Add vertical spacing */
+    }
+
+    /* --- Fix "laaaav" Animation --- */
+    .slogan-main {
+        /* Ensure the flex container is centered */
+        justify-content: center;
+    }
+    
+    /* --- Hide Unnecessary Desktop Elements on Mobile --- */
+    .vertical-line,
+    .bg-text,
+    .oblique-showcase-wrapper,
+    .slogan-subtext,
+    .version {
+        display: none;
+    }
+
+    /* Adjust hero padding for mobile */
+    .hero-brutalist {
+        padding: 80px 1rem 2rem 1rem;
+    }
+    .content-wrapper {
+        padding: 2rem 1rem;
+    }
+}

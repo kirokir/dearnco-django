@@ -65,7 +65,7 @@
             </button>
         </div>
     </div>
-
+    
     <div id="pwa-install-prompt" class="pwa-prompt">
         <p>Get the full Dear&Co experience. Add our app to your home screen!</p>
         <button id="pwa-install-button">Install App</button>
@@ -77,21 +77,61 @@
     </div>
     
     <footer class="main-footer-wrapper" style="{% if site_config.footer_background_image %}background-image: url('{{ site_config.footer_background_image.url }}');{% endif %}">
-        <!-- Footer content remains unchanged -->
+        <div class="footer-overlay"></div>
+        <div class="main-footer">
+            <div class="footer-column footer-left">
+                <h2>Your next project starts here.</h2>
+                <a href="mailto:{{ site_config.email }}?subject=I would like to be a partner" class="partner-btn">Become a Partner →</a>
+            </div>
+            <div class="footer-column footer-links-container">
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="{% url 'blog:blog_index' %}">Blog</a></li>
+                        <li><a href="{% url 'portfolio:team' %}">Our Team</a></li>
+                        <li><a href="{% url 'portfolio:portfolio_all' %}">Portfolio</a></li>
+                        <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="{% url 'core:faq' %}">FAQ</a></li>
+                        <li><a href="{% url 'core:terms' %}">Terms & Conditions</a></li>
+                        <li><a href="{% url 'core:privacy' %}">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-column footer-right">
+                 <div class="footer-locations">
+                    {% for location in office_locations %}
+                    <a href="{{ location.google_maps_link }}" target="_blank" class="footer-address">{{ location.address }}</a>
+                    {% endfor %}
+                </div>
+                <p class="footer-copyright">All rights reserved © 2025</p>
+            </div>
+            <div class="footer-bg-logo">DEAR&CO</div>
+        </div>
     </footer>
-
+    
     <div class="game-indicator">
         <span class="game-indicator-text">↓ Game Below ↓</span>
     </div>
 
     <footer class="mole-game-footer" data-whatsapp-url="{% if site_config.whatsapp %}{{ site_config.whatsapp }}{% endif %}">
-        <!-- Mole game content remains unchanged -->
+        <h2 class="mole-game-title">Catch me if you can!</h2>
+        <div class="mole-game-container">
+            <div class="mole-holes">
+                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
+                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
+                <div class="mole-hole"><div class="mole"><div class="mole-nose"></div><div class="mole-teeth"></div></div></div>
+            </div>
+        </div>
     </footer>
-    
+
     <nav id="bottom-nav" class="hidden-nav">
         <!-- Bottom nav content remains unchanged -->
     </nav>
     
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -99,7 +139,6 @@
             });
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>

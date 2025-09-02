@@ -35,8 +35,36 @@
 </section>
 
 <main class="content-showcase">
+    <section class="services-section-restored">
+        <div class="services-grid-restored">
+            {% for service in services %}
+            <div class="service-card-restored">
+                <div class="service-icon-restored icon-{{ service.icon }}"></div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    <section class="engineering-next-section">
+        <h2>Engineering <span class="highlight">what's</span> Next</h2>
+    </section>
+    
+    <section class="stats-bar" id="stats-bar">
+        <div class="stat-item"><span class="stat-number" data-target="120000">0</span>+<p class="stat-label">Lines of Code</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="2200">0</span>+<p class="stat-label">Hours of Work</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="14">0</span>+<p class="stat-label">Languages</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="3">0</span>+<p class="stat-label">Countries</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="50">0</span>+<p class="stat-label">APIs & Automations</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="3">0</span>+<p class="stat-label">AI Apps & 1 Framework</p></div>
+    </section>
+
     <section class="services-section" id="blog-preview">
-        <h2 class="section-title" style="font-size: 3rem; margin-bottom: 60px;">Latest from the Blog</h2>
+        <div class="section-header-linkable">
+            <h2 class="section-title" style="font-size: 3rem; margin-bottom: 60px;">Latest from the Blog</h2>
+            <a href="{% url 'blog:blog_index' %}" class="view-all-link">View All Posts →</a>
+        </div>
         <div class="services-grid">
             {% for post in recent_posts %}
             <div class="service-card" style="flex-basis: 22%; text-align: left;">
@@ -52,8 +80,9 @@
             {% endfor %}
         </div>
     </section>
-    
+
     <div class="projects-section-container" id="projects">
+        <svg id="connector-svg"></svg>
         <section class="projects-section">
             <h2 class="section-title">Primary Projects</h2>
             {% for project in primary_projects %}

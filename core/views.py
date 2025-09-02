@@ -27,6 +27,8 @@ def home_view(request):
         Service(icon='design', title='Graphic Design', description='Visually compelling brand identities, UI/UX, and marketing materials that capture attention and tell your story.')
     ]
     
+    bento_items = BentoGridItem.objects.all()
+
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2
 
@@ -34,6 +36,7 @@ def home_view(request):
         'primary_projects': primary_projects,
         'secondary_projects': secondary_projects,
         'services': services_data,
+        'bento_items': bento_items,
         'recent_posts': recent_posts,
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,

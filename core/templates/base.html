@@ -8,7 +8,19 @@
     <meta name="description" content="{{ site_config.meta_description }}">
     <meta name="keywords" content="{{ site_config.meta_keywords }}">
     <meta name="author" content="Dear&Co">
+
+    <!-- ✅ Google Site Verification -->
     <meta name="google-site-verification" content="zevlnVJwsTbhMKdrKkanaT_JNHidO191GdLw6gMtqDc" />
+
+    <!-- ✅ Google Tag Manager -->
+    <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WHXGGGHX');
+    </script>
+    <!-- End Google Tag Manager -->
 
     <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
     <link rel="apple-touch-icon" href="{% static 'img/icon-192x192.png' %}">
@@ -19,8 +31,14 @@
     
     {% block extra_head %}{% endblock %}
 </head>
-
 <body class="{{ body_class }}">
+
+    <!-- ✅ Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WHXGGGHX"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <header id="sticky-header">
         <nav>
@@ -88,10 +106,11 @@
     <div class="floating-widgets">
         <button id="scrollToTopBtn" title="Go to top">↑</button>
         <a href="https://wa.me/{{ site_config.whatsapp }}" id="whatsapp-widget" target="_blank" rel="noopener">
+            <!-- WhatsApp Icon -->
             <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--icomoon-free" preserveAspectRatio="xMidYMid meet"><path d="M22.339 17.445c-.275-.138-1.625-.802-1.877-.893-.252-.091-.436-.138-.62.138-.184.275-.709.893-.87.1.069-.184.368-.46.62-.751s.169-.552.252-.921.042-1.688-.237-1.877c-.275-.184-.62-.184-.87-.184-.252 0-1.65.62-2.884 2.884-1.234 2.264-1.234 2.884-1.234 2.884s-1.107-.123-2.222-.656c-2.45-1.173-3.088-2.529-3.088-2.529s-1.107 1.481.275 3.315c1.382 1.833 2.222 3.447 3.447 4.562s2.529 1.107 4.562 1.107c2.033 0 3.315-1.107 3.315-1.107s.275-2.222.138-2.529c-.138-.308-.308-.436-.656-.436h-.436zm-6.339 14.555c-8.835 0-16-7.165-16-16s7.165-16 16-16 16 7.165 16 16-7.165 16-16 16zm0-30c-7.73 0-14 6.27-14 14s6.27 14 14 14 14-6.27 14-14-6.27-14-14-14z" fill="currentColor"></path></svg>
         </a>
         <button id="chatbot-toggle">
-             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="currentColor"></path></svg>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="currentColor"></path></svg>
         </button>
         <button id="darkModeToggle">🌙</button>
     </div>

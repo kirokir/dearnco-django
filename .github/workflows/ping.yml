@@ -2,7 +2,7 @@ name: Keep Render Service Alive
 
 on:
   schedule:
-    - cron: "*/14 * * * *"
+    - cron: "*/14 * * * *"   # every 14 minutes
   workflow_dispatch:
 
 jobs:
@@ -11,8 +11,12 @@ jobs:
     steps:
       - name: Ping Render Subdomain
         run: |
-          curl -sS "https://dearnco-django.onrender.com" || echo "Subdomain ping failed"
+          curl -o /dev/null -sS -w "Subdomain: %{http_code}\n" "https://dearnco-django.onrender.com" || true
 
-      - name: Ping Custom Domain
+      - name: Ping Custom Domain (dearnco.is-a.dev)
         run: |
-          curl -sS "https://dearnco.is-a.dev" || echo "Custom domain ping failed"
+          curl -o /dev/null -sS -w "Custom (dearnco): %{http_code}\n" "https://dearnco.is-a.dev" || true
+
+      - name: Ping Custom Domain (dear.is-a.dev)
+        run: |
+          curl -o /dev/null -sS -w "Custom (dear): %{http_code}\n" "https://dear.is-a.dev" || true

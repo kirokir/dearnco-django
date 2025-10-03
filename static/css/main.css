@@ -95,3 +95,115 @@ body.dark-mode #bottom-nav { background: var(--secondary-color); border-top: 1px
     .floating-widgets { display: flex; }
 }
 @media (max-width: 480px) { .services-snapshot .container { grid-template-columns: 1fr; } }
+/* ===============================================================
+   BENTO GRID STYLES (NEWLY ADDED)
+=============================================================== */
+.bento-section {
+    padding: 80px 0;
+    background-color: var(--bg-color);
+}
+
+.bento-grid-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* A 6-column grid provides flexibility for spanning */
+    grid-auto-rows: minmax(150px, auto);
+    gap: 1rem;
+    margin-top: 40px;
+}
+
+.bento-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bento-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Adds a dark overlay for text readability */
+.bento-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+    z-index: 1;
+}
+
+.bento-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bento-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+}
+
+.bento-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Responsive adjustments for the bento grid */
+@media (max-width: 992px) {
+    .bento-grid-container {
+        grid-template-columns: repeat(4, 1fr); /* Adjust to 4 columns on tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .bento-grid-container {
+        grid-template-columns: repeat(2, 1fr); /* Adjust to 2 columns on mobile */
+    }
+    .bento-item {
+        /* Ensure all items take up full width on mobile if they are meant to be large */
+        grid-column: span 2 !important; 
+    }
+}
+
+/* ===============================================================
+   FALLBACK AVATAR STYLES (NEWLY ADDED)
+=============================================================== */
+.default-avatar-small {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 8px; /* Same as an img would have */
+}
+
+/* For the larger avatar on the blog detail page */
+.default-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: 15px;
+}

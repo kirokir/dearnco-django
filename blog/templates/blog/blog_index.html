@@ -44,9 +44,9 @@
                         <h4>{{ post.title }}</h4>
                         <p>{{ post.subtitle }}</p>
                         <div class="author-info">
-                            <!-- FIX: Safely handle missing profile images -->
-                            {% if post.author.profile.image %}
-                                <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name }}">
+                            {# FIX: Safely checks for profile and image to prevent crashes #}
+                            {% if post.author.profile and post.author.profile.image %}
+                                <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name|default:post.author.username }}">
                             {% else %}
                                 <div class="default-avatar-small">{{ post.author.username|first|upper }}</div>
                             {% endif %}

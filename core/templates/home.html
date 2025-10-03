@@ -5,10 +5,12 @@
 
 {% block content %}
 <section class="hero">
-    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ site_config.hero_image_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
+    <div class="hero-background-image" style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);"></div>
     <div class="hero-content">
         <div class="logo-container">
+            {% if site_config.logo %}
             <img src="{{ site_config.logo.url }}" alt="Dear&Co Logo" id="floating-logo">
+            {% endif %}
         </div>
         <div class="hero-main-text">
             <h1>let's build<br>something<br>that matters.</h1>
@@ -22,8 +24,12 @@
         <div class="hero-contact-info">
             <p>hit us on</p>
             <div class="social-icons">
-                <a href="https://wa.me/{{ site_config.whatsapp }}"><img src="{% static 'img/whatsapp-icon-grey.svg' %}" alt="WhatsApp"></a>
-                <a href="{{ site_config.instagram_url }}"><img src="{% static 'img/instagram-icon-grey.svg' %}" alt="Instagram"></a>
+                {% if site_config.whatsapp %}
+                <a href="{{ site_config.whatsapp }}"><img src="{% static 'img/whatsapp-icon-grey.svg' %}" alt="WhatsApp"></a>
+                {% endif %}
+                {% if site_config.instagram %}
+                <a href="{{ site_config.instagram }}"><img src="{% static 'img/instagram-icon-grey.svg' %}" alt="Instagram"></a>
+                {% endif %}
             </div>
         </div>
         <div class="hero-footer-text">
@@ -42,9 +48,39 @@
             <p>{{ service.description }}</p>
             <a href="#">Read more ›</a>
         </div>
+        {% empty %}
+        <p>Services will be listed here soon.</p>
         {% endfor %}
     </div>
 </section>
+
+<!-- =================================================================
+     START: BENTO GRID SECTION (FULLY IMPLEMENTED)
+     This section renders the dynamic bento grid items.
+================================================================== -->
+<section class="bento-section">
+    <div class="container">
+        <h2 class="section-title">OUR CAPABILITIES</h2>
+        <div class="bento-grid-container">
+            {% for item in bento_items %}
+                <a href="{{ item.link_url|default:'#' }}" target="_blank" rel="noopener" class="bento-item animate-on-scroll" 
+                   style="grid-column: span {{ item.column_span }}; 
+                          grid-row: span {{ item.row_span }}; 
+                          background-image: url('{{ item.image.url }}');">
+                    <div class="bento-content">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.subtitle }}</p>
+                    </div>
+                </a>
+            {% empty %}
+                <p style="text-align: center; grid-column: 1 / -1;">Bento Grid items will be displayed here once configured in the admin panel.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- =================================================================
+     END: BENTO GRID SECTION
+================================================================== -->
 
 <section class="primary-projects">
     <h2 class="section-title">PRIMARY PROJECTS</h2>
@@ -153,6 +189,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{# This script tag is populated by the context processor to power the chatbot #}
 <script id="chatbot-data" type="application/json">
     {{ chatbot_qas_json|safe }}
 </script>

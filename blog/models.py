@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.urls import reverse # Import reverse
 from tinymce.models import HTMLField
 from cloudinary.models import CloudinaryField
 import uuid
@@ -28,12 +29,14 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
+    # FIX: Added the get_absolute_url method required by the template.
+    def get_absolute_url(self):
+        return reverse('blog:blog_post_detail', kwargs={'slug': self.slug})
+
     def save(self, *args, **kwargs):
-        # IMPROVEMENT: Make slug generation robust against duplicates.
         if not self.slug:
             base_slug = slugify(self.title)
             unique_slug = base_slug
-            # Check if slug exists and append a unique suffix if it does
             while BlogPost.objects.filter(slug=unique_slug).exists():
                 unique_slug = f'{base_slug}-{uuid.uuid4().hex[:4]}'
             self.slug = unique_slug

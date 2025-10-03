@@ -4,8 +4,13 @@ from .models import BlogPost, Tag
 import random
 
 def blog_index_view(request):
-    # The optimized query for the list view
-    all_posts = BlogPost.objects.select_related('author').prefetch_related('tags').filter(published_date__lte=timezone.now()).order_by('-published_date')
+    """
+    Handles the main blog page, showing featured and non-featured posts.
+    """
+    # Optimized query to fetch related author and tags efficiently.
+    all_posts = BlogPost.objects.select_related('author').prefetch_related('tags').filter(
+        published_date__lte=timezone.now()
+    ).order_by('-published_date')
     
     featured_posts = list(all_posts.filter(is_featured=True))
     random.shuffle(featured_posts)
@@ -22,8 +27,11 @@ def blog_index_view(request):
 
 
 def blog_post_detail_view(request, slug):
-    # CRITICAL FIX: Simplified the query to be safer.
-    # We only select the author, and let the template handle the profile check.
+    """
+    Handles displaying a single blog post.
+    """
+    # FIX: Simplified the query for safety. It no longer joins on 'author__profile'.
+    # The bulletproof template will handle checking for the profile's existence.
     post = get_object_or_404(
         BlogPost.objects.select_related('author'),
         slug=slug, 

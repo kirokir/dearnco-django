@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.utils import timezone # Import timezone
+from django.utils import timezone
 from .models import BlogPost, Tag
 import random
 
 def blog_index_view(request):
-    # CORRECTED FILTER: Use published_date__lte instead of is_published
-    all_posts = BlogPost.objects.select_related('author__profile').prefetch_related('tags').filter(published_date__lte=timezone.now()).order_by('-published_date')
+    # Use select_related and prefetch_related for high performance
+    all_posts = BlogPost.objects.select_related('author', 'author__profile').prefetch_related('tags').filter(published_date__lte=timezone.now()).order_by('-published_date')
     
     featured_posts = list(all_posts.filter(is_featured=True))
     random.shuffle(featured_posts)
@@ -21,9 +21,9 @@ def blog_index_view(request):
     return render(request, 'blog/blog_index.html', context)
 
 def blog_post_detail_view(request, slug):
-    # CORRECTED FILTER: Use published_date__lte instead of is_published
+    # The query is optimized to fetch author and profile in one go
     post = get_object_or_404(
-        BlogPost.objects.select_related('author__profile').prefetch_related('tags'),
+        BlogPost.objects.select_related('author', 'author__profile').prefetch_related('tags'),
         slug=slug, 
         published_date__lte=timezone.now()
     )

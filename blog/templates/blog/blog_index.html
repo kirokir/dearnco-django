@@ -44,7 +44,7 @@
                         <h4>{{ post.title }}</h4>
                         <p>{{ post.subtitle }}</p>
                         <div class="author-info">
-                            {# FIX: Safely checks for profile and image to prevent crashes #}
+                            {# BULLETPROOF FIX: This safely checks for the profile and then the image, preventing any crashes. #}
                             {% if post.author.profile and post.author.profile.image %}
                                 <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name|default:post.author.username }}">
                             {% else %}

@@ -15,9 +15,9 @@
             <h1>{{ post.title }}</h1>
             <h2>{{ post.subtitle }}</h2>
             <div class="author-info">
-                {# FIX: Check for the profile itself, THEN the image. #}
+                {# BULLETPROOF FIX: This safely checks for the profile and then the image, preventing any crashes. #}
                 {% if post.author.profile and post.author.profile.image %}
-                    <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name }}">
+                    <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name|default:post.author.username }}">
                 {% else %}
                     <div class="default-avatar">{{ post.author.username|first|upper }}</div>
                 {% endif %}

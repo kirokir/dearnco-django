@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from tinymce.models import HTMLField
 from cloudinary.models import CloudinaryField
+import uuid
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -28,6 +29,12 @@ class BlogPost(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        # IMPROVEMENT: Make slug generation robust against duplicates.
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title)
+            unique_slug = base_slug
+            # Check if slug exists and append a unique suffix if it does
+            while BlogPost.objects.filter(slug=unique_slug).exists():
+                unique_slug = f'{base_slug}-{uuid.uuid4().hex[:4]}'
+            self.slug = unique_slug
         super().save(*args, **kwargs)

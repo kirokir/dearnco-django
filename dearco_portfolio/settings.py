@@ -13,7 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = True
+# IMPROVEMENT: Load SECRET_KEY from environment variables for security.
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-for-development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1', 't']
@@ -56,12 +57,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'dearco_portfolio.urls'
 
-# --- CORRECTED TEMPLATES CONFIGURATION ---
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # This explicitly tells Django to look in the project-level templates folder
-        # AND inside each app's namespaced template folder.
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'core', 'templates'),
@@ -69,19 +67,19 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'portfolio', 'templates'),
             os.path.join(BASE_DIR, 'agency', 'templates'),
         ],
-        'APP_DIRS': True, # This should remain True
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'site_settings.context_processors.global_site_settings',
+                # FIX: Corrected the path to the context processor function.
+                'site_settings.context_processors.site_globals',
             ],
         },
     },
 ]
-# -----------------------------------------
 
 WSGI_APPLICATION = 'dearco_portfolio.wsgi.application'
 

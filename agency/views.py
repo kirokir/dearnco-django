@@ -7,7 +7,8 @@ def about_view(request):
     """
     Handles the logic for the About page, displaying team members.
     """
-    team_members = TeamMember.objects.all().order_by('order')
+    # FIX: Corrected field name from 'order' to 'display_order'
+    team_members = TeamMember.objects.all().order_by('display_order')
     context = {
         'team_members': team_members,
     }
@@ -17,7 +18,8 @@ def join_us_view(request):
     """
     Handles the logic for the Join Us/Careers page, displaying open job positions.
     """
-    job_positions = JobPosition.objects.filter(is_active=True).order_by('created_at')
+    # FIX: Corrected field name from 'created_at' to '-posted_at' for descending order
+    job_positions = JobPosition.objects.filter(is_active=True).order_by('-posted_at')
     context = {
         'job_positions': job_positions,
     }
@@ -34,7 +36,7 @@ def contact_submit_view(request):
             StrategyCallLead.objects.create(
                 name=name,
                 email=email,
-                interest=service,
+                interest=service, # This will now save correctly
                 message=message_text
             )
             messages.success(request, "Thank you! Your message has been received. We'll be in touch shortly.")
@@ -47,9 +49,9 @@ def brochure_download_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         if email:
-            AssessmentLead.objects.create(email=email)
+            AssessmentLead.objects.get_or_create(email=email) # Use get_or_create to avoid duplicate errors
             brochure = Brochure.objects.first()
-            if brochure:
+            if brochure and brochure.pdf_file:
                 return redirect(brochure.pdf_file.url)
             else:
                 messages.error(request, "Sorry, the brochure is currently unavailable.")

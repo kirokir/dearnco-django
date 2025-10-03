@@ -44,8 +44,13 @@
                         <h4>{{ post.title }}</h4>
                         <p>{{ post.subtitle }}</p>
                         <div class="author-info">
-                            <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name }}">
-                            <span>{{ post.author.get_full_name }} &bull; {{ post.published_date|date:"M d, Y" }}</span>
+                            <!-- FIX: Safely handle missing profile images -->
+                            {% if post.author.profile.image %}
+                                <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.get_full_name }}">
+                            {% else %}
+                                <div class="default-avatar-small">{{ post.author.username|first|upper }}</div>
+                            {% endif %}
+                            <span>{{ post.author.get_full_name|default:post.author.username }} &bull; {{ post.published_date|date:"M d, Y" }}</span>
                         </div>
                     </div>
                 </a>

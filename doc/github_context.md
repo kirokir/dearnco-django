@@ -24,6 +24,7 @@
 ### 1. Critical Hotfixes (Post-Deployment)
 - **Fixed Homepage 500 Error:** Added safety checks for nullable `hero_image` and `project.image`. Removed duplicate/broken chatbot script.
 - **Fixed Blog 500 Error:** Bumped Service Worker cache to `v2` to force client-side update.
+- **Fixed Global 500 Error:** Added missing `django.contrib.sitemaps` to `INSTALLED_APPS` (was causing crash on URL loading).
 
 ### 2. Major Bug Fixes (16 Items)
 - **Infrastructure:** Fixed Render wake-up workflow (`ping.yml`) to prevent cold starts.

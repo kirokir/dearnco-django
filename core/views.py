@@ -12,6 +12,8 @@ class Service:
         self.title = title
         self.description = description
 
+from django.utils import timezone
+
 def home_view(request):
     primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
     secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
@@ -28,7 +30,7 @@ def home_view(request):
     ]
     
     bento_items = BentoGridItem.objects.all().order_by('display_order')
-    featured_posts = BlogPost.objects.filter(is_published=True, is_featured=True).order_by('-published_date')[:3]
+    featured_posts = BlogPost.objects.filter(published_date__lte=timezone.now(), is_featured=True).order_by('-published_date')[:3]
 
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2

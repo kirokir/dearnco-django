@@ -1,5 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
+from django.utils import timezone
 from blog.models import BlogPost
 
 
@@ -21,7 +22,7 @@ class BlogPostSitemap(Sitemap):
     priority = 0.8
 
     def items(self):
-        return BlogPost.objects.filter(is_published=True).order_by('-published_date')
+        return BlogPost.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
     def lastmod(self, obj):
         return obj.published_date

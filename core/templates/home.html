@@ -6,7 +6,7 @@
 {% block content %}
 <section class="hero">
     <div class="hero-background-image"
-        style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);">
+        style="{% if site_config.hero_image %}background-image: url('{{ site_config.hero_image.url }}');{% endif %} opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);">
     </div>
     <div class="hero-content">
         <div class="logo-container">
@@ -107,7 +107,13 @@
         <div class="secondary-projects-grid">
             {% for project in secondary_projects %}
             <div class="project-card secondary animate-on-scroll">
+                {% if project.image %}
                 <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                {% else %}
+                <div class="default-project-image"
+                    style="height: 200px; background-color: #eee; display: flex; align-items: center; justify-content: center; color: #888;">
+                    No Image</div>
+                {% endif %}
                 <div class="card-content">
                     <h4>{{ project.title }}</h4>
                     <p>{{ project.description|truncatewords:15 }}</p>

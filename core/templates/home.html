@@ -163,7 +163,13 @@
                 {% for post in featured_posts %}
                 <div class="swiper-slide">
                     <a href="{{ post.get_absolute_url }}" class="blog-card featured">
+                        {% if post.header_image and post.header_image.url %}
                         <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                        <div class="default-blog-image"
+                            style="height: 200px; background-color: #333; display: flex; align-items: center; justify-content: center; color: #555;">
+                            No Image</div>
+                        {% endif %}
                         <div class="card-content">
                             <span class="tag">{{ post.tags.first.name|default:'Featured' }}</span>
                             <h4>{{ post.title }}</h4>
@@ -191,11 +197,4 @@
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block extra_js %}
-{# This script tag is populated by the context processor to power the chatbot #}
-<script id="chatbot-data" type="application/json">
-    {{ chatbot_qas_json|safe }}
-</script>
 {% endblock %}

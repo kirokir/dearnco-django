@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dearco-cache-v1';
+const CACHE_NAME = 'dearco-cache-v2';
 const urlsToCache = [
   '/',
   '/static/css/main.css',
@@ -25,6 +25,6 @@ self.addEventListener('fetch', event => {
         }
         return fetch(event.request);
       }
-    )
+      )
   );
 });

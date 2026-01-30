@@ -10,6 +10,7 @@
         text-align: center;
         background-color: var(--bg-color);
     }
+
     .team-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -17,6 +18,7 @@
         max-width: 1200px;
         margin: 0 auto;
     }
+
     .team-member-card {
         background-color: var(--content-bg);
         border: 1px solid var(--border-color);
@@ -24,10 +26,12 @@
         border-radius: 8px;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
+
     .team-member-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     }
+
     .team-member-card img {
         width: 150px;
         height: 150px;
@@ -36,12 +40,14 @@
         margin-bottom: 1rem;
         border: 3px solid var(--primary-red);
     }
+
     .team-member-card h3 {
         font-size: 1.5rem;
         font-weight: 900;
         margin-bottom: 0.25rem;
         color: var(--text-dark);
     }
+
     .team-member-card p {
         font-size: 1rem;
         color: var(--text-light);
@@ -55,7 +61,10 @@
     <div class="team-grid">
         {% for member in team_members %}
         <div class="team-member-card">
-            <img src="{{ member.image.url }}" alt="{{ member.name }}">
+            {% if member.image %}<img src="{{ member.image.url }}" alt="{{ member.name }}">{% else %}<div
+                class="default-avatar"
+                style="width:150px;height:150px;border-radius:50%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;margin:0 auto 1rem;">
+                {{ member.name|first|upper }}</div>{% endif %}
             <h3>{{ member.name }}</h3>
             <p>{{ member.role }}</p>
         </div>

@@ -28,6 +28,7 @@ def home_view(request):
     ]
     
     bento_items = BentoGridItem.objects.all().order_by('display_order')
+    featured_posts = BlogPost.objects.filter(is_published=True, is_featured=True).order_by('-published_date')[:3]
 
     site_config = SiteConfiguration.load()
     hero_opacity_value = site_config.hero_image_opacity / 100.0 if site_config else 0.2
@@ -38,6 +39,7 @@ def home_view(request):
         'services': services_data,
         'bento_items': bento_items,
         'recent_posts': recent_posts,
+        'featured_posts': featured_posts,
         'is_homepage': True,
         'hero_opacity': hero_opacity_value,
     }
@@ -60,7 +62,14 @@ def faq_view(request):
     return render(request, 'core/faq.html', {'breadcrumbs': breadcrumbs})
 
 def robots_txt(request):
-    lines = ["User-Agent: *", "Disallow: /admin/"]
+    host = request.build_absolute_uri('/')[:-1]
+    lines = [
+        "User-Agent: *",
+        "Disallow: /admin/",
+        "Disallow: /tinymce/",
+        "",
+        f"Sitemap: {host}/sitemap.xml"
+    ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
 class ServiceWorkerView(TemplateView):

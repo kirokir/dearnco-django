@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,11 +15,14 @@
 
     <!-- ✅ Google Tag Manager -->
     <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-WHXGGGHX');
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WHXGGGHX');
     </script>
     <!-- End Google Tag Manager -->
 
@@ -28,15 +32,32 @@
     <meta name="theme-color" content="#1a1a2e">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    
+
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Dear&Co",
+        "url": "{{ request.build_absolute_uri }}",
+        "logo": "{% if site_config.logo %}{{ request.scheme }}://{{ request.get_host }}{{ site_config.logo.url }}{% endif %}",
+        "description": "{{ site_config.meta_description|default:'A premium digital agency specializing in SaaS, AI, and mobile app development.' }}",
+        "email": "{{ site_config.email }}",
+        "telephone": "{{ site_config.phone_number }}",
+        "sameAs": [
+            "{{ site_config.linkedin }}"
+        ]
+    }
+    </script>
     {% block extra_head %}{% endblock %}
 </head>
+
 <body class="{{ body_class }}">
 
     <!-- ✅ Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WHXGGGHX"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WHXGGGHX" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
@@ -54,7 +75,8 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="site-footer" style="background-image: url('{{ site_config.footer_background_image.url }}');">
+    <footer class="site-footer" {% if site_config.footer_background_image %}
+        style="background-image: url('{{ site_config.footer_background_image.url }}');" {% endif %}>
         <div class="footer-container">
             <div class="footer-column">
                 <h3>Your next project starts here.</h3>
@@ -75,7 +97,8 @@
                 <h4>Connect</h4>
                 <address>
                     {% for location in office_locations %}
-                        <a href="{{ location.google_maps_link }}" target="_blank" rel="noopener">{{ location.address }}</a><br>
+                    <a href="{{ location.google_maps_link }}" target="_blank" rel="noopener">{{ location.address
+                        }}</a><br>
                     {% endfor %}
                 </address>
                 <div class="footer-socials">
@@ -90,29 +113,52 @@
             <p>&copy; {% now "Y" %} Dear&Co. All rights reserved.</p>
         </div>
     </footer>
-    
+
     <div id="game-indicator">Game Below</div>
     <footer id="game-footer">
         <h2>CATCH ME IF YOU CAN!</h2>
         <div class="game-area">
-            <div class="hole"><div class="mole"></div></div>
-            <div class="hole"><div class="mole"></div></div>
-            <div class="hole"><div class="mole"></div></div>
-            <div class="hole"><div class="mole"></div></div>
-            <div class="hole"><div class="mole"></div></div>
-            <div class="hole"><div class="mole"></div></div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
         </div>
     </footer>
 
     <div class="floating-widgets">
-        <button id="scrollToTopBtn" title="Go to top">↑</button>
-        <a href="https://wa.me/{{ site_config.phone_number }}" id="whatsapp-widget" target="_blank" rel="noopener">
-            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--icomoon-free" preserveAspectRatio="xMidYMid meet"><path d="M22.339 17.445c-.275-.138-1.625-.802-1.877-.893-.252-.091-.436-.138-.62.138-.184.275-.709.893-.87.1.069-.184.368-.46.62-.751s.169-.552.252-.921.042-1.688-.237-1.877c-.275-.184-.62-.184-.87-.184-.252 0-1.65.62-2.884 2.884-1.234 2.264-1.234 2.884-1.234 2.884s-1.107-.123-2.222-.656c-2.45-1.173-3.088-2.529-3.088-2.529s-1.107 1.481.275 3.315c1.382 1.833 2.222 3.447 3.447 4.562s2.529 1.107 4.562 1.107c2.033 0 3.315-1.107 3.315-1.107s.275-2.222.138-2.529c-.138-.308-.308-.436-.656-.436h-.436zm-6.339 14.555c-8.835 0-16-7.165-16-16s7.165-16 16-16 16 7.165 16 16-7.165 16-16 16zm0-30c-7.73 0-14 6.27-14 14s6.27 14 14 14 14-6.27 14-14-6.27-14-14-14z" fill="currentColor"></path></svg>
+        <button id="scrollToTopBtn" title="Go to top" aria-label="Scroll to top">↑</button>
+        <a href="https://wa.me/{{ site_config.phone_number }}" id="whatsapp-widget" target="_blank" rel="noopener"
+            aria-label="Contact us on WhatsApp">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
+                class="iconify iconify--icomoon-free" preserveAspectRatio="xMidYMid meet">
+                <path
+                    d="M22.339 17.445c-.275-.138-1.625-.802-1.877-.893-.252-.091-.436-.138-.62.138-.184.275-.709.893-.87.1.069-.184.368-.46.62-.751s.169-.552.252-.921.042-1.688-.237-1.877c-.275-.184-.62-.184-.87-.184-.252 0-1.65.62-2.884 2.884-1.234 2.264-1.234 2.884-1.234 2.884s-1.107-.123-2.222-.656c-2.45-1.173-3.088-2.529-3.088-2.529s-1.107 1.481.275 3.315c1.382 1.833 2.222 3.447 3.447 4.562s2.529 1.107 4.562 1.107c2.033 0 3.315-1.107 3.315-1.107s.275-2.222.138-2.529c-.138-.308-.308-.436-.656-.436h-.436zm-6.339 14.555c-8.835 0-16-7.165-16-16s7.165-16 16-16 16 7.165 16 16-7.165 16-16 16zm0-30c-7.73 0-14 6.27-14 14s6.27 14 14 14 14-6.27 14-14-6.27-14-14-14z"
+                    fill="currentColor"></path>
+            </svg>
         </a>
-        <button id="chatbot-toggle">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="currentColor"></path></svg>
+        <button id="chatbot-toggle" aria-label="Open chatbot">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
+                class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet">
+                <path
+                    d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                    fill="currentColor"></path>
+            </svg>
         </button>
-        <button id="darkModeToggle">🌙</button>
+        <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
     </div>
 
     <div id="pwa-install-prompt" class="pwa-prompt" style="display: none;">
@@ -134,7 +180,7 @@
             <button id="chatbot-send">Send</button>
         </div>
     </div>
-    
+
     <nav id="bottom-nav">
         <a href="{% url 'core:home' %}">Home</a>
         <a href="{% url 'agency:about' %}">About</a>
@@ -142,10 +188,8 @@
         <a href="#">Work</a>
         <a href="#" class="cta">Let's Talk</a>
     </nav>
-    
-    <script id="chatbot-data" type="application/json">
-        {{ chatbot_qas_json|safe }}
-    </script>
+
+    {{ chatbot_qas_json|json_script:"chatbot-data" }}
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
@@ -166,4 +210,5 @@
     </script>
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>

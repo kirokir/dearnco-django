@@ -7,8 +7,10 @@
 <section class="join-us-section">
     <div class="container">
         <h2 class="section-title">DO THE BEST WORK OF YOUR CAREER</h2>
-        <p class="section-subtitle">We're building a team of relentless problem-solvers who are obsessed with quality and driven by client success. We don’t have ping-pong tables, but we do offer work that has a real, measurable impact.</p>
-        
+        <p class="section-subtitle">We're building a team of relentless problem-solvers who are obsessed with quality
+            and driven by client success. We don’t have ping-pong tables, but we do offer work that has a real,
+            measurable impact.</p>
+
         <h3 class="positions-heading">Open Positions</h3>
         <div class="open-positions">
             {% for job in job_positions %}
@@ -18,16 +20,25 @@
                     <span class="job-location">{{ job.location_tags }}</span>
                     <span class="job-type">{{ job.employment_type }}</span>
                 </div>
-                <a href="#" class="view-details-btn">View Details</a>
+                <details class="job-details">
+                    <summary class="view-details-btn">View Details</summary>
+                    <div class="job-description">
+                        {{ job.description|safe }}
+                        <a href="mailto:{{ site_config.email }}?subject=Application for {{ job.title }}"
+                            class="apply-btn">Apply Now</a>
+                    </div>
+                </details>
             </div>
             {% empty %}
             <p style="text-align: center;">There are no open positions at this time. Check back soon!</p>
             {% endfor %}
         </div>
-        
+
         <div class="perfect-fit-callout">
             <h4>Don't see the perfect fit?</h4>
-            <p>We're always looking for exceptional talent. If you believe in our mission and think you can contribute, we want to hear from you. Send your resume and a brief note on why you'd be a great addition to our team.</p>
+            <p>We're always looking for exceptional talent. If you believe in our mission and think you can contribute,
+                we want to hear from you. Send your resume and a brief note on why you'd be a great addition to our
+                team.</p>
             <a href="mailto:{{ site_config.email }}" class="get-in-touch-btn">Get in Touch</a>
         </div>
     </div>

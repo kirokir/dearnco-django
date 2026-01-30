@@ -26,6 +26,8 @@
 - **Fixed Blog 500 Error:** Bumped Service Worker cache to `v2` to force client-side update.
 - **Fixed Global 500 Error:** Added missing `django.contrib.sitemaps` to `INSTALLED_APPS` (was causing crash on URL loading).
 - **Fixed Homepage 500 Error (Traceback):** Replaced invalid filter `is_published=True` with correct `published_date__lte=timezone.now()` in `core/views.py`.
+- **Fixed Global 500 Error (Template):** Corrected invalid `{% extends 'core/base.html' %}` to `{% extends 'base.html' %}` in all templates.
+- **Fixed Missing CSS:** Disabled `DEBUG` mode to ensure `WhiteNoise` serves static files correctly in production.
 
 ### 2. Major Bug Fixes (16 Items)
 - **Infrastructure:** Fixed Render wake-up workflow (`ping.yml`) to prevent cold starts.

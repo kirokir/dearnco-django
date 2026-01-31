@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
     'cloudinary',
     'tinymce',
     

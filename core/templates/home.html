@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 
 {% block title %}Dear&Co | Home{% endblock %}
@@ -6,7 +6,7 @@
 {% block content %}
 <section class="hero">
     <div class="hero-background-image"
-        style="{% if site_config.hero_image %}background-image: url('{{ site_config.hero_image.url }}');{% endif %} opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);">
+        style="background-image: url('{{ site_config.hero_image.url }}'); opacity: {{ hero_opacity }}; filter: blur({{ site_config.hero_image_blur }}px);">
     </div>
     <div class="hero-content">
         <div class="logo-container">
@@ -69,8 +69,8 @@
             {% for item in bento_items %}
             <a href="{{ item.link_url|default:'#' }}" target="_blank" rel="noopener"
                 class="bento-item animate-on-scroll" style="grid-column: span {{ item.column_span }}; 
-                          grid-row: span {{ item.row_span }};{% if item.image %} 
-                          background-image: url('{{ item.image.url }}');{% endif %}">
+                          grid-row: span {{ item.row_span }}; 
+                          background-image: url('{{ item.image.url }}');">
                 <div class="bento-content">
                     <h3>{{ item.title }}</h3>
                     <p>{{ item.subtitle }}</p>
@@ -107,13 +107,7 @@
         <div class="secondary-projects-grid">
             {% for project in secondary_projects %}
             <div class="project-card secondary animate-on-scroll">
-                {% if project.image %}
                 <img src="{{ project.image.url }}" alt="{{ project.title }}">
-                {% else %}
-                <div class="default-project-image"
-                    style="height: 200px; background-color: #eee; display: flex; align-items: center; justify-content: center; color: #888;">
-                    No Image</div>
-                {% endif %}
                 <div class="card-content">
                     <h4>{{ project.title }}</h4>
                     <p>{{ project.description|truncatewords:15 }}</p>
@@ -169,13 +163,7 @@
                 {% for post in featured_posts %}
                 <div class="swiper-slide">
                     <a href="{{ post.get_absolute_url }}" class="blog-card featured">
-                        {% if post.header_image and post.header_image.url %}
                         <img src="{{ post.header_image.url }}" alt="{{ post.title }}">
-                        {% else %}
-                        <div class="default-blog-image"
-                            style="height: 200px; background-color: #333; display: flex; align-items: center; justify-content: center; color: #555;">
-                            No Image</div>
-                        {% endif %}
                         <div class="card-content">
                             <span class="tag">{{ post.tags.first.name|default:'Featured' }}</span>
                             <h4>{{ post.title }}</h4>
@@ -203,4 +191,11 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+{# This script tag is populated by the context processor to power the chatbot #}
+<script id="chatbot-data" type="application/json">
+    {{ chatbot_qas_json|safe }}
+</script>
 {% endblock %}

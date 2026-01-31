@@ -29,24 +29,14 @@ def contact_submit_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
-        company_name = request.POST.get('company_name', '')
-        revenue_range = request.POST.get('revenue_range', '')
-        interest = request.POST.get('interest', '')
-        biggest_challenge = request.POST.get('biggest_challenge', '')
-        success_goal = request.POST.get('success_goal', '')
-        ideal_timeline = request.POST.get('ideal_timeline', '')
-        message_text = request.POST.get('message', '')
+        service = request.POST.get('service')
+        message_text = request.POST.get('message')
 
-        if name and email:
+        if name and email and message_text:
             StrategyCallLead.objects.create(
                 name=name,
                 email=email,
-                company_name=company_name,
-                revenue_range=revenue_range,
-                interest=interest,
-                biggest_challenge=biggest_challenge,
-                success_goal=success_goal,
-                ideal_timeline=ideal_timeline,
+                interest=service, # This will now save correctly
                 message=message_text
             )
             messages.success(request, "Thank you! Your message has been received. We'll be in touch shortly.")

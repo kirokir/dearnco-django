@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
     const stickyHeader = document.getElementById('sticky-header');
     const bottomNav = document.getElementById('bottom-nav');
     let lastScrollY = window.scrollY;
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             svg.appendChild(path);
         }
     };
-    
+
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (entry.target.classList.contains('primary')) {
                     const order = parseInt(entry.target.dataset.order, 10);
                     const path = document.querySelector(`#connector-svg path:nth-of-type(${order + 1})`);
-                    if(path) {
+                    if (path) {
                         path.style.transition = 'stroke-dashoffset 2s ease-out';
                         path.style.strokeDashoffset = '0';
                     }
@@ -143,17 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.animate-on-scroll').forEach(el => animationObserver.observe(el));
-    
+
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     if (scrollToTopBtn) {
-        window.onscroll = function() {
+        window.onscroll = function () {
             if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
                 scrollToTopBtn.style.display = "block";
             } else {
                 scrollToTopBtn.style.display = "none";
             }
         };
-        scrollToTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+        scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
     const holes = document.querySelectorAll('.hole');
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!timeUp) peep();
         }, time);
     }
-    
+
     const gameFooter = document.getElementById('game-footer');
     const gameObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => timeUp = true, 30000);
             }
         });
-    }, {threshold: 0.1});
-    if(gameFooter) gameObserver.observe(gameFooter);
+    }, { threshold: 0.1 });
+    if (gameFooter) gameObserver.observe(gameFooter);
 
     if (document.querySelector('.featured-posts-slider')) {
         new Swiper('.featured-posts-slider', {
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatbotInput = document.getElementById('chatbot-input');
     const chatbotSend = document.getElementById('chatbot-send');
     let chatbotQAs = [];
-    try { chatbotQAs = JSON.parse(document.getElementById('chatbot-data').textContent); } catch (e) {}
+    try { chatbotQAs = JSON.parse(document.getElementById('chatbot-data').textContent); } catch (e) { }
 
     if (chatbotToggle) chatbotToggle.addEventListener('click', () => chatbotWindow.style.display = 'flex');
     if (closeChatbot) closeChatbot.addEventListener('click', () => chatbotWindow.style.display = 'none');
@@ -242,20 +242,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chatbotSend) chatbotSend.addEventListener('click', handleChat);
     if (chatbotInput) chatbotInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') handleChat(); });
 
-    // Tag filter dropdown
-    const tagSelect = document.getElementById('tag-select');
-    if (tagSelect) {
-        tagSelect.addEventListener('change', (e) => {
-            const tag = e.target.value;
-            const posts = document.querySelectorAll('.blog-grid .blog-card-wrapper');
-            posts.forEach(post => {
-                const postTags = post.dataset.tags;
-                if (tag === 'all' || (postTags && postTags.includes(tag))) {
-                    post.style.display = 'block';
-                } else {
-                    post.style.display = 'none';
-                }
-            });
+    const filterContainer = document.querySelector('.tag-filters');
+    if (filterContainer) {
+        filterContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.tag-filter')) {
+                filterContainer.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+                const tag = e.target.dataset.tag;
+                const posts = document.querySelectorAll('.blog-grid .blog-card-wrapper');
+                posts.forEach(post => {
+                    const postTags = post.dataset.tags;
+                    if (tag === 'all' || (postTags && postTags.includes(tag))) {
+                        post.style.display = 'block';
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+            }
         });
     }
 });

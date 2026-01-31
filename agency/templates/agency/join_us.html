@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 
 {% block title %}Join Us | Dear&Co{% endblock %}
@@ -20,14 +20,7 @@
                     <span class="job-location">{{ job.location_tags }}</span>
                     <span class="job-type">{{ job.employment_type }}</span>
                 </div>
-                <details class="job-details">
-                    <summary class="view-details-btn">View Details</summary>
-                    <div class="job-description">
-                        {{ job.description|safe }}
-                        <a href="mailto:{{ site_config.email }}?subject=Application for {{ job.title }}"
-                            class="apply-btn">Apply Now</a>
-                    </div>
-                </details>
+                <a href="#" class="view-details-btn">View Details</a>
             </div>
             {% empty %}
             <p style="text-align: center;">There are no open positions at this time. Check back soon!</p>

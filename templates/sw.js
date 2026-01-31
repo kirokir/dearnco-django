@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dearco-cache-v2';
+const CACHE_NAME = 'dearco-cache-v1';
 const urlsToCache = [
   '/',
   '/static/css/main.css',

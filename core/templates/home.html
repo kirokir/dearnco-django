@@ -194,8 +194,4 @@
 {% endblock %}
 
 {% block extra_js %}
-{# This script tag is populated by the context processor to power the chatbot #}
-<script id="chatbot-data" type="application/json">
-    {{ chatbot_qas_json|safe }}
-</script>
 {% endblock %}

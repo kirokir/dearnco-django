@@ -198,50 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const chatbotToggle = document.getElementById('chatbot-toggle');
-    const chatbotWindow = document.getElementById('chatbot-window');
-    const closeChatbot = document.getElementById('close-chatbot');
-    const chatbotMessages = document.getElementById('chatbot-messages');
-    const chatbotInput = document.getElementById('chatbot-input');
-    const chatbotSend = document.getElementById('chatbot-send');
-    let chatbotQAs = [];
-    try { chatbotQAs = JSON.parse(document.getElementById('chatbot-data').textContent); } catch (e) { }
-
-    if (chatbotToggle) chatbotToggle.addEventListener('click', () => chatbotWindow.style.display = 'flex');
-    if (closeChatbot) closeChatbot.addEventListener('click', () => chatbotWindow.style.display = 'none');
-
-    const addMessage = (text, sender) => {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('chat-message', `${sender}-message`);
-        messageElement.textContent = text;
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    };
-
-    const handleChat = () => {
-        const userInput = chatbotInput.value.trim().toLowerCase();
-        if (!userInput) return;
-        addMessage(chatbotInput.value, 'user');
-        chatbotInput.value = '';
-        setTimeout(() => {
-            const typingIndicator = document.createElement('div');
-            typingIndicator.classList.add('chat-message', 'bot-message', 'typing');
-            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-            chatbotMessages.appendChild(typingIndicator);
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            setTimeout(() => {
-                chatbotMessages.removeChild(typingIndicator);
-                let response = "I'm sorry, I don't have information about that. Please try another question.";
-                const match = chatbotQAs.find(qa => userInput.includes(qa.keyword.toLowerCase()));
-                if (match) response = match.answer;
-                addMessage(response, 'bot');
-            }, 1200);
-        }, 300);
-    };
-
-    if (chatbotSend) chatbotSend.addEventListener('click', handleChat);
-    if (chatbotInput) chatbotInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') handleChat(); });
-
     const filterContainer = document.querySelector('.tag-filters');
     if (filterContainer) {
         filterContainer.addEventListener('click', (e) => {

@@ -132,14 +132,6 @@
                     fill="currentColor"></path>
             </svg>
         </a>
-        <button id="chatbot-toggle">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
-                class="iconify iconify--material-symbols" preserveAspectRatio="xMidYMid meet">
-                <path
-                    d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
-                    fill="currentColor"></path>
-            </svg>
-        </button>
         <button id="darkModeToggle">🌙</button>
     </div>
 
@@ -149,19 +141,6 @@
         <button id="pwa-dismiss-button">Later</button>
     </div>
 
-    <div id="chatbot-window" style="display: none;">
-        <div class="chatbot-header">
-            <h3>Dear Bot</h3>
-            <button id="close-chatbot">&times;</button>
-        </div>
-        <div class="chatbot-body">
-            <div id="chatbot-messages"></div>
-        </div>
-        <div class="chatbot-footer">
-            <input type="text" id="chatbot-input" placeholder="Ask a question...">
-            <button id="chatbot-send">Send</button>
-        </div>
-    </div>
 
     <nav id="bottom-nav">
         <a href="{% url 'core:home' %}">Home</a>
@@ -171,9 +150,6 @@
         <a href="#" class="cta">Let's Talk</a>
     </nav>
 
-    <script id="chatbot-data" type="application/json">
-        {{ chatbot_qas_json|safe }}
-    </script>
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>

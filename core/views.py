@@ -12,11 +12,13 @@ class Service:
         self.title = title
         self.description = description
 
+from django.utils import timezone
+
 def home_view(request):
     primary_projects = Project.objects.filter(project_type='primary').order_by('display_order')
     secondary_projects = Project.objects.filter(project_type='secondary').order_by('display_order')
     
-    recent_posts = BlogPost.objects.all().order_by('-published_date')[:4]
+    recent_posts = BlogPost.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')[:4]
     
     services_data = [
         Service(icon='saas', title='SaaS Development', description='End-to-end platform creation, from architecture to deployment, built for scalability and user engagement.'),

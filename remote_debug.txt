@@ -1,2 +1,0 @@
-﻿origin	https://kirokir@github.com/kirokir/dearnco-django.git (fetch)
-origin	https://kirokir@github.com/kirokir/dearnco-django.git (push)

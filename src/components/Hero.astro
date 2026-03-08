@@ -1,10 +1,14 @@
 ---
-import fs from "node:fs/promises";
-import path from "node:path";
+import { supabase } from "../lib/supabase";
 
-const configPath = path.resolve(process.cwd(), "src/data/siteConfig.json");
-const configRaw = await fs.readFile(configPath, "utf-8");
-const siteConfig = JSON.parse(configRaw);
+const { data: configData, error } = await supabase
+  .from("site_config")
+  .select("data")
+  .eq("key", "primary_settings")
+  .single();
+
+if (error) console.error("Supabase error:", error);
+const siteConfig = configData?.data || { hero: {}, stats: [] };
 const { hero, stats } = siteConfig;
 ---
 

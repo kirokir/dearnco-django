@@ -1,61 +1,69 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import { supabaseAdmin } from '../../lib/supabase';
 
 export const prerender = false;
 
-const BLOG_DIR = path.resolve(process.cwd(), 'src/content/blog');
-
 export async function GET() {
     try {
-        const files = await fs.readdir(BLOG_DIR);
-        const posts = await Promise.all(
-            files
-                .filter(f => f.endsWith('.mdx'))
-                .map(async (file) => {
-                    const content = await fs.readFile(path.join(BLOG_DIR, file), 'utf-8');
-                    return {
-                        slug: file.replace('.mdx', ''),
-                        content,
-                    };
-                })
-        );
-        return new Response(JSON.stringify(posts), { status: 200 });
-    } catch (e) {
+        const { data, error } = await supabaseAdmin
+            .from('posts')
+            .select('*')
+            .order('date', { ascending: false });
+
+        if (error) throw error;
+
+        // Return in the format expected by AdminInterface
+        const formattedPosts = data.map(post => ({
+            slug: post.slug,
+            title: post.title,
+            category: post.category,
+            date: post.date,
+            excerpt: post.excerpt,
+            body: post.body
+        }));
+
+        return new Response(JSON.stringify(formattedPosts), { status: 200 });
+    } catch (e: any) {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }
 
-export async function POST({ request }) {
+export async function POST({ request }: { request: Request }) {
     try {
         const { slug, title, category, date, excerpt, body } = await request.json();
-        const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
 
-        const mdxContent = `---
-title: "${title}"
-category: "${category}"
-date: ${date}
-excerpt: "${excerpt}"
----
+        const { error } = await supabaseAdmin
+            .from('posts')
+            .upsert({
+                slug,
+                title,
+                category,
+                date,
+                excerpt,
+                body,
+                updated_at: new Date().toISOString()
+            });
 
-${body}`;
-
-        await fs.writeFile(filePath, mdxContent, 'utf-8');
+        if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
-    } catch (e) {
+    } catch (e: any) {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }
 
-export async function DELETE({ request }) {
+export async function DELETE({ request }: { request: Request }) {
     try {
         const url = new URL(request.url);
         const slug = url.searchParams.get('slug');
         if (!slug) return new Response('Missing slug', { status: 400 });
 
-        const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
-        await fs.unlink(filePath);
+        const { error } = await supabaseAdmin
+            .from('posts')
+            .delete()
+            .eq('slug', slug);
+
+        if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
-    } catch (e) {
+    } catch (e: any) {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }

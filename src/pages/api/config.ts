@@ -1,25 +1,33 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import { supabaseAdmin } from '../../lib/supabase';
 
 export const prerender = false;
 
-const CONFIG_PATH = path.resolve(process.cwd(), 'src/data/siteConfig.json');
-
 export async function GET() {
     try {
-        const config = await fs.readFile(CONFIG_PATH, 'utf-8');
-        return new Response(config, { status: 200 });
-    } catch (e) {
+        const { data, error } = await supabaseAdmin
+            .from('site_config')
+            .select('data')
+            .eq('key', 'primary_settings')
+            .single();
+
+        if (error) throw error;
+        return new Response(JSON.stringify(data.data), { status: 200 });
+    } catch (e: any) {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }
 
-export async function POST({ request }) {
+export async function POST({ request }: { request: Request }) {
     try {
         const data = await request.json();
-        await fs.writeFile(CONFIG_PATH, JSON.stringify(data, null, 2), 'utf-8');
+        const { error } = await supabaseAdmin
+            .from('site_config')
+            .upsert({ key: 'primary_settings', data })
+            .eq('key', 'primary_settings');
+
+        if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
-    } catch (e) {
+    } catch (e: any) {
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }

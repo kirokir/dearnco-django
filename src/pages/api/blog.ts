@@ -5,7 +5,10 @@ export const prerender = false;
 export async function GET() {
     try {
         if (!supabaseAdmin) {
-            throw new Error('Supabase client not initialized. Check your environment variables.');
+            return new Response(JSON.stringify({
+                error: 'Supabase client not initialized.',
+                details: 'Check PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.'
+            }), { status: 500 });
         }
         const { data, error } = await supabaseAdmin
             .from('posts')
@@ -14,7 +17,6 @@ export async function GET() {
 
         if (error) throw error;
 
-        // Return in the format expected by AdminInterface
         const formattedPosts = data.map(post => ({
             slug: post.slug,
             title: post.title,
@@ -26,14 +28,19 @@ export async function GET() {
 
         return new Response(JSON.stringify(formattedPosts), { status: 200 });
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        console.error('API Blog GET Error:', e);
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: e.message,
+            stack: e.stack
+        }), { status: 500 });
     }
 }
 
 export async function POST({ request }: { request: Request }) {
     try {
         if (!supabaseAdmin) {
-            throw new Error('Supabase client not initialized. Check your environment variables.');
+            return new Response(JSON.stringify({ error: 'Supabase client not initialized.' }), { status: 500 });
         }
         const { slug, title, category, date, excerpt, body } = await request.json();
 
@@ -52,14 +59,19 @@ export async function POST({ request }: { request: Request }) {
         if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        console.error('API Blog POST Error:', e);
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: e.message,
+            stack: e.stack
+        }), { status: 500 });
     }
 }
 
 export async function DELETE({ request }: { request: Request }) {
     try {
         if (!supabaseAdmin) {
-            throw new Error('Supabase client not initialized. Check your environment variables.');
+            return new Response(JSON.stringify({ error: 'Supabase client not initialized.' }), { status: 500 });
         }
         const url = new URL(request.url);
         const slug = url.searchParams.get('slug');
@@ -73,6 +85,11 @@ export async function DELETE({ request }: { request: Request }) {
         if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        console.error('API Blog DELETE Error:', e);
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: e.message,
+            stack: e.stack
+        }), { status: 500 });
     }
 }

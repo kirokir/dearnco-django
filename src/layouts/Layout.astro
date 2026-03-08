@@ -45,6 +45,12 @@ const navLinks = [
     <ViewTransitions />
   </head>
   <body>
+    <!-- ─── Debug Banner ─── -->
+    <div id="debug-banner" class="hidden fixed top-0 left-0 w-full z-[100] bg-red-600 text-white font-mono text-[10px] py-1 px-4 flex justify-between items-center">
+      <span>SYSTEM_CRITICAL: <span id="debug-error-msg">Unknown Server Error</span></span>
+      <button onclick="this.parentElement.classList.add('hidden')" class="hover:text-black">[DISMISS]</button>
+    </div>
+
     <Preloader />
     <!-- ─── Top Utility Bar ─── -->
     <div class="fixed top-0 right-0 z-[70] p-4 flex items-center gap-6 bg-charcoal/50 backdrop-blur-sm rounded-bl-xl border-l border-b border-charcoal-light/30">
@@ -219,7 +225,32 @@ const navLinks = [
         }
       }
 
-      document.addEventListener('astro:page-load', initLayout);
+      // --- Debug Mode & Health Check ---
+      async function runHealthCheck() {
+        try {
+          const res = await fetch('/api/config');
+          if (!res.ok) {
+            const data = await res.json();
+            const banner = document.getElementById('debug-banner');
+            const msg = document.getElementById('debug-error-msg');
+            if (banner && msg) {
+               msg.textContent = `${res.status} ${data.message || res.statusText}`;
+               banner.classList.remove('hidden');
+            }
+            console.error('Health Check Failed:', data);
+          }
+        } catch (e) {
+          console.error('Health Check Network Error:', e);
+        }
+      }
+
+      document.addEventListener('astro:page-load', () => {
+        initLayout();
+        // Only run health check if debug requested or on dev
+        if (window.location.search.includes('debug=true') || window.location.hostname === 'localhost') {
+           runHealthCheck();
+        }
+      });
     </script>
 
     <!-- ─── Nav Active Style ─── -->

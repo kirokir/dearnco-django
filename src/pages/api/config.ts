@@ -5,7 +5,10 @@ export const prerender = false;
 export async function GET() {
     try {
         if (!supabaseAdmin) {
-            throw new Error('Supabase client not initialized. Check your environment variables.');
+            return new Response(JSON.stringify({
+                error: 'Supabase client not initialized.',
+                details: 'Check PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.'
+            }), { status: 500 });
         }
         const { data, error } = await supabaseAdmin
             .from('site_config')
@@ -16,14 +19,21 @@ export async function GET() {
         if (error) throw error;
         return new Response(JSON.stringify(data.data), { status: 200 });
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        console.error('API Config GET Error:', e);
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: e.message,
+            stack: e.stack // Exposing stack for debugging as requested
+        }), { status: 500 });
     }
 }
 
 export async function POST({ request }: { request: Request }) {
     try {
         if (!supabaseAdmin) {
-            throw new Error('Supabase client not initialized. Check your environment variables.');
+            return new Response(JSON.stringify({
+                error: 'Supabase client not initialized.'
+            }), { status: 500 });
         }
         const data = await request.json();
         const { error } = await supabaseAdmin
@@ -34,6 +44,11 @@ export async function POST({ request }: { request: Request }) {
         if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { status: 200 });
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        console.error('API Config POST Error:', e);
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: e.message,
+            stack: e.stack
+        }), { status: 500 });
     }
 }

@@ -1,18 +1,81 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import Hero from "../components/Hero.astro";
 import Works from "../components/Works.astro";
 import Socials from "../components/Socials.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { supabase } from "../lib/supabase";
+
+let founderPhoto = "/arjun-portrait.png";
+if (supabase) {
+  try {
+    const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
+    if (data?.data?.founder_photo_url) founderPhoto = data.data.founder_photo_url;
+  } catch (e) {
+    console.error("Founder SSR:", e);
+  }
+}
 ---
 
 <Layout title="Founder" description="Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building KINBO TECHNOLOGIES PRIVATE LIMITED.">
   <section class="max-w-7xl mx-auto pt-24 px-6 mb-[-4rem]">
     <Breadcrumbs />
   </section>
-  <Hero />
-  
+
+  <!-- Founder Hero with Parallax Portrait -->
+  <section id="founder-hero" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <!-- Animated Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
+      style="background-image: radial-gradient(circle, #2A9D8F 1px, transparent 1px); background-size: 40px 40px;"></div>
+    
+    <!-- Gradient Overlays -->
+    <div class="absolute inset-0 bg-gradient-to-b from-charcoal via-transparent to-charcoal z-[1] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-charcoal/40 via-transparent to-charcoal/40 z-[1] pointer-events-none"></div>
+
+    <!-- Centered Portrait with Parallax -->
+    <div class="relative z-10 flex flex-col items-center" id="founder-parallax-container">
+      <!-- Portrait Frame -->
+      <div class="relative hero-image" style="opacity: 0; transform: scale(0.9);">
+        <!-- Glow Effect Behind Photo -->
+        <div class="absolute inset-0 rounded-full bg-teal/5 blur-3xl scale-150 animate-pulse" style="animation-duration: 4s;"></div>
+        
+        <!-- Orbiting Rings -->
+        <div class="absolute -inset-6 rounded-full border border-dashed border-teal/15 animate-spin" style="animation-duration: 30s;"></div>
+        <div class="absolute -inset-12 rounded-full border border-dotted border-teal/8 animate-spin" style="animation-duration: 50s; animation-direction: reverse;"></div>
+        <div class="absolute -inset-20 rounded-full border border-solid border-teal/4 animate-spin" style="animation-duration: 80s;"></div>
+
+        <!-- The Photo -->
+        <div class="w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full overflow-hidden relative"
+             style="box-shadow: 0 0 80px rgba(42,157,143,0.15), 0 0 160px rgba(42,157,143,0.05);">
+          <img 
+            src={founderPhoto}
+            alt="Arjun Jayesh" 
+            class="w-full h-full object-cover object-top"
+            style="mix-blend-mode: normal;"
+          />
+          <!-- Subtle vignette overlay on the photo -->
+          <div class="absolute inset-0 rounded-full" style="box-shadow: inset 0 0 40px rgba(0,0,0,0.3);"></div>
+        </div>
+      </div>
+
+      <!-- Name & Title Below Photo -->
+      <div class="mt-8 text-center space-y-2 hero-text" style="opacity: 0; transform: translateY(20px);">
+        <h1 class="font-poppins text-4xl sm:text-5xl md:text-6xl font-bold text-offwhite tracking-tight">
+          Arjun <span class="text-teal">Jayesh</span>
+        </h1>
+        <p class="font-mono text-[10px] sm:text-xs text-teal/80 uppercase tracking-[0.5em]">
+          Systems Architect · Founder · Independent Researcher
+        </p>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="mt-12 flex flex-col items-center gap-2 hero-text" style="opacity: 0;">
+        <span class="font-mono text-[9px] tracking-widest uppercase text-muted/50">Scroll</span>
+        <div class="w-px h-10 bg-gradient-to-b from-teal to-transparent"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- About the Founder -->
   <section class="section-padding max-w-4xl mx-auto">
     <div class="text-center mb-12 founder-section" style="opacity:0; transform:translateY(20px);">
@@ -45,11 +108,46 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   gsap.registerPlugin(ScrollTrigger);
-  
-  gsap.utils.toArray(".founder-section").forEach((el: any) => {
-    gsap.to(el, {
-      scrollTrigger: { trigger: el, start: "top 85%" },
-      opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+
+  function initFounder() {
+    // Hero entrance animations
+    gsap.to(".hero-image", {
+      opacity: 1,
+      scale: 1,
+      duration: 1.4,
+      ease: "power3.out",
+      delay: 0.3,
     });
-  });
+
+    gsap.to(".hero-text", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.2,
+      ease: "power3.out",
+      delay: 0.8,
+    });
+
+    // Parallax effect on the portrait
+    gsap.to("#founder-parallax-container", {
+      yPercent: -15,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#founder-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      }
+    });
+
+    // Founder sections reveal
+    gsap.utils.toArray(".founder-section").forEach((el: any) => {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: "top 85%" },
+        opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initFounder);
 </script>

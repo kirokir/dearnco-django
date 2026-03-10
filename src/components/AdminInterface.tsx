@@ -1,4 +1,92 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef } from "preact/hooks";
+
+// ─── Cloudinary Upload Helper ───
+async function uploadToCloudinary(file: File): Promise<string | null> {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        return data.url || null;
+    } catch {
+        return null;
+    }
+}
+
+// ─── Universal DragDrop Zone ───
+function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = false, children, className = '' }: {
+    onUpload: (urls: string[]) => void;
+    accept?: string;
+    multiple?: boolean;
+    children?: any;
+    className?: string;
+}) {
+    const [dragging, setDragging] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const processFiles = async (files: File[]) => {
+        if (!files.length) return;
+        setUploading(true);
+        const urls: string[] = [];
+        for (const file of files) {
+            const url = await uploadToCloudinary(file);
+            if (url) urls.push(url);
+        }
+        if (urls.length) onUpload(urls);
+        setUploading(false);
+    };
+
+    const handleDrop = (e: DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragging(false);
+        const files = Array.from(e.dataTransfer?.files || []);
+        processFiles(multiple ? files : files.slice(0, 1));
+    };
+
+    const handleDragOver = (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); setDragging(true); };
+    const handleDragLeave = (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); setDragging(false); };
+
+    return (
+        <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onClick={() => inputRef.current?.click()}
+            class={`relative cursor-pointer transition-all duration-200 ${
+                dragging ? 'border-teal bg-teal/10 scale-[1.01]' : 'border-charcoal-light/30 hover:border-teal/40'
+            } ${className}`}
+        >
+            <input
+                ref={inputRef}
+                type="file"
+                accept={accept}
+                multiple={multiple}
+                class="hidden"
+                onChange={(e) => {
+                    const files = Array.from((e.target as HTMLInputElement).files || []);
+                    processFiles(files);
+                    (e.target as HTMLInputElement).value = '';
+                }}
+            />
+            {uploading ? (
+                <div class="flex items-center justify-center gap-2 py-4">
+                    <div class="w-4 h-4 border-2 border-teal border-t-transparent rounded-full animate-spin"></div>
+                    <span class="font-mono text-[10px] text-teal uppercase tracking-widest">Uploading to Cloud...</span>
+                </div>
+            ) : children ? children : (
+                <div class="flex flex-col items-center justify-center gap-2 py-6 text-center">
+                    <svg class="w-8 h-8 text-teal/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                    <span class="font-mono text-[10px] text-muted uppercase tracking-widest">
+                        {dragging ? 'Drop files here' : 'Drag & drop or click to upload'}
+                    </span>
+                    <span class="font-mono text-[8px] text-muted/60">Images, Videos, GIFs</span>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function AdminInterface() {
     const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise">("blog");
@@ -252,42 +340,54 @@ export default function AdminInterface() {
     );
 }
 
-function Input({ label, value, onChange, type = "text", required = false }: any) {
-    const isImage = label.toLowerCase().includes('logo') || label.toLowerCase().includes('image') || (label.toLowerCase().includes('url') && !label.toLowerCase().includes('video'));
+function Input({ label, value, onChange, type = "text", required = false, uploadable = false }: any) {
+    // Auto-detect if this field should support uploads (any URL, logo, image, video, media field)
+    const isMediaField = uploadable || label.toLowerCase().includes('logo') || label.toLowerCase().includes('image') || label.toLowerCase().includes('url') || label.toLowerCase().includes('video') || label.toLowerCase().includes('photo') || label.toLowerCase().includes('gif');
 
-    const handleUpload = async (e: any) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const formData = new FormData();
-        formData.append('file', file);
-        try {
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
-            const data = await res.json();
-            if (data.url) onChange(data.url);
-            else alert('Upload failed: ' + data.error);
-        } catch (err) {
-            alert('Upload error');
-        }
-    };
+    const acceptType = label.toLowerCase().includes('video') ? 'video/*' : 'image/*,video/*,.gif';
 
     return (
         <div class="space-y-1">
-            <div class="flex justify-between items-end">
-                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
-                {isImage && (
-                    <label class="cursor-pointer text-teal hover:underline font-mono text-[10px] uppercase">
-                        [ Upload File ]
-                        <input type="file" accept="image/*" class="hidden" onChange={handleUpload} />
-                    </label>
-                )}
-            </div>
-            <input
-                type={type}
-                value={value}
-                required={required}
-                onInput={(e) => onChange((e.target as any).value)}
-                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
-            />
+            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
+            {isMediaField ? (
+                <DragDropZone
+                    accept={acceptType}
+                    className="border border-dashed rounded-lg"
+                    onUpload={(urls) => { if (urls[0]) onChange(urls[0]); }}
+                >
+                    <div class="px-3 py-2">
+                        <input
+                            type={type}
+                            value={value}
+                            required={required}
+                            onInput={(e) => { e.stopPropagation(); onChange((e.target as any).value); }}
+                            onClick={(e) => e.stopPropagation()}
+                            class="w-full bg-transparent text-offwhite font-poppins text-sm focus:outline-none placeholder-muted/40"
+                            placeholder="Paste URL or drag & drop a file here..."
+                        />
+                        {value && (
+                            <div class="mt-2 flex items-center gap-2">
+                                {(value.match(/\.(jpg|jpeg|png|gif|webp|svg)/i) || value.includes('cloudinary')) && !value.match(/\.(mp4|webm|mov)/i) ? (
+                                    <img src={value} alt="preview" class="w-10 h-10 object-cover rounded border border-charcoal-light/30" />
+                                ) : value.match(/\.(mp4|webm|mov)/i) ? (
+                                    <div class="w-10 h-10 rounded bg-teal/10 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                ) : null}
+                                <span class="font-mono text-[8px] text-teal/60 truncate flex-1">{value.split('/').pop()}</span>
+                            </div>
+                        )}
+                    </div>
+                </DragDropZone>
+            ) : (
+                <input
+                    type={type}
+                    value={value}
+                    required={required}
+                    onInput={(e) => onChange((e.target as any).value)}
+                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                />
+            )}
         </div>
     );
 }
@@ -575,34 +675,39 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
                         <Input label="Play Store Link" value={prod.play_store_link} onChange={(v: string) => setEditingProduct({ ...prod, play_store_link: v })} />
                         <Input label="App Store Link" value={prod.app_store_link} onChange={(v: string) => setEditingProduct({ ...prod, app_store_link: v })} />
                     </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between items-end">
-                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Screenshot URLs (one per line)</label>
-                            <label class="cursor-pointer text-teal hover:underline font-mono text-[10px] uppercase">
-                                [ Add Files ]
-                                <input type="file" accept="image/*" multiple class="hidden" onChange={async (e) => {
-                                    const files = Array.from((e.target as HTMLInputElement).files || []);
-                                    if (!files.length) return;
-                                    let newUrls = [...(Array.isArray(prod.screenshots) ? prod.screenshots : [])];
-                                    for (const file of files) {
-                                        const formData = new FormData();
-                                        formData.append('file', file);
-                                        try {
-                                            const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                                            const data = await res.json();
-                                            if (data.url) newUrls.push(data.url);
-                                        } catch (err) { }
-                                    }
-                                    setEditingProduct({ ...prod, screenshots: newUrls });
-                                }} />
-                            </label>
-                        </div>
-                        <textarea
-                            value={Array.isArray(prod.screenshots) ? prod.screenshots.join('\n') : prod.screenshots}
-                            onInput={(e) => setEditingProduct({ ...prod, screenshots: (e.target as any).value.split('\n').filter((s: string) => s.trim()) })}
-                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-mono text-xs focus:border-teal outline-none transition-all h-24"
-                            placeholder="https://example.com/shot1.png&#10;https://example.com/shot2.png"
-                        ></textarea>
+                    <div class="space-y-2">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Screenshots (drag & drop multiple)</label>
+                        <DragDropZone
+                            accept="image/*"
+                            multiple={true}
+                            className="border border-dashed rounded-xl p-4 min-h-[100px]"
+                            onUpload={(urls) => {
+                                const existing = Array.isArray(prod.screenshots) ? prod.screenshots : [];
+                                setEditingProduct({ ...prod, screenshots: [...existing, ...urls] });
+                            }}
+                        >
+                            {Array.isArray(prod.screenshots) && prod.screenshots.length > 0 ? (
+                                <div onClick={(e) => e.stopPropagation()} class="space-y-3">
+                                    <div class="flex flex-wrap gap-2">
+                                        {prod.screenshots.map((url: string, i: number) => (
+                                            <div key={i} class="relative group">
+                                                <img src={url} alt={`shot-${i}`} class="w-16 h-16 object-cover rounded border border-charcoal-light/30" />
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const newShots = prod.screenshots.filter((_: any, idx: number) => idx !== i);
+                                                        setEditingProduct({ ...prod, screenshots: newShots });
+                                                    }}
+                                                    class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >×</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div class="text-center font-mono text-[9px] text-muted/60">Drop more files or click to add</div>
+                                </div>
+                            ) : undefined}
+                        </DragDropZone>
                     </div>
                     <div class="grid md:grid-cols-2 gap-4">
                         <div class="space-y-1">
@@ -684,7 +789,19 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
 }
 
 function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () => void }) {
-    const [localAssets, setLocalAssets] = useState(assets);
+    const defaultHero = {
+        hero_video_url: '',
+        hero_bg_type: 'video', // 'video' | 'image' | 'gif'
+        hero_bg_opacity: 0.4,
+        hero_bg_darkness: 0.6,
+        hero_bg_blur: 2,
+        hero_parallax_intensity: 20,
+        logo_url: '',
+        locations: 'INDIA | CHINA | GCC',
+        company_name: 'KINBO TECHNOLOGIES PRIVATE LIMITED',
+        founder_photo_url: '/arjun-portrait.png',
+    };
+    const [localAssets, setLocalAssets] = useState({ ...defaultHero, ...assets });
     const [saving, setSaving] = useState(false);
 
     async function handleSave(e: Event) {
@@ -703,14 +820,132 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
         setSaving(false);
     }
 
+    const bgType = localAssets.hero_bg_type || 'video';
+
     return (
         <div class="space-y-8 animate-fadeIn">
-            <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets</h2>
-            <form onSubmit={handleSave} class="space-y-6 bg-charcoal-light/5 p-8 rounded-2xl border border-charcoal-light/20">
-                <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
-                <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
-                <Input label="Hero Video URL (MP4)" value={localAssets.hero_video_url} onChange={(v: string) => setLocalAssets({ ...localAssets, hero_video_url: v })} />
-                <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
+            <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets & Hero Editor</h2>
+            <form onSubmit={handleSave} class="space-y-8">
+
+                {/* Company Info */}
+                <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-charcoal-light/20 space-y-4">
+                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Company Info</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
+                        <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
+                    </div>
+                    <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
+                    <Input label="Founder Photo URL" value={localAssets.founder_photo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, founder_photo_url: v })} />
+                </div>
+
+                {/* KINBO HOME HERO EDITOR */}
+                <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-teal/20 space-y-6">
+                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        KINBO Home Hero Editor
+                    </h3>
+
+                    {/* Background Type Selector */}
+                    <div class="space-y-2">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Background Type</label>
+                        <div class="flex gap-2">
+                            {['video', 'image', 'gif'].map((t) => (
+                                <button
+                                    key={t}
+                                    type="button"
+                                    onClick={() => setLocalAssets({ ...localAssets, hero_bg_type: t })}
+                                    class={`px-4 py-2 rounded-lg font-mono text-[10px] uppercase tracking-widest border transition-all ${
+                                        bgType === t
+                                            ? 'bg-teal text-charcoal border-teal font-bold'
+                                            : 'border-charcoal-light/30 text-muted hover:border-teal/40'
+                                    }`}
+                                >{t}</button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Background Media Upload */}
+                    <div class="space-y-2">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">
+                            Hero {bgType === 'video' ? 'Video' : bgType === 'gif' ? 'GIF' : 'Image'} — Drag & Drop
+                        </label>
+                        <DragDropZone
+                            accept={bgType === 'video' ? 'video/*' : bgType === 'gif' ? '.gif,image/gif' : 'image/*'}
+                            className="border border-dashed rounded-xl overflow-hidden"
+                            onUpload={(urls) => { if (urls[0]) setLocalAssets({ ...localAssets, hero_video_url: urls[0] }); }}
+                        >
+                            {localAssets.hero_video_url ? (
+                                <div onClick={(e) => e.stopPropagation()} class="relative">
+                                    {bgType === 'video' ? (
+                                        <video src={localAssets.hero_video_url} muted autoPlay loop playsinline class="w-full h-40 object-cover" />
+                                    ) : (
+                                        <img src={localAssets.hero_video_url} alt="Hero BG" class="w-full h-40 object-cover" />
+                                    )}
+                                    <div class="absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                                        <span class="font-mono text-[10px] text-teal uppercase tracking-widest bg-charcoal/80 px-3 py-1 rounded">Drop new media to replace</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={localAssets.hero_video_url}
+                                        onInput={(e) => { e.stopPropagation(); setLocalAssets({ ...localAssets, hero_video_url: (e.target as any).value }); }}
+                                        onClick={(e) => e.stopPropagation()}
+                                        class="w-full bg-charcoal-dark/90 px-3 py-2 text-offwhite font-mono text-[10px] focus:outline-none border-t border-charcoal-light/20"
+                                        placeholder="Or paste a URL..."
+                                    />
+                                </div>
+                            ) : undefined}
+                        </DragDropZone>
+                    </div>
+
+                    {/* Visual Controls */}
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <Range label="Background Opacity" value={localAssets.hero_bg_opacity ?? 0.4} min={0} max={1} step={0.05} unit="" onChange={(v: number) => setLocalAssets({ ...localAssets, hero_bg_opacity: v })} />
+                            <Range label="Overlay Darkness" value={localAssets.hero_bg_darkness ?? 0.6} min={0} max={1} step={0.05} unit="" onChange={(v: number) => setLocalAssets({ ...localAssets, hero_bg_darkness: v })} />
+                        </div>
+                        <div class="space-y-4">
+                            <Range label="Blur Intensity" value={localAssets.hero_bg_blur ?? 2} min={0} max={30} step={1} unit="px" onChange={(v: number) => setLocalAssets({ ...localAssets, hero_bg_blur: v })} />
+                            <Range label="Parallax Intensity" value={localAssets.hero_parallax_intensity ?? 20} min={0} max={50} step={5} unit="%" onChange={(v: number) => setLocalAssets({ ...localAssets, hero_parallax_intensity: v })} />
+                        </div>
+                    </div>
+
+                    {/* Live Preview */}
+                    <div class="space-y-2">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Live Preview</label>
+                        <div class="relative h-48 rounded-xl overflow-hidden border border-charcoal-light/20">
+                            {localAssets.hero_video_url && (
+                                <>
+                                    {bgType === 'video' ? (
+                                        <video
+                                            src={localAssets.hero_video_url}
+                                            muted autoPlay loop playsinline
+                                            class="absolute inset-0 w-full h-full object-cover"
+                                            style={`filter: blur(${localAssets.hero_bg_blur ?? 2}px); opacity: ${localAssets.hero_bg_opacity ?? 0.4};`}
+                                        />
+                                    ) : (
+                                        <img
+                                            src={localAssets.hero_video_url}
+                                            alt="Preview"
+                                            class="absolute inset-0 w-full h-full object-cover"
+                                            style={`filter: blur(${localAssets.hero_bg_blur ?? 2}px); opacity: ${localAssets.hero_bg_opacity ?? 0.4};`}
+                                        />
+                                    )}
+                                    <div
+                                        class="absolute inset-0 bg-charcoal-dark"
+                                        style={`opacity: ${localAssets.hero_bg_darkness ?? 0.6};`}
+                                    ></div>
+                                </>
+                            )}
+                            <div class="absolute inset-0 flex items-center justify-center z-10">
+                                <div class="text-center">
+                                    <p class="font-mono text-[8px] text-teal uppercase tracking-[0.5em]">KINBO TECHNOLOGIES</p>
+                                    <h4 class="font-poppins text-xl font-bold text-offwhite">Intelligent technology</h4>
+                                    <p class="font-mono text-[8px] text-muted mt-1">Parallax: {localAssets.hero_parallax_intensity ?? 20}% | Blur: {localAssets.hero_bg_blur ?? 2}px | Dark: {((localAssets.hero_bg_darkness ?? 0.6) * 100).toFixed(0)}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <button
                     type="submit"

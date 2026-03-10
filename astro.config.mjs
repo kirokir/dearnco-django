@@ -6,11 +6,11 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://arjun-jayesh.com',
+  site: 'https://portfolio-sage-two-43.vercel.app',
   output: 'server',
   security: {
     checkOrigin: false
@@ -21,7 +21,9 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  adapter: node({
-    mode: 'standalone'
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
   })
 });

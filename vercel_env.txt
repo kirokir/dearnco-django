@@ -1,16 +1,20 @@
-# Vercel Environment Variables
-# Paste these into the Vercel Project Settings > Environment Variables
+# Environment Variables for Production
+# Use these on Vercel or Render (Settings > Environment Variables)
 
-# The master password for your /admin panel
+# Admin panel password
 ADMIN_PASSWORD=your_secret_password_here
 
-# Your production deployment URL (used for sitemap generation)
+# Production URL
 SITE=https://arjun-jayesh.com
 
-# Supabase Credentials (from Project Settings > API)
+# Supabase JS Client Keys (JWT format — NOT the Management API sb_ keys)
 PUBLIC_SUPABASE_URL=https://mwwvycnuyqfoscwizbhk.supabase.co
 PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13d3Z5Y251eXFmb3Njd2l6YmhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MzYyNzgsImV4cCI6MjA4ODUxMjI3OH0.s6ZaOYWiKcZUM3O2L9bv-naGVSSRIBBGnW0wteO1t9w
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13d3Z5Y251eXFmb3Njd2l6YmhrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjkzNjI3OCwiZXhwIjoyMDg4NTEyMjc4fQ.Yk_heqtQQ1zfx9Aq6BZIXEtmcgDRTpSL5WEjkH38Gkg
 
-# Optional: Disable Astro telemetry in production
+# Node server config (for Render)
+HOST=0.0.0.0
+PORT=4321
+
+# Disable telemetry
 ASTRO_TELEMETRY_DISABLED=1

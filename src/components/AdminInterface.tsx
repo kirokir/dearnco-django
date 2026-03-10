@@ -1,9 +1,10 @@
 import { useState, useEffect } from "preact/hooks";
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
+    const [ideas, setIdeas] = useState<any[]>([]);
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -16,14 +17,17 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes] = await Promise.all([
+            const [postsRes, configRes, ideasRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
+                fetch("/api/ideas"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
-            setPosts(postsData);
+            const ideasData = await ideasRes.json();
+            setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
+            setIdeas(Array.isArray(ideasData) ? ideasData : []);
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -105,6 +109,13 @@ export default function AdminInterface() {
                         }`}
                 >
                     Homepage Editor
+                </button>
+                <button
+                    onClick={() => setActiveTab("ideas")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "ideas" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Ideas ({ideas.length})
                 </button>
             </div>
 
@@ -202,6 +213,10 @@ export default function AdminInterface() {
                     </button>
                 </div>
             )}
+
+            {activeTab === "ideas" && (
+                <IdeasViewer ideas={ideas} onRefresh={fetchData} />
+            )}
         </div>
     );
 }
@@ -293,4 +308,166 @@ function parseMDX(content: string, slug: string) {
         });
     }
     return { slug, body, ...fm };
+}
+
+function IdeasViewer({ ideas, onRefresh }: { ideas: any[]; onRefresh: () => void }) {
+    const [expanded, setExpanded] = useState<number | null>(null);
+    const [deleting, setDeleting] = useState<number | null>(null);
+
+    async function handleDelete(id: number) {
+        if (!confirm("Delete this idea submission?")) return;
+        setDeleting(id);
+        try {
+            const res = await fetch(`/api/ideas?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+        setDeleting(null);
+    }
+
+    const statusColors: Record<string, string> = {
+        new: "bg-teal/20 text-teal border-teal/30",
+        reviewed: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+        accepted: "bg-green-500/20 text-green-400 border-green-500/30",
+        rejected: "bg-red-500/20 text-red-400 border-red-500/30",
+    };
+
+    if (!ideas.length) {
+        return (
+            <div class="text-center py-16 space-y-4">
+                <div class="text-5xl opacity-30">💡</div>
+                <p class="font-mono text-sm text-muted">No idea submissions yet.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">
+                    Idea Submissions
+                </h2>
+                <span class="font-mono text-xs text-teal">{ideas.length} total</span>
+            </div>
+
+            {ideas.map((idea) => (
+                <div
+                    key={idea.id}
+                    class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl overflow-hidden hover:border-teal/30 transition-all"
+                >
+                    {/* Header */}
+                    <div
+                        class="p-4 flex justify-between items-start cursor-pointer"
+                        onClick={() => setExpanded(expanded === idea.id ? null : idea.id)}
+                    >
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="text-offwhite font-poppins font-medium truncate">
+                                    {idea.idea_title}
+                                </h4>
+                                <span
+                                    class={`px-2 py-0.5 rounded-full text-[9px] font-mono uppercase border ${statusColors[idea.status] || statusColors.new
+                                        }`}
+                                >
+                                    {idea.status}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-4 text-[10px] font-mono text-muted">
+                                <span>{idea.name}</span>
+                                <span>•</span>
+                                <span>{idea.project_type?.replace("_", " ")}</span>
+                                <span>•</span>
+                                <span>{new Date(idea.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(idea.id);
+                                }}
+                                disabled={deleting === idea.id}
+                                class="text-red-400 font-mono text-[10px] uppercase hover:underline disabled:opacity-50"
+                            >
+                                {deleting === idea.id ? "..." : "[ DEL ]"}
+                            </button>
+                            <span class="text-muted text-xs">{expanded === idea.id ? "▲" : "▼"}</span>
+                        </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {expanded === idea.id && (
+                        <div class="border-t border-charcoal-light/20 p-4 space-y-4 animate-fadeIn">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                {/* Contact Info */}
+                                <div class="space-y-3">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Contact</h5>
+                                    <InfoRow label="Name" value={idea.name} />
+                                    <InfoRow label="Email" value={idea.email} link={`mailto:${idea.email}`} />
+                                    {idea.phone && <InfoRow label="Phone" value={idea.phone} />}
+                                    {idea.linkedin && <InfoRow label="LinkedIn" value={idea.linkedin} link={idea.linkedin} />}
+                                    {idea.portfolio_url && <InfoRow label="Portfolio" value={idea.portfolio_url} link={idea.portfolio_url} />}
+                                </div>
+
+                                {/* Project Details */}
+                                <div class="space-y-3">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Project</h5>
+                                    <InfoRow label="Type" value={idea.project_type?.replace("_", " ")} />
+                                    {idea.budget && <InfoRow label="Budget" value={idea.budget} />}
+                                    {idea.timeline && <InfoRow label="Timeline" value={idea.timeline} />}
+                                    {idea.target_audience && <InfoRow label="Audience" value={idea.target_audience} />}
+                                </div>
+                            </div>
+
+                            {/* Description */}
+                            <div class="space-y-1">
+                                <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Description</h5>
+                                <p class="text-offwhite font-lora text-sm leading-relaxed whitespace-pre-wrap bg-charcoal-dark/50 p-4 rounded-lg">
+                                    {idea.idea_description}
+                                </p>
+                            </div>
+
+                            {/* Features */}
+                            {idea.features && (
+                                <div class="space-y-1">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Features</h5>
+                                    <p class="text-muted font-lora text-sm leading-relaxed whitespace-pre-wrap bg-charcoal-dark/50 p-4 rounded-lg">
+                                        {idea.features}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Notes */}
+                            {idea.additional_notes && (
+                                <div class="space-y-1">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Additional Notes</h5>
+                                    <p class="text-muted font-lora text-sm leading-relaxed whitespace-pre-wrap bg-charcoal-dark/50 p-4 rounded-lg">
+                                        {idea.additional_notes}
+                                    </p>
+                                </div>
+                            )}
+
+                            <div class="text-right font-mono text-[9px] text-muted pt-2">
+                                Submitted: {new Date(idea.created_at).toLocaleString()}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function InfoRow({ label, value, link }: { label: string; value: string; link?: string }) {
+    return (
+        <div class="flex items-start gap-2 text-sm">
+            <span class="font-mono text-[10px] text-muted uppercase min-w-[70px]">{label}:</span>
+            {link ? (
+                <a href={link} target="_blank" rel="noopener" class="text-teal hover:underline truncate">{value}</a>
+            ) : (
+                <span class="text-offwhite capitalize">{value}</span>
+            )}
+        </div>
+    );
 }

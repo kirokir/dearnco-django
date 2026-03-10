@@ -5,8 +5,23 @@ import { supabase } from "../lib/supabase";
 
 let dynamicProducts: any[] = [];
 if (supabase) {
-  const { data, error } = await supabase.from("products").select("*").eq("status", "active").order("sort_order", { ascending: true });
-  if (!error && data) dynamicProducts = data;
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("status", "active")
+      .order("sort_order", { ascending: true });
+    
+    if (error) {
+      console.error("Products Supabase Fetch Error:", error);
+    } else if (data) {
+      dynamicProducts = data;
+    }
+  } catch (e) {
+    console.error("Products SSR Crash Caught:", e);
+  }
+} else {
+  console.warn("Supabase client not available on Products SSR");
 }
 
 import Breadcrumbs from "../components/Breadcrumbs.astro";

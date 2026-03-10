@@ -11,8 +11,24 @@ let enterpriseAssets = {
 };
 
 if (supabase) {
-    const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
-    if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
+    try {
+        const { data, error } = await supabase
+            .from('site_config')
+            .select('data')
+            .eq('key', 'enterprise_assets')
+            .single();
+        
+        if (error && error.code !== 'PGRST116') {
+            console.error('Homepage Data Fetch Error:', error);
+        } else if (data?.data) {
+            enterpriseAssets = { ...enterpriseAssets, ...data.data };
+        }
+    } catch (e) {
+        console.error('Homepage SSR Crash Caught:', e);
+        // Fallback already defined in enterpriseAssets variable
+    }
+} else {
+    console.warn('Supabase client not available on homepage SSR');
 }
 ---
 

@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
 export const prerender = false;
 
 export async function POST({ request }: { request: Request }) {
@@ -12,35 +9,29 @@ export async function POST({ request }: { request: Request }) {
             return new Response(JSON.stringify({ error: 'No file provided' }), { status: 400 });
         }
 
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        // Cloudinary Credentials from user
+        const cloudName = "dw4fmucml";
+        const uploadPreset = "kinbo1";
 
-        // Ensure uploads directory exists
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+        uploadFormData.append('upload_preset', uploadPreset);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+            method: 'POST',
+            body: uploadFormData
+        });
+
+        const data = await response.json();
+
+        if (data.secure_url) {
+            return new Response(JSON.stringify({ url: data.secure_url }), { status: 200 });
+        } else {
+            console.error('Cloudinary Error:', data);
+            return new Response(JSON.stringify({ error: data.error?.message || 'Upload failed' }), { status: 500 });
         }
-
-        // Generate safe unique filename
-        const ext = path.extname(file.name) || '';
-        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
-        const filename = `${Date.now()}-${safeName}`;
-        const filePath = path.join(uploadDir, filename);
-
-        fs.writeFileSync(filePath, buffer);
-
-        // Also save to dist/client/uploads so it immediately works in production
-        const distDir = path.join(process.cwd(), 'dist', 'client', 'uploads');
-        if (fs.existsSync(path.join(process.cwd(), 'dist'))) {
-            if (!fs.existsSync(distDir)) {
-                fs.mkdirSync(distDir, { recursive: true });
-            }
-            fs.writeFileSync(path.join(distDir, filename), buffer);
-        }
-
-        return new Response(JSON.stringify({ url: `/uploads/${filename}` }), { status: 200 });
     } catch (e: any) {
-        console.error('Upload Error:', e);
+        console.error('Upload API Error:', e);
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
 }

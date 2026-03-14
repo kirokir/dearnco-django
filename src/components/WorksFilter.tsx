@@ -2,14 +2,38 @@ import { useState } from "preact/hooks";
 import type { WorkItem } from "../data/works";
 import { works } from "../data/works";
 
-type Category = "All" | "Software" | "Research" | "Automation";
+type Category = 
+    | "All"
+    | "Fundamental research & architectures"
+    | "AI / cognition / scientific systems"
+    | "Infrastructure & developer platforms"
+    | "High-complexity applications"
+    | "Product platforms"
+    | "Specialized tools & creative software"
+    | "Experiments, simulations & games"
+    | "Commercial websites & deployments";
 
-const categories: Category[] = ["All", "Software", "Research", "Automation"];
+const categories: Category[] = [
+    "All",
+    "Fundamental research & architectures",
+    "AI / cognition / scientific systems",
+    "Infrastructure & developer platforms",
+    "High-complexity applications",
+    "Product platforms",
+    "Specialized tools & creative software",
+    "Experiments, simulations & games",
+    "Commercial websites & deployments"
+];
 
 const categoryColors: Record<string, string> = {
-    Software: "#2A9D8F",
-    Research: "#E9C46A",
-    Automation: "#E76F51",
+    "Fundamental research & architectures": "#8A2BE2",
+    "AI / cognition / scientific systems": "#E9C46A",
+    "Infrastructure & developer platforms": "#2A9D8F",
+    "High-complexity applications": "#E76F51",
+    "Product platforms": "#457B9D",
+    "Specialized tools & creative software": "#F4A261",
+    "Experiments, simulations & games": "#9B5DE5",
+    "Commercial websites & deployments": "#00F5D4"
 };
 
 export default function WorksFilter() {
@@ -219,6 +243,23 @@ export default function WorksFilter() {
                                     >
                                         {item.description}
                                     </p>
+                                    {item.stack && (
+                                        <div style={{ marginTop: "0.5rem", fontSize: "0.75rem", color: "#2A9D8F", fontFamily: '"Roboto Mono", monospace' }}>
+                                            &gt; {item.stack}
+                                        </div>
+                                    )}
+                                    {item.link && (
+                                        <a
+                                            href={item.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ display: "inline-block", marginTop: "1rem", fontSize: "0.8rem", color: "#F5F5F7", textDecoration: "none", borderBottom: "1px solid rgba(245,245,247,0.3)", transition: "all 0.2s ease" }}
+                                            onMouseOver={(e) => (e.currentTarget.style.borderColor = "#2A9D8F")}
+                                            onMouseOut={(e) => (e.currentTarget.style.borderColor = "rgba(245,245,247,0.3)")}
+                                        >
+                                            View Project ↗
+                                        </a>
+                                    )}
                                 </div>
 
                                 {/* Mobile card */}
@@ -274,6 +315,21 @@ export default function WorksFilter() {
                                     >
                                         {item.description}
                                     </p>
+                                    {item.stack && (
+                                        <div style={{ marginTop: "0.4rem", fontSize: "0.7rem", color: "#2A9D8F", fontFamily: '"Roboto Mono", monospace' }}>
+                                            &gt; {item.stack}
+                                        </div>
+                                    )}
+                                    {item.link && (
+                                        <a
+                                            href={item.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ display: "inline-block", marginTop: "0.75rem", fontSize: "0.75rem", color: "#F5F5F7", textDecoration: "none", borderBottom: "1px solid rgba(245,245,247,0.3)" }}
+                                        >
+                                            View Project ↗
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         );

@@ -232,7 +232,16 @@ export default function IdeasForm() {
     );
 }
 
-function FormField({ label, value, onChange, type = "text", required = false, placeholder = "" }: any) {
+interface FormFieldProps {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    type?: string;
+    required?: boolean;
+    placeholder?: string;
+}
+
+function FormField({ label, value, onChange, type = "text", required = false, placeholder = "" }: FormFieldProps) {
     return (
         <div class="space-y-1">
             <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>
@@ -248,7 +257,16 @@ function FormField({ label, value, onChange, type = "text", required = false, pl
     );
 }
 
-function FormTextarea({ label, value, onChange, required = false, placeholder = "", rows = 4 }: any) {
+interface FormTextareaProps {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    required?: boolean;
+    placeholder?: string;
+    rows?: number;
+}
+
+function FormTextarea({ label, value, onChange, required = false, placeholder = "", rows = 4 }: FormTextareaProps) {
     return (
         <div class="space-y-1">
             <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">{label}</label>

@@ -1,11 +1,11 @@
 services:
-  - type: web
+  - type: static
     name: arjun-portfolio
     runtime: node
     repo: https://github.com/arjun-jayesh/portfolio
     branch: main
     buildCommand: npm install && npm run build
-    startCommand: node dist/server/entry.mjs
+    publishPath: dist
     envVars:
       - key: NODE_VERSION
         value: 20

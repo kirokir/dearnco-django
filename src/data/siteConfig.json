@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "firstName": "ARJUN ",
+    "lastName": "JAYESH",
+    "role": "POLYMATH • ENGINEER • RESEARCHER",
+    "bio": "Systems Architect, Independent Researcher, and Developer building deterministic, constraint-bound systems. Focused on entropy, chaotic feedback loops, and self-healing infrastructure patterns.",
+    "video": {
+      "url": "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-loop-with-blue-and-purple-lights-31830-large.mp4",
+      "blur": 4,
+      "opacity": 0.4,
+      "overlayDarkness": 0.6
+    }
+  },
+  "stats": [
+    {
+      "label": "Projects Completed",
+      "value": "24+"
+    },
+    {
+      "label": "Research Papers",
+      "value": "12"
+    },
+    {
+      "label": "Code Commits",
+      "value": "8.4k"
+    },
+    {
+      "label": "System Uptime",
+      "value": "99.9%"
+    }
+  ]
+}

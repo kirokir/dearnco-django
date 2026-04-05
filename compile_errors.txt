@@ -1,0 +1,28 @@
+﻿node_modules/@types/mdx/types.d.ts(23,38): error TS2503: Cannot find namespace 'JSX'.
+node_modules/@types/mdx/types.d.ts(28,23): error TS2503: Cannot find namespace 'JSX'.
+node_modules/@types/mdx/types.d.ts(47,28): error TS2503: Cannot find namespace 'JSX'.
+node_modules/@types/mdx/types.d.ts(73,46): error TS2503: Cannot find namespace 'JSX'.
+src/components/WorksFilter.tsx(46,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(48,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(65,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(93,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(95,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(108,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(121,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(125,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(139,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(157,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(174,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(189,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(205,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(223,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(235,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(247,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(252,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(266,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(278,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(296,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(307,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(319,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(324,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+src/components/WorksFilter.tsx(341,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.

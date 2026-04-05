@@ -1,0 +1,350 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import Preloader from "../components/Preloader.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Arjun Jayesh — Polymath · Engineer · Researcher",
+  description = "Portfolio of Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building deterministic, constraint-bound systems.",
+} = Astro.props;
+
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Products", href: "/products" },
+  { label: "Founder", href: "/founder" },
+  { label: "Blog", href: "/blog" },
+  { label: "Ideas", href: "/ideas" },
+  { label: "Contact", href: "/chat" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{title} — KINBO TECHNOLOGIES PRIVATE LIMITED</title>
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO & OpenGraph -->
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.site || Astro.url} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <ViewTransitions />
+  </head>
+  <body>
+    <!-- ─── Debug Banner ─── -->
+    <div id="debug-banner" class="hidden fixed top-0 left-0 w-full z-[100] bg-red-600 text-white font-mono text-[10px] py-1 px-4 flex justify-between items-center">
+      <span>SYSTEM_CRITICAL: <span id="debug-error-msg">Unknown Server Error</span></span>
+      <button onclick="this.parentElement.classList.add('hidden')" class="hover:text-black">[DISMISS]</button>
+    </div>
+
+    <Preloader />
+    <!-- ─── Top Utility Bar ─── -->
+    <div class="fixed top-20 right-0 z-[70] p-4 flex items-center gap-6 bg-charcoal/50 backdrop-blur-sm rounded-l-xl border-l border-b border-t border-charcoal-light/30">
+      <!-- Clock -->
+      <div id="clock" class="font-mono text-xs text-teal tracking-widest tabular-nums">
+        00:00:00
+      </div>
+      
+      <!-- Theme Toggle -->
+      <button 
+        id="theme-toggle" 
+        class="text-muted hover:text-teal transition-colors duration-300"
+        aria-label="Toggle theme"
+      >
+        <svg id="sun-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <svg id="moon-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ─── Navbar ─── -->
+    <nav
+      class="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-charcoal/80 border-b border-charcoal-light/40"
+      id="main-nav"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between px-5 py-4">
+        <!-- Logo -->
+        <a
+          href="/"
+          class="flex items-center gap-3 font-poppins text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
+          aria-label="Go to home"
+        >
+          <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
+            <span class="text-teal font-mono text-sm">K</span>
+          </div>
+          <span class="tracking-widest">KINBO</span>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
+          {navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="nav-link font-poppins text-sm font-medium uppercase tracking-widest text-muted hover:text-offwhite transition-colors duration-300 relative pb-1"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+      </div>
+    </nav>
+
+    <!-- ─── Main Content ─── -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Mobile Nav Bar (Bottom Floating Island) -->
+    <nav
+      class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 px-6 py-3 rounded-full bg-charcoal/80 backdrop-blur-md border border-charcoal-light/30 shadow-2xl z-50 pointer-events-auto"
+      aria-label="Mobile navigation"
+    >
+      {navLinks.map((link) => {
+        // Icon mapping based on label
+        let iconSvg = "";
+        if (link.label === "Home") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>`;
+        else if (link.label === "About") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`;
+        else if (link.label === "Products") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>`;
+        else if (link.label === "Founder") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />`;
+        else if (link.label === "Blog") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>`;
+        else if (link.label === "Socials") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>`;
+        else if (link.label === "Ideas") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>`;
+        else if (link.label === "Chat" || link.label === "Contact") iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>`;
+
+        return (
+          <a
+            href={link.href}
+            class="mobile-nav-link text-muted hover:text-teal transition-colors duration-300 relative p-1"
+            aria-label={link.label}
+          >
+            <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={iconSvg}></svg>
+          </a>
+        )
+      })}
+    </nav>
+
+    <!-- ─── Footer ─── -->
+    <footer class="border-t border-charcoal-light/20 py-16 px-5 bg-charcoal-dark/50">
+      <div class="max-w-7xl mx-auto flex flex-col items-center gap-12">
+        <!-- Brand/Logo Area -->
+        <div class="flex flex-col items-center gap-4 text-center">
+            <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
+                <span class="text-teal font-poppins text-3xl font-bold">K</span>
+            </div>
+            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">KINBO TECHNOLOGIES PRIVATE LIMITED</h2>
+            <p class="font-lora text-sm text-muted max-w-md">Building intelligent everyday apps that improve real-world outcomes through practical technology and user-focused design.</p>
+        </div>
+
+        <!-- Locations -->
+        <div class="flex flex-wrap justify-center items-center gap-6 font-mono text-[10px] text-teal uppercase tracking-[0.3em]">
+            <span>INDIA</span>
+            <div class="w-1 h-1 bg-charcoal-light/40 rounded-full"></div>
+            <span>CHINA</span>
+            <div class="w-1 h-1 bg-charcoal-light/40 rounded-full"></div>
+            <span>GCC</span>
+        </div>
+
+        <!-- Badges Area -->
+        <div class="flex flex-wrap justify-center items-center gap-8 py-6 opacity-60 hover:opacity-100 transition-opacity">
+            <div class="flex items-center gap-3 grayscale hover:grayscale-0 transition-all">
+                <svg class="w-8 h-8 text-offwhite" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.523 15.3414C17.0396 15.3414 16.6346 14.9364 16.6346 14.453C16.6346 13.9696 17.0396 13.5646 17.523 13.5646C18.0064 13.5646 18.4114 13.9696 18.4114 14.453C18.4114 14.9364 18.0064 15.3414 17.523 15.3414ZM6.47696 15.3414C5.9935 15.3414 5.58852 14.9364 5.58852 14.453C5.58852 13.9696 5.9935 13.5646 6.47696 13.5646C6.96043 13.5646 7.36541 13.9696 7.36541 14.453C7.36541 14.9364 6.96043 15.3414 6.47696 15.3414ZM17.9103 11.2355L19.7824 7.99447C19.8974 7.79543 19.8294 7.54034 19.6304 7.4253C19.4313 7.31026 19.1762 7.37829 19.0612 7.57733L17.1558 10.8775C15.6596 10.1943 13.8962 9.8092 12 9.8092C10.1037 9.8092 8.34038 10.1943 6.84412 10.8775L4.9388 7.57733C4.82376 7.37829 4.56867 7.31026 4.36962 7.4253C4.17058 7.54034 4.10255 7.79543 4.21759 7.99447L6.08968 11.2355C3.12596 12.8361 1.10906 15.8923 1.05603 19.4218H22.944C22.8909 15.8923 20.874 12.8361 17.9103 11.2355Z"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-mono leading-none">BUILDING ON</span>
+                    <span class="text-xs font-poppins font-bold leading-none">ANDROID</span>
+                </div>
+            </div>
+            <div class="w-px h-8 bg-charcoal-light/20"></div>
+            <div class="flex items-center gap-3 grayscale hover:grayscale-0 transition-all">
+                <svg class="w-8 h-8 text-offwhite" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.5 12c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H7.5c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h10zm-3-8h2v2h-2V4zm-3 0h2v2h-2V4zm-3 0h2v2h-2V4zm0 3h2v2h-2V7zm3 0h2v2h-2V7zm3 0h2v2h-2V7zM5 13v7c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-7H5zm5 7H8v-2h2v2zm3 0h-2v-2h2v2zm3 0h-2v-2h2v2z"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-mono leading-none">GET IT ON</span>
+                    <span class="text-xs font-poppins font-bold leading-none">Play Store</span>
+                </div>
+            </div>
+            <div class="w-px h-8 bg-charcoal-light/20"></div>
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded border border-offwhite/20 flex items-center justify-center">
+                    <span class="text-offwhite font-bold text-lg leading-none">K</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-mono leading-none text-muted">A PRODUCT OF</span>
+                    <span class="text-xs font-poppins font-bold leading-none text-offwhite">KINBO TECHNOLOGIES</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="font-mono text-[9px] text-muted/60 tracking-[0.2em] uppercase">
+          © {new Date().getFullYear()} Kinbo Technologies Private Limited. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- ─── Global Scripts ─── -->
+    <script>
+      function initLayout() {
+        // --- Clock ---
+        const clockEl = document.getElementById("clock");
+        function updateClock() {
+          const now = new Date();
+          const h = String(now.getHours()).padStart(2, '0');
+          const m = String(now.getMinutes()).padStart(2, '0');
+          const s = String(now.getSeconds()).padStart(2, '0');
+          if (clockEl) clockEl.textContent = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- Theme Toggle ---
+        const toggle = document.getElementById("theme-toggle");
+        const sun = document.getElementById("sun-icon");
+        const moon = document.getElementById("moon-icon");
+        const html = document.documentElement;
+
+        function setTheme(theme: string) {
+          html.setAttribute("data-theme", theme);
+          localStorage.setItem("theme", theme);
+          if (theme === "light") {
+            sun?.classList.remove("hidden");
+            moon?.classList.add("hidden");
+          } else {
+            sun?.classList.add("hidden");
+            moon?.classList.remove("hidden");
+          }
+        }
+
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        setTheme(savedTheme);
+
+        toggle?.addEventListener("click", () => {
+          const current = html.getAttribute("data-theme");
+          setTheme(current === "light" ? "dark" : "light");
+        });
+
+        // --- Mobile nav active state updates ---
+        // Active states are purely CSS now using the same Intersection Observer logic 
+        // as the desktop nav for anchors. For SPA routes, page-load handles it.
+
+        // --- Active link tracking (only for current page anchors) ---
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll(".nav-link, .mobile-nav-link");
+
+        if (sections.length > 0 || navLinks.length > 0) {
+          // Add basic SPA route active state checking to handle non-anchor links
+          const currentPath = window.location.pathname;
+          navLinks.forEach((link) => {
+            link.classList.remove("active");
+            const href = link.getAttribute("href");
+            if (href === currentPath || (href === "/" && currentPath === "")) {
+               link.classList.add("active");
+            }
+          });
+
+          // Handle in-page anchors
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  navLinks.forEach((link) => {
+                    link.classList.remove("active");
+                    const href = link.getAttribute("href");
+                    if (href === `#${entry.target.id}` || (href === "/" && entry.target.id === "home")) {
+                      link.classList.add("active");
+                    }
+                  });
+                }
+              });
+            },
+            { rootMargin: "-40% 0px -55% 0px" }
+          );
+          sections.forEach((section) => observer.observe(section));
+        }
+      }
+
+      // --- Debug Mode & Health Check ---
+      async function runHealthCheck() {
+        try {
+          const res = await fetch('/api/config');
+          if (!res.ok) {
+            const data = await res.json();
+            const banner = document.getElementById('debug-banner');
+            const msg = document.getElementById('debug-error-msg');
+            if (banner && msg) {
+               msg.textContent = `${res.status} ${data.message || res.statusText}`;
+               banner.classList.remove('hidden');
+            }
+            console.error('Health Check Failed:', data);
+          }
+        } catch (e) {
+          console.error('Health Check Network Error:', e);
+        }
+      }
+
+      document.addEventListener('astro:page-load', () => {
+        initLayout();
+        // Only run health check if debug requested or on dev
+        if (window.location.search.includes('debug=true') || window.location.hostname === 'localhost') {
+           runHealthCheck();
+        }
+      });
+    </script>
+
+    <!-- ─── Nav Active Style ─── -->
+    <style is:global>
+      .nav-link.active,
+      .nav-link:hover {
+        color: var(--color-offwhite) !important;
+      }
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        border-bottom: 2px dashed var(--color-teal);
+      }
+      
+      .mobile-nav-link.active {
+        color: var(--color-teal) !important;
+      }
+      .mobile-nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: var(--color-teal);
+      }
+    </style>
+  </body>
+</html>

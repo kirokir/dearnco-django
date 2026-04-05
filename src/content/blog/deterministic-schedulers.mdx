@@ -1,0 +1,22 @@
+---
+title: "Building Deterministic Schedulers"
+excerpt: "How constraint-propagation techniques from AI can produce schedulers with provable timing guarantees."
+category: "Software"
+date: 2025-11-15
+---
+
+# Building Deterministic Schedulers
+
+Most schedulers treat timing as a best-effort concern. In safety-critical domains, that isn't good enough. This post explores how **constraint-propagation techniques** from AI planning can produce schedulers with provable timing guarantees.
+
+## Key Insight
+
+By modeling tasks as nodes in a temporal constraint network, we can enforce deadlines at the structural level—making missed deadlines *impossible by construction*.
+
+## The Approach
+
+1. Define each task as a temporal variable with earliest/latest bounds
+2. Propagate constraints using arc-consistency (AC-3)
+3. Extract a feasible schedule via topological ordering
+
+The result is a scheduler that *cannot* produce invalid schedules, eliminating an entire class of runtime failures.

@@ -1,0 +1,25 @@
+---
+title: "Self-Healing Infrastructure Patterns"
+excerpt: "A pattern language for building autonomous remediation agents that reduce MTTR by 10x."
+category: "Automation"
+date: 2025-07-10
+---
+
+# Self-Healing Infrastructure Patterns
+
+Modern infrastructure demands **autonomous remediation**—systems that detect, diagnose, and fix failures without human intervention. This post introduces a pattern language for building such agents.
+
+## Core Patterns
+
+### Observer Pattern
+Continuously monitors health metrics (CPU, memory, error rates) and emits structured events on anomaly detection.
+
+### Diagnostician Pattern
+Receives anomaly events and runs a decision tree to identify root cause from a curated knowledge base.
+
+### Remediator Pattern
+Executes the appropriate fix: restart a service, scale a replica set, or failover to a backup region.
+
+## Results
+
+Deploying these patterns in production reduced Mean Time To Recovery (MTTR) from ~45 minutes to under 4 minutes—a **10× improvement**.

@@ -1,0 +1,27 @@
+
+> portolio@0.0.1 build
+> astro build
+
+[2m09:52:13[22m [34m[@astrojs/node][39m Enabling sessions with filesystem storage
+[2m09:52:14[22m [34m[content][39m Syncing content
+[2m09:52:14[22m [34m[content][39m Synced content
+[2m09:52:14[22m [34m[types][39m Generated [2m1.16s[22m
+[2m09:52:14[22m [34m[build][39m output: [34m"static"[39m
+[2m09:52:14[22m [34m[build][39m mode: [34m"server"[39m
+[2m09:52:14[22m [34m[build][39m directory: [34mC:\Users\Arjun\Desktop\New folder\projects\portolio\dist\[39m
+[2m09:52:14[22m [34m[build][39m adapter: [32m@astrojs/node[39m
+[2m09:52:14[22m [34m[build][39m Collecting build info...
+[2m09:52:14[22m [34m[build][39m [32m✓ Completed in 1.29s.[39m
+[2m09:52:14[22m [34m[build][39m Building server entrypoints...
+
+[31m[1m09:52:15[22m [ERROR] [vite][39m [31m✗[39m Build failed in 1.38s
+[31m[CompilerError][39m [astro:build] The closing frontmatter fence (---) is missing an opening fence
+file: C:/Users/Arjun/Desktop/New folder/projects/portolio/src/pages/blog/[slug].astro:14:1
+  [1mHint:[22m
+[33m    Add --- at the beginning of your file before any import statements or code[39m
+  [1mLocation:[22m
+    [4mC:/Users/Arjun/Desktop/New folder/projects/portolio/src/pages/blog/[slug].astro:14:1[24m
+  [1mStack trace:[22m
+[2m    at handleCompileResultErrors (file:///C:/Users/Arjun/Desktop/New%20folder/projects/portolio/node_modules/astro/dist/core/compile/compile.js:65:11)
+    at async compileAstro (file:///C:/Users/Arjun/Desktop/New%20folder/projects/portolio/node_modules/astro/dist/vite-plugin-astro/compile.js:13:23)
+    at async transform (file:///C:/Users/Arjun/Desktop/New%20folder/projects/portolio/node_modules/rollup/dist/es/shared/node-entry.js:21269:16)[22m

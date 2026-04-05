@@ -1,0 +1,60 @@
+---
+import { supabase } from "../lib/supabase";
+import BlogFilter from "./BlogFilter";
+
+let allPosts = [];
+
+if (!supabase) {
+  console.error("Supabase client not initialized. Check your environment variables.");
+} else {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("date", { ascending: false });
+
+  if (error) console.error("Supabase error fetching posts:", error);
+  allPosts = data || [];
+}
+
+const posts = allPosts.map((post) => ({
+  slug: post.slug,
+  title: post.title,
+  excerpt: post.excerpt,
+  category: post.category,
+  date: new Date(post.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }),
+}));
+---
+
+<section id="blog" class="section-padding bg-charcoal-dark/30">
+  <div class="max-w-6xl mx-auto">
+    <!-- Section Header -->
+    <div class="text-center mb-12 blog-header" style="opacity:0; transform:translateY(20px);">
+      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Journal</span>
+      <h2 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite">
+        Thoughts & <span class="text-teal">Explorations</span>
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
+    </div>
+
+    <!-- Preact Island -->
+    <BlogFilter client:load posts={posts} />
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".blog-header", {
+    scrollTrigger: { trigger: ".blog-header", start: "top 85%" },
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: "power2.out",
+  });
+</script>

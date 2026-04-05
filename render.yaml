@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: arjun-portfolio
+    runtime: node
+    repo: https://github.com/arjun-jayesh/portfolio
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server/entry.mjs
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
+      - key: PUBLIC_SUPABASE_URL
+        sync: false
+      - key: PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SITE
+        sync: false
+      - key: ASTRO_TELEMETRY_DISABLED
+        value: 1

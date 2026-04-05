@@ -1,0 +1,314 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import Works from "../components/Works.astro";
+import Socials from "../components/Socials.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { supabase } from "../lib/supabase";
+
+let founderPhoto = "/arjun-portrait.png";
+if (supabase) {
+  try {
+    const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
+    if (data?.data?.founder_photo_url) founderPhoto = data.data.founder_photo_url;
+  } catch (e) {
+    console.error("Founder SSR:", e);
+  }
+}
+---
+
+<Layout title="Founder" description="Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building KINBO TECHNOLOGIES PRIVATE LIMITED.">
+  <section class="max-w-7xl mx-auto pt-24 px-6 mb-[-4rem]">
+    <Breadcrumbs />
+  </section>
+
+  <!-- Founder Hero with Parallax Portrait -->
+  <section id="founder-hero" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <!-- Animated Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
+      style="background-image: radial-gradient(circle, #2A9D8F 1px, transparent 1px); background-size: 40px 40px;"></div>
+    
+    <!-- Gradient Overlays -->
+    <div class="absolute inset-0 bg-gradient-to-b from-charcoal via-transparent to-charcoal z-[1] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-charcoal/40 via-transparent to-charcoal/40 z-[1] pointer-events-none"></div>
+
+    <!-- Centered Portrait with Parallax -->
+    <div class="relative z-10 flex flex-col items-center" id="founder-parallax-container">
+      <!-- Portrait Frame -->
+      <div class="relative hero-image" style="opacity: 0; transform: scale(0.9);">
+        <!-- Glow Effect Behind Photo -->
+        <div class="absolute inset-0 rounded-full bg-teal/5 blur-3xl scale-150 animate-pulse" style="animation-duration: 4s;"></div>
+        
+        <!-- Orbiting Rings -->
+        <div class="absolute -inset-6 rounded-full border border-dashed border-teal/15 animate-spin" style="animation-duration: 30s;"></div>
+        <div class="absolute -inset-12 rounded-full border border-dotted border-teal/8 animate-spin" style="animation-duration: 50s; animation-direction: reverse;"></div>
+        <div class="absolute -inset-20 rounded-full border border-solid border-teal/4 animate-spin" style="animation-duration: 80s;"></div>
+
+        <!-- The Photo -->
+        <div class="w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full overflow-hidden relative"
+             style="box-shadow: 0 0 80px rgba(42,157,143,0.15), 0 0 160px rgba(42,157,143,0.05);">
+          <img 
+            src={founderPhoto}
+            alt="Arjun Jayesh" 
+            class="w-full h-full object-cover object-top"
+            style="mix-blend-mode: normal;"
+          />
+          <!-- Subtle vignette overlay on the photo -->
+          <div class="absolute inset-0 rounded-full" style="box-shadow: inset 0 0 40px rgba(0,0,0,0.3);"></div>
+        </div>
+      </div>
+
+      <!-- Name & Title Below Photo -->
+      <div class="mt-8 text-center space-y-2 hero-text" style="opacity: 0; transform: translateY(20px);">
+        <h1 class="font-poppins text-4xl sm:text-5xl md:text-6xl font-bold text-offwhite tracking-tight">
+          Arjun <span class="text-teal">Jayesh</span>
+        </h1>
+        <p class="font-mono text-[10px] sm:text-xs text-teal/80 uppercase tracking-[0.5em]">
+          Systems Architect · Founder · Independent Researcher
+        </p>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="mt-12 flex flex-col items-center gap-2 hero-text" style="opacity: 0;">
+        <span class="font-mono text-[9px] tracking-widest uppercase text-muted/50">Scroll</span>
+        <div class="w-px h-10 bg-gradient-to-b from-teal to-transparent"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About the Founder -->
+  <section class="section-padding max-w-4xl mx-auto">
+    <div class="text-center mb-12 founder-section" style="opacity:0; transform:translateY(20px);">
+      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">About</span>
+      <h2 class="font-poppins text-3xl sm:text-4xl font-bold text-offwhite">
+        The Mind Behind <span class="text-teal">KINBO</span>
+      </h2>
+    </div>
+    <div class="founder-section font-lora text-muted leading-relaxed space-y-4 max-w-3xl mx-auto" style="opacity:0; transform:translateY(20px);">
+      <p>
+        Arjun Jayesh is a systems architect, independent researcher, and developer with a passion for building deterministic, constraint-bound systems that deliver measurable outcomes. As the founder of KINBO TECHNOLOGIES PRIVATE LIMITED, he leads the technical vision and product strategy for KINBO's growing ecosystem of intelligent everyday applications.
+      </p>
+      <p>
+        With deep expertise spanning software engineering, automation, and applied artificial intelligence, Arjun brings a methodical approach to product development. He believes that the best technology disappears into the background — working reliably, transparently, and in service of the user rather than the platform.
+      </p>
+      <p>
+        Before founding KINBO, Arjun spent years studying how consumer technology fails its users — through unnecessary complexity, opaque algorithms, and engagement-driven design patterns that prioritize metrics over meaning. KINBO was created to prove that a different approach is possible: one where every feature exists because it genuinely helps someone.
+      </p>
+      <p>
+        Currently scaling KINBO across India, China, and the GCC, Arjun continues to lead the mission to build practical, responsible technology that improves everyday outcomes. When not architecting systems, he explores independent research in constraint-based computing and deterministic system design.
+      </p>
+    </div>
+  </section>
+
+  <!-- Professional Profile (Expandable) -->
+  <section class="section-padding max-w-4xl mx-auto" id="profile-section">
+    <div class="text-center founder-section" style="opacity:0; transform:translateY(20px);">
+      <button
+        id="profile-toggle"
+        class="group inline-flex items-center gap-3 px-6 py-3 border border-teal/20 rounded-full hover:border-teal/50 hover:bg-teal/5 transition-all duration-300"
+      >
+        <span class="font-mono text-xs text-teal uppercase tracking-[0.2em]">Professional Profile</span>
+        <svg id="profile-arrow" class="w-4 h-4 text-teal transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="profile-content" class="overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+      <div class="pt-10 space-y-10">
+
+        <!-- Summary -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <p class="font-lora text-muted leading-relaxed text-center max-w-3xl mx-auto border-l-2 border-teal/30 pl-6 italic">
+            A senior web and app developer with hands-on experience building production-grade Android apps, full-stack web platforms, and scalable backend systems. Founder of a software development company with full ownership across architecture, development, deployment, and maintenance. Strong focus on clean code, system design, and real-world reliability.
+          </p>
+        </div>
+
+        <!-- Core Skills Grid -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal mb-6 text-center">Core Competencies</h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-4 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl space-y-2">
+              <h4 class="font-poppins text-xs font-semibold text-offwhite uppercase tracking-wider">App & Frontend</h4>
+              <ul class="space-y-1 font-mono text-[10px] text-muted">
+                <li>• Android Development (Flutter)</li>
+                <li>• Cross-platform Mobile Apps</li>
+                <li>• React, Next.js, Modern JS</li>
+                <li>• Responsive & Mobile-first</li>
+              </ul>
+            </div>
+            <div class="p-4 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl space-y-2">
+              <h4 class="font-poppins text-xs font-semibold text-offwhite uppercase tracking-wider">Backend & Full-Stack</h4>
+              <ul class="space-y-1 font-mono text-[10px] text-muted">
+                <li>• Python (FastAPI, Django)</li>
+                <li>• Node.js, REST APIs</li>
+                <li>• Auth (OAuth, RBAC)</li>
+                <li>• MongoDB, PostgreSQL</li>
+              </ul>
+            </div>
+            <div class="p-4 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl space-y-2">
+              <h4 class="font-poppins text-xs font-semibold text-offwhite uppercase tracking-wider">Business Systems</h4>
+              <ul class="space-y-1 font-mono text-[10px] text-muted">
+                <li>• eCommerce Platforms</li>
+                <li>• ERP & Business Mgmt</li>
+                <li>• Custom CMS Development</li>
+                <li>• Stripe, Razorpay, UPI</li>
+              </ul>
+            </div>
+            <div class="p-4 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl space-y-2">
+              <h4 class="font-poppins text-xs font-semibold text-offwhite uppercase tracking-wider">Engineering</h4>
+              <ul class="space-y-1 font-mono text-[10px] text-muted">
+                <li>• Clean Architecture</li>
+                <li>• API-first Design</li>
+                <li>• CI/CD-aware Development</li>
+                <li>• Secure, Scalable Systems</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal mb-6 text-center">Professional Experience</h3>
+          <div class="p-6 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-3">
+              <h4 class="font-poppins text-sm font-semibold text-offwhite">Founder & Systems Architect — Dear & Co</h4>
+              <span class="font-mono text-[10px] text-teal shrink-0">2021 – Present</span>
+            </div>
+            <ul class="space-y-2 font-lora text-sm text-muted leading-relaxed">
+              <li>• Founded and led delivery of web applications, Android apps, ERP systems, eCommerce platforms, and backend services.</li>
+              <li>• Owned complete lifecycle: requirements → architecture → development → deployment → iteration.</li>
+              <li>• Worked with international clients, delivering scalable and maintainable systems.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Selected Projects -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal mb-6 text-center">Selected Projects</h3>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">Android Applications</span><p class="font-mono text-[10px] text-muted mt-1">Flutter-based productivity, safety, and business apps</p></div>
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">Web Platforms</span><p class="font-mono text-[10px] text-muted mt-1">Restaurant websites, business portals, SEO-optimized sites</p></div>
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">eCommerce Systems</span><p class="font-mono text-[10px] text-muted mt-1">Full-stack eCommerce with admin dashboards and payments</p></div>
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">ERP & CMS</span><p class="font-mono text-[10px] text-muted mt-1">Custom systems for operations and content management</p></div>
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">AI & Automation</span><p class="font-mono text-[10px] text-muted mt-1">Backend systems supporting automation workflows</p></div>
+            <div class="p-4 border border-charcoal-light/20 rounded-lg"><span class="font-poppins text-xs text-offwhite font-medium">Desktop Software</span><p class="font-mono text-[10px] text-muted mt-1">Native desktop application focused on performance</p></div>
+          </div>
+        </div>
+
+        <!-- Research -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal mb-6 text-center">Research & Technical Work</h3>
+          <div class="p-6 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl space-y-3">
+            <ul class="space-y-2 font-lora text-sm text-muted leading-relaxed">
+              <li>• Developed deterministic, reproducible software systems emphasizing correctness and auditability.</li>
+              <li>• Authored a research-grade computational framework with archived code and datasets.</li>
+              <li>• Experience auditing security-sensitive, offline-first systems and cryptographic trust chains.</li>
+            </ul>
+            <div class="flex flex-wrap gap-4 pt-2">
+              <a href="https://doi.org/10.5281/zenodo.18181494" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-mono text-[10px] text-teal hover:underline uppercase tracking-widest">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                Zenodo Archive
+              </a>
+              <a href="https://orcid.org/0009-0001-8057-3225" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-mono text-[10px] text-teal hover:underline uppercase tracking-widest">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                ORCID Profile
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links & Contact -->
+        <div class="founder-section" style="opacity:0; transform:translateY(20px);">
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://github.com/arjun-jayesh" target="_blank" rel="noopener" class="px-4 py-2 border border-charcoal-light/30 rounded-lg hover:border-teal/40 hover:bg-teal/5 transition-all font-mono text-[10px] text-muted hover:text-teal uppercase tracking-widest">GitHub (Primary)</a>
+            <a href="https://github.com/kriokir" target="_blank" rel="noopener" class="px-4 py-2 border border-charcoal-light/30 rounded-lg hover:border-teal/40 hover:bg-teal/5 transition-all font-mono text-[10px] text-muted hover:text-teal uppercase tracking-widest">GitHub (Legacy)</a>
+            <a href="mailto:arjunjayesh500@gmail.com" class="px-4 py-2 border border-charcoal-light/30 rounded-lg hover:border-teal/40 hover:bg-teal/5 transition-all font-mono text-[10px] text-muted hover:text-teal uppercase tracking-widest">arjunjayesh500@gmail.com</a>
+          </div>
+        </div>
+
+        <!-- Value Statement -->
+        <div class="founder-section text-center" style="opacity:0; transform:translateY(20px);">
+          <blockquote class="font-lora text-lg text-offwhite/80 italic max-w-2xl mx-auto border-l-2 border-teal/40 pl-6">
+            Arjun Jayesh builds web and mobile applications that scale cleanly and work reliably in the real world.
+          </blockquote>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <Works />
+  <Socials />
+</Layout>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initFounder() {
+    // Hero entrance animations
+    gsap.to(".hero-image", {
+      opacity: 1,
+      scale: 1,
+      duration: 1.4,
+      ease: "power3.out",
+      delay: 0.3,
+    });
+
+    gsap.to(".hero-text", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.2,
+      ease: "power3.out",
+      delay: 0.8,
+    });
+
+    // Parallax effect on the portrait
+    gsap.to("#founder-parallax-container", {
+      yPercent: -15,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#founder-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      }
+    });
+
+    // Founder sections reveal
+    gsap.utils.toArray(".founder-section").forEach((el: any) => {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: "top 85%" },
+        opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+      });
+    });
+    // Profile expand/collapse toggle
+    const toggle = document.getElementById("profile-toggle");
+    const content = document.getElementById("profile-content");
+    const arrow = document.getElementById("profile-arrow");
+    let isOpen = false;
+
+    toggle?.addEventListener("click", () => {
+      isOpen = !isOpen;
+      if (content) {
+        if (isOpen) {
+          content.style.maxHeight = content.scrollHeight + "px";
+          content.style.opacity = "1";
+          // Re-trigger section reveals for newly visible elements
+          ScrollTrigger.refresh();
+        } else {
+          content.style.maxHeight = "0";
+          content.style.opacity = "0";
+        }
+      }
+      if (arrow) {
+        arrow.style.transform = isOpen ? "rotate(180deg)" : "rotate(0deg)";
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", initFounder);
+</script>

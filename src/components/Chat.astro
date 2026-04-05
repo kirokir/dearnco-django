@@ -1,0 +1,246 @@
+<!-- Chat Section — IDE terminal/chat widget styled contact form -->
+
+<section id="chat" class="section-padding bg-charcoal-dark/30">
+  <div class="max-w-4xl mx-auto">
+    <!-- Section Header -->
+    <div class="text-center mb-12 chat-header" style="opacity:0; transform:translateY(20px);">
+      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Contact</span>
+      <h2 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite">
+        Start a <span class="text-teal">Conversation</span>
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
+    </div>
+
+    <!-- Terminal/Chat Widget -->
+    <div class="chat-widget rounded-2xl border border-charcoal-light/30 overflow-hidden shadow-2xl" style="opacity:0; transform:translateY(20px);">
+      <!-- Terminal Title Bar -->
+      <div class="flex items-center gap-2 px-5 py-3 bg-charcoal-dark border-b border-charcoal-light/20">
+        <div class="flex gap-2">
+          <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+        </div>
+        <span class="font-mono text-xs text-muted ml-3 tracking-wider">arjun@portfolio ~ /chat</span>
+      </div>
+
+      <!-- Form Body -->
+      <div class="p-6 sm:p-8 md:p-10 bg-gradient-to-b from-charcoal-dark/80 to-charcoal">
+        <!-- Terminal prompt decoration -->
+        <div class="font-mono text-xs text-muted mb-6 flex items-center gap-2">
+          <span class="text-teal">❯</span>
+          <span>init collaboration --interactive</span>
+          <span class="inline-block w-2 h-4 bg-teal/50 animate-pulse ml-1"></span>
+        </div>
+
+        <form action="#" method="POST" class="space-y-6" id="contact-form">
+          <!-- Name + Email row -->
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="name" class="block font-poppins text-xs uppercase tracking-wider text-muted mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="Your name"
+                class="chat-input w-full px-4 py-3 rounded-lg bg-charcoal-light/30 border border-charcoal-light/30 text-offwhite font-lora text-sm placeholder:text-muted/50 transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label for="email" class="block font-poppins text-xs uppercase tracking-wider text-muted mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="you@domain.com"
+                class="chat-input w-full px-4 py-3 rounded-lg bg-charcoal-light/30 border border-charcoal-light/30 text-offwhite font-lora text-sm placeholder:text-muted/50 transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          <!-- Project Type Dropdown -->
+          <div>
+            <label for="project-type" class="block font-poppins text-xs uppercase tracking-wider text-muted mb-2">
+              Project Type
+            </label>
+            <select
+              id="project-type"
+              name="project_type"
+              required
+              class="chat-input w-full px-4 py-3 rounded-lg bg-charcoal-light/30 border border-charcoal-light/30 text-offwhite font-lora text-sm appearance-none cursor-pointer transition-all duration-300"
+              style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22%239CA3AF%22 viewBox=%220 0 24 24%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 1rem center;"
+            >
+              <option value="" disabled selected style="color: #6B7280;">Select a type...</option>
+              <option value="software">Software Engineering</option>
+              <option value="research">Research Collaboration</option>
+              <option value="automation">Automation / DevOps</option>
+              <option value="consulting">Consulting</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label for="message" class="block font-poppins text-xs uppercase tracking-wider text-muted mb-2">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="5"
+              placeholder="Describe your project or idea..."
+              class="chat-input w-full px-4 py-3 rounded-lg bg-charcoal-light/30 border border-charcoal-light/30 text-offwhite font-lora text-sm placeholder:text-muted/50 resize-none transition-all duration-300"
+            ></textarea>
+          </div>
+
+          <!-- Submit -->
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <p class="font-mono text-[10px] text-muted/50 tracking-wider">
+              <span class="text-teal">↵</span> Hits ENTER to initialize connection
+            </p>
+            <button
+              type="submit"
+              id="submit-btn"
+              class="submit-btn inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-teal text-charcoal font-poppins text-sm font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-teal-dark hover:shadow-lg hover:shadow-teal/20"
+            >
+              Send Message
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden mt-8 p-6 rounded-lg border border-teal/20 bg-teal/5 text-center">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-teal/20 text-teal mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p class="text-offwhite font-poppins font-medium mb-2">Transmission Successful</p>
+          <p class="text-muted text-sm font-lora">Your message has been queued. Arjun will respond shortly.</p>
+          <button id="reset-form" class="mt-4 text-xs font-mono text-teal uppercase tracking-widest hover:underline">
+            [ Send Another ]
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".chat-header", {
+    scrollTrigger: { trigger: ".chat-header", start: "top 85%" },
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: "power2.out",
+  });
+
+  gsap.to(".chat-widget", {
+    scrollTrigger: { trigger: ".chat-widget", start: "top 85%" },
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: "power2.out",
+    delay: 0.2,
+  });
+
+  // Form Handling
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const successMessage = document.getElementById("success-message");
+  const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement | null;
+  const resetBtn = document.getElementById("reset-form");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    // Disable button and show loading state
+    let originalText = "";
+    if (submitBtn) {
+      originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-charcoal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Sending...
+      `;
+    }
+
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Hide form, show success
+    gsap.to(form, {
+      opacity: 0,
+      y: -20,
+      duration: 0.5,
+      onComplete: () => {
+        form?.classList.add("hidden");
+        successMessage?.classList.remove("hidden");
+        gsap.fromTo(successMessage, 
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5 }
+        );
+      }
+    });
+  });
+
+  resetBtn?.addEventListener("click", () => {
+    gsap.to(successMessage, {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      onComplete: () => {
+        successMessage?.classList.add("hidden");
+        if (form) {
+          form.classList.remove("hidden");
+          form.reset();
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            Send Message
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          `;
+        }
+        gsap.fromTo(form,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.5 }
+        );
+      }
+    });
+  });
+</script>
+
+<style>
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--color-teal);
+    border-style: dashed;
+    box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+  }
+  .submit-btn:focus-visible {
+    outline: 2px dashed var(--color-teal);
+    outline-offset: 3px;
+  }
+  select option {
+    background: var(--color-charcoal);
+    color: var(--color-offwhite);
+  }
+</style>

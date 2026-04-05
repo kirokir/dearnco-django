@@ -1,0 +1,27 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import IdeasForm from "../components/IdeasForm";
+---
+
+<Layout title="Submit an Idea — Arjun Jayesh" description="Have a startup idea or project concept? Submit it here and let's build something extraordinary together.">
+  <section class="section-padding max-w-4xl mx-auto mt-16 mb-24">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Idea Lab</span>
+      <h1 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite mb-4">
+        Got an <span class="text-teal">Idea</span>?
+      </h1>
+      <p class="font-lora text-muted max-w-2xl mx-auto leading-relaxed">
+        Whether it's a startup concept, a prototype you want built, or a website for your business — 
+        share your vision and I'll turn it into reality. Fill out the details below and I'll get back to you.
+      </p>
+      <div class="mt-6 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
+    </div>
+
+    <!-- Form Island -->
+    <div class="bg-charcoal-light/5 border border-charcoal-light/20 rounded-2xl p-6 sm:p-10 backdrop-blur-sm">
+      <IdeasForm client:load />
+    </div>
+  </section>
+</Layout>

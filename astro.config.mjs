@@ -10,7 +10,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://portfolio-sage-two-43.vercel.app',
+  site: 'https://dear.is-a.dev',
   output: 'server',
   security: {
     checkOrigin: false

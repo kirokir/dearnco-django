@@ -49,16 +49,18 @@ export default function WorksFilter() {
                 style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: "0.75rem",
+                    gap: "0.5rem",
                     justifyContent: "center",
-                    marginBottom: "3rem",
+                    marginBottom: "2rem",
                     position: "sticky",
-                    top: "4.5rem",
+                    top: "4.25rem",
                     zIndex: 20,
-                    paddingTop: "1rem",
+                    paddingTop: "0.75rem",
                     paddingBottom: "1rem",
-                    background:
-                        "linear-gradient(to bottom, #1E1E1E 60%, transparent)",
+                    background: "var(--charcoal)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    borderBottom: "1px solid rgba(128,128,128,0.1)",
                 }}
             >
                 {categories.map((cat) => (
@@ -77,11 +79,11 @@ export default function WorksFilter() {
                             transition: "all 0.3s ease",
                             border:
                                 active === cat
-                                    ? "2px solid #2A9D8F"
-                                    : "2px solid rgba(245,245,247,0.15)",
+                                    ? "2px solid var(--teal)"
+                                    : "2px solid rgba(128,128,128,0.15)",
                             background:
                                 active === cat ? "rgba(42,157,143,0.15)" : "transparent",
-                            color: active === cat ? "#2A9D8F" : "#9CA3AF",
+                            color: active === cat ? "var(--teal)" : "var(--muted)",
                         }}
                     >
                         {cat}
@@ -144,11 +146,11 @@ export default function WorksFilter() {
                                         width: "14px",
                                         height: "14px",
                                         borderRadius: "50%",
-                                        background: "#2A9D8F",
-                                        border: "3px solid #1E1E1E",
+                                        background: "var(--teal)",
+                                        border: "3px solid var(--charcoal)",
                                         transform: "translate(-50%, -50%)",
                                         zIndex: 2,
-                                        boxShadow: "0 0 12px rgba(42,157,143,0.4)",
+                                        boxShadow: "0 0 12px var(--teal-glow)",
                                     }}
                                     class="hidden md:block"
                                 />
@@ -162,8 +164,8 @@ export default function WorksFilter() {
                                         width: "12px",
                                         height: "12px",
                                         borderRadius: "50%",
-                                        background: "#2A9D8F",
-                                        border: "3px solid #1E1E1E",
+                                        background: "var(--teal)",
+                                        border: "3px solid var(--charcoal)",
                                         transform: "translate(-50%, -50%)",
                                         zIndex: 2,
                                     }}
@@ -193,7 +195,7 @@ export default function WorksFilter() {
                                         borderRadius: "1rem",
                                         border: "1px solid rgba(245,245,247,0.08)",
                                         background:
-                                            "linear-gradient(135deg, rgba(42,42,42,0.6), rgba(30,30,30,0.8))",
+                                            "linear-gradient(135deg, rgba(var(--charcoal-light-rgb, 42,42,42), 0.6), rgba(var(--charcoal-rgb, 30,30,30), 0.8))",
                                         backdropFilter: "blur(8px)",
                                         transition: "all 0.3s ease",
                                         ...(isLeft
@@ -225,7 +227,7 @@ export default function WorksFilter() {
                                             fontFamily: '"Poppins", sans-serif',
                                             fontSize: "1.1rem",
                                             fontWeight: 600,
-                                            color: "#F5F5F7",
+                                            color: "var(--offwhite)",
                                             marginBottom: "0.5rem",
                                             margin: "0 0 0.5rem 0",
                                         }}
@@ -236,7 +238,7 @@ export default function WorksFilter() {
                                         style={{
                                             fontFamily: '"Lora", serif',
                                             fontSize: "0.875rem",
-                                            color: "#9CA3AF",
+                                            color: "var(--muted)",
                                             lineHeight: 1.6,
                                             margin: 0,
                                         }}
@@ -270,7 +272,9 @@ export default function WorksFilter() {
                                         borderRadius: "0.75rem",
                                         border: "1px solid rgba(245,245,247,0.08)",
                                         background:
-                                            "linear-gradient(135deg, rgba(42,42,42,0.6), rgba(30,30,30,0.8))",
+                                            "linear-gradient(135deg, rgba(var(--charcoal-light-rgb, 42,42,42), 0.6), rgba(var(--charcoal-rgb, 30,30,30), 0.8))",
+                                        backdropFilter: "blur(8px)",
+                                        WebkitBackdropFilter: "blur(8px)",
                                         flex: 1,
                                     }}
                                     class="block md:hidden"
@@ -298,7 +302,7 @@ export default function WorksFilter() {
                                             fontFamily: '"Poppins", sans-serif',
                                             fontSize: "1rem",
                                             fontWeight: 600,
-                                            color: "#F5F5F7",
+                                            color: "var(--offwhite)",
                                             margin: "0 0 0.4rem 0",
                                         }}
                                     >
@@ -308,7 +312,7 @@ export default function WorksFilter() {
                                         style={{
                                             fontFamily: '"Lora", serif',
                                             fontSize: "0.8rem",
-                                            color: "#9CA3AF",
+                                            color: "var(--muted)",
                                             lineHeight: 1.5,
                                             margin: 0,
                                         }}
@@ -344,9 +348,9 @@ export default function WorksFilter() {
           to   { opacity: 1; transform: translateY(0); }
         }
         .works-card:hover {
-          border-color: rgba(42,157,143,0.3) !important;
+          border-color: rgba(var(--teal-rgb, 42,157,143), 0.3) !important;
           transform: translateY(-3px);
-          box-shadow: 0 8px 30px rgba(42,157,143,0.1);
+          box-shadow: 0 8px 30px rgba(var(--teal-rgb, 42,157,143), 0.1);
         }
       `}</style>
         </div>

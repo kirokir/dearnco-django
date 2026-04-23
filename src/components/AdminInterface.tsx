@@ -89,11 +89,12 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
+    const [redirects, setRedirects] = useState<any[]>([]);
     const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
@@ -107,24 +108,27 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
                 fetch("/api/config?key=enterprise_assets"),
                 fetch("/api/ideas"),
                 fetch("/api/products"),
+                fetch("/api/redirects"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
             const enterpriseData = await enterpriseRes.json();
             const ideasData = await ideasRes.json();
             const productsData = await productsRes.json();
+            const redirectsData = await redirectsRes.json();
 
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
             setEnterprise(enterpriseData || { hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
             setIdeas(Array.isArray(ideasData) ? ideasData : []);
             setProducts(Array.isArray(productsData) ? productsData : []);
+            setRedirects(Array.isArray(redirectsData) ? redirectsData : []);
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -227,6 +231,13 @@ export default function AdminInterface() {
                         }`}
                 >
                     Enterprise Assets
+                </button>
+                <button
+                    onClick={() => setActiveTab("redirects")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "redirects" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Redirects ({redirects.length})
                 </button>
             </div>
 
@@ -335,6 +346,10 @@ export default function AdminInterface() {
 
             {activeTab === "enterprise" && (
                 <EnterpriseManager assets={enterprise} onRefresh={fetchData} />
+            )}
+
+            {activeTab === "redirects" && (
+                <RedirectsManager redirects={redirects} onRefresh={fetchData} />
             )}
         </div>
     );
@@ -995,6 +1010,216 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                     {saving ? "SAVING..." : "[ Update Enterprise Core ]"}
                 </button>
             </form>
+        </div>
+    );
+}
+
+function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefresh: () => void }) {
+    const [isNew, setIsNew] = useState(false);
+    const [editing, setEditing] = useState<any>(null);
+    const [saving, setSaving] = useState(false);
+    const [dnsError, setDnsError] = useState<any>(null);
+
+    async function handleSave(e: Event) {
+        e.preventDefault();
+        setSaving(true);
+        setDnsError(null);
+        const data = editing || { fqdn: "", target_url: "" };
+        try {
+            const res = await fetch("/api/redirects", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" },
+            });
+            
+            if (res.status === 422) {
+                const errorData = await res.json();
+                setDnsError(errorData);
+                setSaving(false);
+                return;
+            }
+
+            if (res.ok) {
+                setEditing(null);
+                setIsNew(false);
+                onRefresh();
+            }
+        } catch (e) {
+            console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    async function handleDelete(id: any) {
+        if (!confirm("Delete this redirection rule?")) return;
+        try {
+            const res = await fetch(`/api/redirects?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+    }
+
+    if (isNew || editing) {
+        const item = editing || { fqdn: "", target_url: "" };
+
+        if (dnsError) {
+            return (
+                <div class="space-y-6 animate-fadeIn">
+                    <div class="flex justify-between items-center bg-red-500/10 p-4 rounded border-l-4 border-red-500">
+                        <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                            Failed to Create Redirector
+                        </h3>
+                        <button onClick={() => setDnsError(null)} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
+                    </div>
+
+                    <div class="p-6 bg-charcoal-light/10 border border-red-500/20 rounded-xl space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-offwhite font-poppins text-sm font-semibold">DNS failure for <span class="text-red-400">{dnsError.fqdn}</span>, the A record does not resolve to 18.133.72.105</p>
+                                <p class="text-muted font-mono text-xs leading-relaxed">
+                                    You may need to wait for DNS propagation to complete which can sometimes take a few minutes or hours.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-charcoal-light/20">
+                            <h4 class="font-poppins text-[10px] font-bold text-teal uppercase tracking-[0.2em] mb-4">Advanced DNS Information</h4>
+                            <p class="text-[10px] text-muted font-mono mb-4 leading-relaxed">
+                                The following results were returned as part of the DNS query for your domain <span class="text-offwhite">{dnsError.fqdn}</span>. If you are having trouble setting up a redirector the most likely cause is DNS propagation, which in some cases can take up to 72 hours. Review the TTL values below, if you have recently transferred your domain or updated your name servers the SOA TTL will also impact DNS propagation.
+                            </p>
+                            
+                            <div class="bg-charcoal-dark/50 rounded-lg overflow-hidden border border-charcoal-light/20">
+                                <table class="w-full text-left font-mono text-[9px]">
+                                    <thead class="bg-charcoal-light/10 text-teal uppercase tracking-widest">
+                                        <tr>
+                                            <th class="px-3 py-2">Type</th>
+                                            <th class="px-3 py-2">Value / Result</th>
+                                            <th class="px-3 py-2 text-right">TTL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-charcoal-light/10 text-offwhite/70">
+                                        {Array.isArray(dnsError.diagnostics) && dnsError.diagnostics.length > 0 ? (
+                                            dnsError.diagnostics.map((d: any, i: number) => (
+                                                <tr key={i} class="hover:bg-white/5 transition-colors">
+                                                    <td class="px-3 py-2 font-bold text-teal">{d.type}</td>
+                                                    <td class="px-3 py-2 truncate max-w-[200px]">{d.address || d.value || d.ns || JSON.stringify(d)}</td>
+                                                    <td class="px-3 py-2 text-right text-muted">{d.ttl || '-'}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={3} class="px-3 py-4 text-center text-muted italic">No public records found yet. Propagation pending.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pt-4">
+                            <button 
+                                onClick={() => handleSave(new Event('submit') as any)} 
+                                class="flex-1 py-3 bg-teal/10 border border-teal/30 text-teal font-mono text-[10px] uppercase tracking-widest hover:bg-teal hover:text-charcoal transition-all rounded"
+                            >
+                                [ RETRY VALIDATION ]
+                            </button>
+                            <button 
+                                onClick={() => setDnsError(null)} 
+                                class="flex-1 py-3 bg-charcoal-light/10 border border-charcoal-light/30 text-muted font-mono text-[10px] uppercase tracking-widest hover:text-offwhite transition-all rounded"
+                            >
+                                [ BACK TO EDITOR ]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div class="space-y-6 animate-fadeIn">
+                <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
+                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                        {isNew ? "New Redirector" : "Edit Redirector"}
+                    </h3>
+                    <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
+                </div>
+
+                {/* DNS Configuration Alert */}
+                <div class="p-6 bg-charcoal-light/10 border border-teal/20 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-teal"></div>
+                    <h4 class="font-poppins text-sm font-bold text-teal mb-3 uppercase tracking-widest flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        DNS Configuration
+                    </h4>
+                    <p class="font-mono text-xs text-offwhite/80 leading-relaxed italic">
+                        Before creating a redirector please navigate to your DNS provider and add an A record for your FQDN pointing to <span class="text-teal font-bold px-1.5 py-0.5 bg-teal/10 rounded">18.133.72.105</span> allowing time for DNS propagation.
+                    </p>
+                </div>
+
+                <form onSubmit={handleSave} class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input 
+                            label="FQDN (Full Domain)" 
+                            value={item.fqdn} 
+                            onChange={(v: string) => setEditing({ ...item, fqdn: v })} 
+                            placeholder="e.g. link.arjunjayesh.com"
+                            required 
+                        />
+                        <Input 
+                            label="Target URL" 
+                            value={item.target_url} 
+                            onChange={(v: string) => setEditing({ ...item, target_url: v })} 
+                            placeholder="e.g. https://github.com/arjunjayesh"
+                            required 
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={saving}
+                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                    >
+                        {saving ? "SAVING..." : "[ Establish New Redirector ]"}
+                    </button>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Redirector Management</h2>
+                <button
+                    onClick={() => setIsNew(true)}
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                >
+                    + New Redirector
+                </button>
+            </div>
+
+            <div class="grid gap-4">
+                {redirects.map((r) => (
+                    <div key={r.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
+                        <div class="flex-1 min-w-0 pr-4">
+                            <h4 class="text-offwhite font-poppins font-medium truncate">{r.fqdn}</h4>
+                            <p class="text-[10px] text-teal/60 font-mono truncate">➜ {r.target_url}</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onClick={() => setEditing(r)} class="text-teal font-mono text-[10px] uppercase hover:underline">[ EDIT ]</button>
+                            <button onClick={() => handleDelete(r.id)} class="text-red-400 font-mono text-[10px] uppercase hover:underline">[ DELETE ]</button>
+                        </div>
+                    </div>
+                ))}
+                {redirects.length === 0 && (
+                    <div class="text-center py-12 bg-charcoal-light/5 rounded-xl border border-dashed border-charcoal-light/30">
+                        <p class="text-muted font-mono text-xs uppercase tracking-widest">No active redirectors configured</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

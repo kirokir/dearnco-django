@@ -2,6 +2,7 @@
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
+import LeadFunnel from "../components/LeadFunnel";
 
 let enterpriseAssets = {
     hero_video_url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1113-large.mp4",
@@ -292,6 +293,8 @@ if (supabase) {
     </div>
   </section>
 
+  <LeadFunnel client:load />
+
 </Layout>
 
 <script>
@@ -360,13 +363,24 @@ if (supabase) {
     gsap.utils.toArray(".reveal").forEach((el: any) => {
       gsap.from(el, {
         opacity: 0,
-        y: 50,
-        duration: 1,
+        y: 60,
+        duration: 1.2,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: el,
-          start: "top 85%"
+          start: "top 90%"
         }
       });
+    });
+
+    // ─── Portfolio Grid Hover Intent (Tilt effect simulation or custom animation) ───
+    gsap.utils.toArray("#work a").forEach((card: any) => {
+        card.addEventListener("mouseenter", () => {
+            gsap.to(card.querySelector(".z-20"), { y: -10, duration: 0.4, ease: "power2.out" });
+        });
+        card.addEventListener("mouseleave", () => {
+            gsap.to(card.querySelector(".z-20"), { y: 0, duration: 0.4, ease: "power2.inOut" });
+        });
     });
   }
 

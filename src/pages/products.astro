@@ -291,11 +291,15 @@ import AutoCarousel from "../components/AutoCarousel";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.utils.toArray(".product-block").forEach((el: any) => {
-    gsap.to(el, {
-      scrollTrigger: { trigger: el, start: "top 85%" },
-      opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+  function initProducts() {
+    gsap.utils.toArray(".product-block").forEach((el: any) => {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: "top 85%" },
+        opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+      });
     });
-  });
+  }
+
+  document.addEventListener("astro:page-load", initProducts);
 </script>
 

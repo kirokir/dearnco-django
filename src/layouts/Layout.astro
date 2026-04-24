@@ -20,12 +20,24 @@ let enterpriseAssets = {
 };
 
 if (supabase) {
-    const { data } = await supabase
-        .from('site_config')
-        .select('data')
-        .eq('key', 'enterprise_assets')
-        .single();
-    if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
+    try {
+        // 5-second timeout for the database fetch to prevent blocking the entire page
+        const configPromise = supabase
+            .from('site_config')
+            .select('data')
+            .eq('key', 'enterprise_assets')
+            .single();
+            
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Config fetch timeout')), 5000)
+        );
+
+        const { data }: any = await Promise.race([configPromise, timeoutPromise]);
+        if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
+    } catch (e) {
+        console.error("Layout Config Fetch Error:", e);
+        // Fallback to defaults already set in enterpriseAssets
+    }
 }
 
 const navLinks = [

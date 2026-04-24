@@ -89,12 +89,13 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "models">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
     const [redirects, setRedirects] = useState<any[]>([]);
+    const [models, setModels] = useState<any[]>([]);
     const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
@@ -108,13 +109,14 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, modelsRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
                 fetch("/api/config?key=enterprise_assets"),
                 fetch("/api/ideas"),
                 fetch("/api/products"),
                 fetch("/api/redirects"),
+                fetch("/api/models"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
@@ -122,6 +124,7 @@ export default function AdminInterface() {
             const ideasData = await ideasRes.json();
             const productsData = await productsRes.json();
             const redirectsData = await redirectsRes.json();
+            const modelsData = await modelsRes.json();
 
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
@@ -129,6 +132,7 @@ export default function AdminInterface() {
             setIdeas(Array.isArray(ideasData) ? ideasData : []);
             setProducts(Array.isArray(productsData) ? productsData : []);
             setRedirects(Array.isArray(redirectsData) ? redirectsData : []);
+            setModels(Array.isArray(modelsData) ? modelsData : []);
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -238,6 +242,13 @@ export default function AdminInterface() {
                         }`}
                 >
                     Redirects ({redirects.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("models")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "models" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Models ({models.length})
                 </button>
             </div>
 
@@ -350,6 +361,10 @@ export default function AdminInterface() {
 
             {activeTab === "redirects" && (
                 <RedirectsManager redirects={redirects} onRefresh={fetchData} />
+            )}
+
+            {activeTab === "models" && (
+                <ModelsManager models={models} onRefresh={fetchData} />
             )}
         </div>
     );
@@ -1217,6 +1232,147 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                 {redirects.length === 0 && (
                     <div class="text-center py-12 bg-charcoal-light/5 rounded-xl border border-dashed border-charcoal-light/30">
                         <p class="text-muted font-mono text-xs uppercase tracking-widest">No active redirectors configured</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => void }) {
+    const [editing, setEditing] = useState<any>(null);
+    const [isNew, setIsNew] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    async function handleSave(e: Event) {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            const res = await fetch("/api/models", {
+                method: "POST",
+                body: JSON.stringify(editing),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setEditing(null);
+                setIsNew(false);
+                onRefresh();
+            }
+        } catch (e) {
+            console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    async function handleDelete(id: any) {
+        if (!confirm("Delete this industry model?")) return;
+        try {
+            const res = await fetch(`/api/models?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+    }
+
+    if (isNew || editing) {
+        const item = editing || { title: "", description: "", category: "General", benchmark_name: "", benchmark_url: "", icon_type: "generic", is_featured: false, sort_order: 0 };
+        return (
+            <div class="space-y-6 animate-fadeIn">
+                <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
+                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                        {isNew ? "New Industry Model" : `Editing: ${item.title}`}
+                    </h3>
+                    <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
+                </div>
+
+                <form onSubmit={handleSave} class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Title *" value={item.title} onChange={(v: string) => setEditing({ ...item, title: v })} required />
+                        <Input label="Category *" value={item.category} onChange={(v: string) => setEditing({ ...item, category: v })} required />
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <Input label="Benchmark Name" value={item.benchmark_name} onChange={(v: string) => setEditing({ ...item, benchmark_name: v })} />
+                        <Input label="Benchmark URL" value={item.benchmark_url} onChange={(v: string) => setEditing({ ...item, benchmark_url: v })} />
+                    </div>
+                    <div class="grid items-end md:grid-cols-3 gap-4">
+                        <div class="space-y-1">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Icon Type</label>
+                            <select
+                                value={item.icon_type}
+                                onChange={(e) => setEditing({ ...item, icon_type: (e.target as any).value })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                            >
+                                <option value="wp">WordPress</option>
+                                <option value="jewel">Jewellery</option>
+                                <option value="fashion">Fashion/Clothes</option>
+                                <option value="bank">Banking</option>
+                                <option value="boutique">Boutique</option>
+                                <option value="market">Supermarket</option>
+                                <option value="eng">Engineering</option>
+                                <option value="health">Healthcare</option>
+                                <option value="generic">Generic</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-4 h-[41px] bg-charcoal-dark/50 border border-charcoal-light/20 rounded px-4">
+                            <input
+                                type="checkbox"
+                                checked={item.is_featured}
+                                onChange={(e) => setEditing({ ...item, is_featured: (e.target as any).checked })}
+                                class="w-4 h-4 accent-teal"
+                            />
+                            <label class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Featured Card</label>
+                        </div>
+                        <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: string) => setEditing({ ...item, sort_order: parseInt(v) })} />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
+                        <textarea
+                            value={item.description}
+                            onInput={(e) => setEditing({ ...item, description: (e.target as any).value })}
+                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-32"
+                            required
+                        ></textarea>
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={saving}
+                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                    >
+                        {saving ? "SAVING..." : "[ Update Library Node ]"}
+                    </button>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Models Library</h2>
+                <button
+                    onClick={() => setIsNew(true)}
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                >
+                    + Add Model
+                </button>
+            </div>
+
+            <div class="grid gap-4">
+                {models.map((m) => (
+                    <div key={m.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
+                        <div>
+                            <h4 class="text-offwhite font-poppins font-medium">{m.title} {m.is_featured && <span class="text-[8px] text-teal border border-teal/20 px-1 rounded ml-2">FEATURED</span>}</h4>
+                            <p class="text-[10px] text-muted font-mono uppercase tracking-widest">{m.category} • {m.icon_type}</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onClick={() => setEditing(m)} class="text-teal font-mono text-[10px] uppercase hover:underline">[ EDIT ]</button>
+                            <button onClick={() => handleDelete(m.id)} class="text-red-400 font-mono text-[10px] uppercase hover:underline">[ DELETE ]</button>
+                        </div>
+                    </div>
+                ))}
+                {models.length === 0 && (
+                    <div class="text-center py-12 bg-charcoal-light/5 rounded-xl border border-dashed border-charcoal-light/30">
+                        <p class="text-muted font-mono text-xs uppercase tracking-widest">No industry models configured</p>
                     </div>
                 )}
             </div>

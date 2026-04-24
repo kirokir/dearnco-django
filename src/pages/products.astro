@@ -4,18 +4,25 @@ import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 
 let dynamicProducts: any[] = [];
+let industryModels: any[] = [];
+
 if (supabase) {
   try {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("status", "active")
-      .order("sort_order", { ascending: true });
+    const [productsRes, modelsRes] = await Promise.all([
+      supabase.from("products").select("*").eq("status", "active").order("sort_order", { ascending: true }),
+      supabase.from("industry_models").select("*").order("sort_order", { ascending: true })
+    ]);
     
-    if (error) {
-      console.error("Products Supabase Fetch Error:", error);
-    } else if (data) {
-      dynamicProducts = data;
+    if (productsRes.error) console.error("Products Fetch Error:", productsRes.error);
+    else {
+      dynamicProducts = productsRes.data || [];
+      console.log(`[SSR] Fetched ${dynamicProducts.length} dynamic products`);
+    }
+ 
+    if (modelsRes.error) console.error("Models Fetch Error:", modelsRes.error);
+    else {
+      industryModels = modelsRes.data || [];
+      console.log(`[SSR] Fetched ${industryModels.length} industry models`);
     }
   } catch (e) {
     console.error("Products SSR Crash Caught:", e);
@@ -198,6 +205,7 @@ import AutoCarousel from "../components/AutoCarousel";
     )}
 
     <!-- MODELS SECTION -->
+    <!-- MODELS SECTION -->
     <div id="models" class="mb-20 product-block" style="opacity:0; transform:translateY(30px);">
       <div class="text-center mb-16">
         <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Industry Standard Models</span>
@@ -209,106 +217,60 @@ import AutoCarousel from "../components/AutoCarousel";
         </p>
       </div>
 
-      <!-- Feature Collage -->
-      <div class="mb-16 rounded-3xl overflow-hidden border border-charcoal-light/20 relative group">
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent z-10"></div>
-          <img 
-            src="/indian_business_models_collage_1776926783752.png" 
-            alt="Business Ecosystem" 
-            class="w-full h-80 object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0"
-          />
-          <div class="absolute bottom-8 left-8 z-20">
-              <span class="font-mono text-[10px] text-teal uppercase tracking-widest block mb-2">Integrated Verticals</span>
-              <h3 class="font-poppins text-2xl font-bold text-offwhite">Scaling the Indian Enterprise</h3>
+      {industryModels.length > 0 ? (
+        <>
+          {/* Feature Collage */}
+          <div class="mb-16 rounded-3xl overflow-hidden border border-charcoal-light/20 relative group">
+              <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent z-10"></div>
+              <img 
+                src="/indian_business_models_collage_1776926783752.png" 
+                alt="Business Ecosystem" 
+                class="w-full h-80 object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0"
+              />
+              <div class="absolute bottom-8 left-8 z-20">
+                  <span class="font-mono text-[10px] text-teal uppercase tracking-widest block mb-2">Integrated Verticals</span>
+                  <h3 class="font-poppins text-2xl font-bold text-offwhite">Scaling the Indian Enterprise</h3>
+              </div>
           </div>
-      </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <!-- WordPress Sites -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">WordPress Sites</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">Agile CMS frameworks for high-velocity deployments, featuring SEO tuning and automated performance optimization.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="text-[9px] font-mono text-teal uppercase border border-teal/20 px-2 py-0.5 rounded">Elementor-Pro</span>
-            <span class="text-[9px] font-mono text-teal uppercase border border-teal/20 px-2 py-0.5 rounded">WooCommerce-API</span>
-          </div>
-        </div>
-
-        <!-- Jewellery Retail -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">Jewellery Retails</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">High-asset value inventory management including vault-sync, SKU tracking, and secure payment orchestration.</p>
-          <span class="mt-4 inline-block text-[9px] font-mono text-muted uppercase tracking-widest">Example: CaratLane Model</span>
-        </div>
-
-        <!-- Clothing & Fashion -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">Clothing Brands</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">Visual-centric D2C platforms optimized for high mobile conversion and rapid style iteration cycles.</p>
-          <span class="mt-4 inline-block text-[9px] font-mono text-muted uppercase tracking-widest">Example: Myntra/D2C Ecosystem</span>
-        </div>
-
-        <!-- Banking & Fintech -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">Banks & Fintech</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">Financial architectures emphasizing security, KYC/AML automation, and low-latency transaction nodes.</p>
-          <div class="mt-4 flex gap-2">
-            <span class="text-[8px] font-mono bg-charcoal-dark/50 px-2 py-1 rounded">UPI Integration</span>
-            <span class="text-[8px] font-mono bg-charcoal-dark/50 px-2 py-1 rounded">RBAC-Security</span>
-          </div>
-        </div>
-
-        <!-- Boutiques & High-End Retail -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">Luxury Boutiques</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">Exclusive digital experiences for luxury goods, focusing on storytelling and elite customer journey mapping.</p>
-          <span class="mt-4 inline-block text-[9px] font-mono text-muted uppercase tracking-widest">Example: Sabyasachi Model</span>
-        </div>
-
-        <!-- Supermarkets & Q-Commerce -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300">
-          <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center mb-6 border border-teal/20">
-            <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-          </div>
-          <h3 class="font-poppins text-xl font-bold text-offwhite mb-3">Supermarkets</h3>
-          <p class="font-lora text-sm text-muted leading-relaxed">Integrated supply chain solutions with real-time stock-tracking and hyperlocal delivery orchestration.</p>
-          <span class="mt-4 inline-block text-[9px] font-mono text-muted uppercase tracking-widest">Example: Zepto/BigBasket Infra</span>
-        </div>
-
-        <!-- Engineering & Heavy Industry -->
-        <div class="p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300 lg:col-span-3">
-            <div class="flex flex-col md:flex-row items-center gap-8">
-                <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 shrink-0">
-                    <svg class="w-8 h-8 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.638.319a4 4 0 01-1.833.433H6.5V10h.5a2 2 0 001.507-.68l.024-.03a2 2 0 011.502-.68H11l.245-1.225A2 2 0 0113.205 6h.79a2 2 0 011.96 1.605L16.5 10H19m0 10v-3.5a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1v-4a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1V5a1 1 0 011-1h1a1 1 0 000-2H17.5a2.5 2.5 0 00-2.5 2.5V5a1 1 0 01-1 1h-1.111c-1.249 0-2.43.513-3.268 1.411L8.5 8.5V10H7v8.5a1.5 1.5 0 003 0V17h2.333c1.47 0 2.873-.615 3.861-1.691l1.234-1.345a1 1 0 011.507.03z"/></svg>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-poppins text-xl font-bold text-offwhite mb-2">Engineering & Heavy Industry Firms</h3>
-                    <p class="font-lora text-sm text-muted leading-relaxed mb-4">Enterprise-grade systems for industrial asset management, project tracking, and complex bill-of-materials (BOM) orchestration. Designed for the scale of Tata Projects and L&T systems.</p>
-                    <div class="flex gap-4">
-                        <span class="text-[9px] font-mono text-teal border-b border-teal/20 pb-0.5">Asset-Lifecycle-Mgmt</span>
-                        <span class="text-[9px] font-mono text-teal border-b border-teal/20 pb-0.5">Supply-Chain-Transparency</span>
-                        <span class="text-[9px] font-mono text-teal border-b border-teal/20 pb-0.5">Industrial-IoT-Ready</span>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {industryModels.map((m) => (
+              <div class={`p-8 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 hover:bg-teal/[0.02] transition-all duration-300 ${m.is_featured ? 'lg:col-span-3' : ''}`}>
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                  <div class={`bg-teal/10 rounded-xl flex items-center justify-center border border-teal/20 shrink-0 ${m.is_featured ? 'w-16 h-16' : 'w-12 h-12'}`}>
+                    {m.icon_type === 'wp' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>}
+                    {m.icon_type === 'jewel' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>}
+                    {m.icon_type === 'fashion' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>}
+                    {m.icon_type === 'bank' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>}
+                    {m.icon_type === 'boutique' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>}
+                    {m.icon_type === 'market' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>}
+                    {m.icon_type === 'eng' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.638.319a4 4 0 01-1.833.433H6.5V10h.5a2 2 0 001.507-.68l.024-.03a2 2 0 011.502-.68H11l.245-1.225A2 2 0 0113.205 6h.79a2 2 0 011.96 1.605L16.5 10H19m0 10v-3.5a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1v-4a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1V5a1 1 0 011-1h1a1 1 0 000-2H17.5a2.5 2.5 0 00-2.5 2.5V5a1 1 0 01-1 1h-1.111c-1.249 0-2.43.513-3.268 1.411L8.5 8.5V10H7v8.5a1.5 1.5 0 003 0V17h2.333c1.47 0 2.873-.615 3.861-1.691l1.234-1.345a1 1 0 011.507.03z"/></svg>}
+                    {(m.icon_type === 'generic' || !['wp','jewel','fashion','bank','boutique','market','eng'].includes(m.icon_type)) && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}
+                  </div>
+                  <div class="flex-1">
+                    <h3 class={`font-poppins font-bold text-offwhite mb-2 ${m.is_featured ? 'text-xl' : 'text-lg'}`}>{m.title}</h3>
+                    <p class="font-lora text-sm text-muted leading-relaxed mb-4">{m.description}</p>
+                    <div class="flex flex-wrap items-center gap-4">
+                      {m.benchmark_name && (
+                        <span class="text-[9px] font-mono text-muted uppercase tracking-widest">
+                          Example: {m.benchmark_url ? <a href={m.benchmark_url} target="_blank" class="text-teal hover:underline">{m.benchmark_name}</a> : m.benchmark_name}
+                        </span>
+                      )}
+                      <span class="text-[9px] font-mono text-teal uppercase border border-teal/20 px-2 py-0.5 rounded ml-auto">
+                        {m.category}
+                      </span>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="text-center p-12 border border-dashed border-charcoal-light/20 rounded-3xl">
+          <p class="font-lora text-sm text-muted italic">Framework models are being updated. Check back soon for the latest industry benchmarks.</p>
         </div>
-      </div>
+      )}
     </div>
   </section>
 </Layout>

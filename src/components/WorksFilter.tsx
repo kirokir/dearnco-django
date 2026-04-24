@@ -51,15 +51,9 @@ export default function WorksFilter() {
                     flexWrap: "wrap",
                     gap: "0.5rem",
                     justifyContent: "center",
-                    marginBottom: "2rem",
-                    position: "sticky",
-                    top: "4.25rem",
-                    zIndex: 20,
+                    marginBottom: "3rem",
                     paddingTop: "0.75rem",
-                    paddingBottom: "1rem",
-                    background: "var(--charcoal)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
+                    paddingBottom: "1.5rem",
                     borderBottom: "1px solid rgba(128,128,128,0.1)",
                 }}
             >

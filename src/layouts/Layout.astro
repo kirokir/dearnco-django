@@ -282,6 +282,19 @@ const navLinks = [
         // Active states are purely CSS now using the same Intersection Observer logic 
         // as the desktop nav for anchors. For SPA routes, page-load handles it.
 
+        // --- Audit Trigger ---
+        const triggerFunnel = (e: Event) => {
+          e.preventDefault();
+          const funnelBtn = document.getElementById('cta-start-project');
+          if (funnelBtn) {
+            funnelBtn.click();
+          }
+        };
+
+        document.querySelectorAll('a[href="#audit"]').forEach(link => {
+          link.addEventListener('click', triggerFunnel);
+        });
+
         // --- Active link tracking (only for current page anchors) ---
         const sections = document.querySelectorAll("section[id]");
         const navLinks = document.querySelectorAll(".nav-link, .mobile-nav-link");

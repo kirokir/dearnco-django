@@ -1,0 +1,14 @@
+name: Render Keep-Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual triggering for testing
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Keep-Alive Endpoint
+        run: |
+          curl -sSf "${{ secrets.RENDER_APP_URL }}/api/keep-alive" || echo "Ping failed but continuing..."

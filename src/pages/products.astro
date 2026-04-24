@@ -5,12 +5,18 @@ import { supabase } from "../lib/supabase";
 
 let dynamicProducts: any[] = [];
 let industryModels: any[] = [];
+let modelsSectionConfig = {
+  title: "Framework Library",
+  description: "Standardized architectural models and business frameworks designed to solve specific operational challenges across Indian industry verticals.",
+  collage_url: "/indian_business_models_collage_1776926783752.png"
+};
 
 if (supabase) {
   try {
-    const [productsRes, modelsRes] = await Promise.all([
+    const [productsRes, modelsRes, modelsConfigRes] = await Promise.all([
       supabase.from("products").select("*").eq("status", "active").order("sort_order", { ascending: true }),
-      supabase.from("industry_models").select("*").order("sort_order", { ascending: true })
+      supabase.from("industry_models").select("*").order("sort_order", { ascending: true }),
+      supabase.from("site_config").select("data").eq("key", "models_section").single()
     ]);
     
     if (productsRes.error) console.error("Products Fetch Error:", productsRes.error);
@@ -23,6 +29,10 @@ if (supabase) {
     else {
       industryModels = modelsRes.data || [];
       console.log(`[SSR] Fetched ${industryModels.length} industry models`);
+    }
+
+    if (modelsConfigRes.data) {
+      modelsSectionConfig = modelsConfigRes.data.data;
     }
   } catch (e) {
     console.error("Products SSR Crash Caught:", e);
@@ -210,10 +220,10 @@ import AutoCarousel from "../components/AutoCarousel";
       <div class="text-center mb-16">
         <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Industry Standard Models</span>
         <h2 class="font-poppins text-3xl sm:text-4xl font-bold text-offwhite mb-4">
-          Framework <span class="text-teal">Library</span>
+          {modelsSectionConfig.title.split(' ')[0]} <span class="text-teal">{modelsSectionConfig.title.split(' ').slice(1).join(' ')}</span>
         </h2>
         <p class="font-lora text-muted max-w-2xl mx-auto leading-relaxed">
-          Standardized architectural models and business frameworks designed to solve specific operational challenges across Indian industry verticals.
+          {modelsSectionConfig.description}
         </p>
       </div>
 
@@ -223,7 +233,7 @@ import AutoCarousel from "../components/AutoCarousel";
           <div class="mb-16 rounded-3xl overflow-hidden border border-charcoal-light/20 relative group">
               <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent z-10"></div>
               <img 
-                src="/indian_business_models_collage_1776926783752.png" 
+                src={modelsSectionConfig.collage_url} 
                 alt="Business Ecosystem" 
                 class="w-full h-80 object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0"
               />
@@ -244,8 +254,9 @@ import AutoCarousel from "../components/AutoCarousel";
                     {m.icon_type === 'bank' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>}
                     {m.icon_type === 'boutique' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>}
                     {m.icon_type === 'market' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>}
-                    {m.icon_type === 'eng' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.638.319a4 4 0 01-1.833.433H6.5V10h.5a2 2 0 001.507-.68l.024-.03a2 2 0 011.502-.68H11l.245-1.225A2 2 0 0113.205 6h.79a2 2 0 011.96 1.605L16.5 10H19m0 10v-3.5a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1v-4a1 1 0 011-1h.5a.5.5 0 000-1H19a1 1 0 01-1-1V5a1 1 0 011-1h1a1 1 0 000-2H17.5a2.5 2.5 0 00-2.5 2.5V5a1 1 0 01-1 1h-1.111c-1.249 0-2.43.513-3.268 1.411L8.5 8.5V10H7v8.5a1.5 1.5 0 003 0V17h2.333c1.47 0 2.873-.615 3.861-1.691l1.234-1.345a1 1 0 011.507.03z"/></svg>}
-                    {(m.icon_type === 'generic' || !['wp','jewel','fashion','bank','boutique','market','eng'].includes(m.icon_type)) && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}
+                    {m.icon_type === 'eng' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>}
+                    {m.icon_type === 'health' && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>}
+                    {(m.icon_type === 'generic' || !['wp','jewel','fashion','bank','boutique','market','eng','health'].includes(m.icon_type)) && <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}
                   </div>
                   <div class="flex-1">
                     <h3 class={`font-poppins font-bold text-offwhite mb-2 ${m.is_featured ? 'text-xl' : 'text-lg'}`}>{m.title}</h3>

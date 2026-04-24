@@ -96,6 +96,7 @@ export default function AdminInterface() {
     const [products, setProducts] = useState<any[]>([]);
     const [redirects, setRedirects] = useState<any[]>([]);
     const [models, setModels] = useState<any[]>([]);
+    const [modelsConfig, setModelsConfig] = useState<any>({ title: "Framework Library", description: "Standardized architectural models...", collage_url: "/indian_business_models_collage_1776926783752.png" });
     const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
@@ -117,6 +118,7 @@ export default function AdminInterface() {
                 fetch("/api/products"),
                 fetch("/api/redirects"),
                 fetch("/api/models"),
+                fetch("/api/config?key=models_section"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
@@ -125,7 +127,8 @@ export default function AdminInterface() {
             const productsData = await productsRes.json();
             const redirectsData = await redirectsRes.json();
             const modelsData = await modelsRes.json();
-
+            const modelsConfigData = await modelsConfigRes.json();
+ 
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
             setEnterprise(enterpriseData || { hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
@@ -133,6 +136,11 @@ export default function AdminInterface() {
             setProducts(Array.isArray(productsData) ? productsData : []);
             setRedirects(Array.isArray(redirectsData) ? redirectsData : []);
             setModels(Array.isArray(modelsData) ? modelsData : []);
+            setModelsConfig(modelsConfigData && Object.keys(modelsConfigData).length ? modelsConfigData : { 
+                title: "Framework Library", 
+                description: "Standardized architectural models and business frameworks designed to solve specific operational challenges across Indian industry verticals.", 
+                collage_url: "/indian_business_models_collage_1776926783752.png" 
+            });
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -364,7 +372,7 @@ export default function AdminInterface() {
             )}
 
             {activeTab === "models" && (
-                <ModelsManager models={models} onRefresh={fetchData} />
+                <ModelsManager models={models} config={modelsConfig} onRefresh={fetchData} />
             )}
         </div>
     );
@@ -1239,10 +1247,16 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
     );
 }
 
-function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => void }) {
+function ModelsManager({ models, config, onRefresh }: { models: any[]; config: any; onRefresh: () => void }) {
     const [editing, setEditing] = useState<any>(null);
     const [isNew, setIsNew] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [localConfig, setLocalConfig] = useState(config);
+    const [showConfig, setShowConfig] = useState(false);
+
+    useEffect(() => {
+        setLocalConfig(config);
+    }, [config]);
 
     async function handleSave(e: Event) {
         e.preventDefault();
@@ -1260,6 +1274,24 @@ function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => 
             }
         } catch (e) {
             console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    async function saveSectionConfig() {
+        setSaving(true);
+        try {
+            const res = await fetch("/api/config", {
+                method: "POST",
+                body: JSON.stringify({ key: "models_section", value: localConfig }),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setShowConfig(false);
+                onRefresh();
+            }
+        } catch (e) {
+            console.error("Config save error:", e);
         }
         setSaving(false);
     }
@@ -1285,62 +1317,90 @@ function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => 
                     <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
                 </div>
 
-                <form onSubmit={handleSave} class="space-y-4">
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <Input label="Title *" value={item.title} onChange={(v: string) => setEditing({ ...item, title: v })} required />
-                        <Input label="Category *" value={item.category} onChange={(v: string) => setEditing({ ...item, category: v })} required />
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <Input label="Benchmark Name" value={item.benchmark_name} onChange={(v: string) => setEditing({ ...item, benchmark_name: v })} />
-                        <Input label="Benchmark URL" value={item.benchmark_url} onChange={(v: string) => setEditing({ ...item, benchmark_url: v })} />
-                    </div>
-                    <div class="grid items-end md:grid-cols-3 gap-4">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <form onSubmit={handleSave} class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <Input label="Title *" value={item.title} onChange={(v: string) => setEditing({ ...item, title: v })} required />
+                            <Input label="Category *" value={item.category} onChange={(v: string) => setEditing({ ...item, category: v })} required />
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <Input label="Benchmark Name" value={item.benchmark_name} onChange={(v: string) => setEditing({ ...item, benchmark_name: v })} />
+                            <Input label="Benchmark URL" value={item.benchmark_url} onChange={(v: string) => setEditing({ ...item, benchmark_url: v })} />
+                        </div>
+                        <div class="grid items-end md:grid-cols-3 gap-4">
+                            <div class="space-y-1">
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Icon Type</label>
+                                <select
+                                    value={item.icon_type}
+                                    onChange={(e) => setEditing({ ...item, icon_type: (e.target as any).value })}
+                                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                                >
+                                    <option value="wp">WordPress</option>
+                                    <option value="jewel">Jewellery</option>
+                                    <option value="fashion">Fashion/Clothes</option>
+                                    <option value="bank">Banking</option>
+                                    <option value="boutique">Boutique</option>
+                                    <option value="market">Supermarket</option>
+                                    <option value="eng">Engineering</option>
+                                    <option value="health">Healthcare</option>
+                                    <option value="generic">Generic</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-4 h-[41px] bg-charcoal-dark/50 border border-charcoal-light/20 rounded px-4">
+                                <input
+                                    type="checkbox"
+                                    checked={item.is_featured}
+                                    onChange={(e) => setEditing({ ...item, is_featured: (e.target as any).checked })}
+                                    class="w-4 h-4 accent-teal"
+                                />
+                                <label class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Featured Card</label>
+                            </div>
+                            <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: string) => setEditing({ ...item, sort_order: parseInt(v) })} />
+                        </div>
                         <div class="space-y-1">
-                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Icon Type</label>
-                            <select
-                                value={item.icon_type}
-                                onChange={(e) => setEditing({ ...item, icon_type: (e.target as any).value })}
-                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
-                            >
-                                <option value="wp">WordPress</option>
-                                <option value="jewel">Jewellery</option>
-                                <option value="fashion">Fashion/Clothes</option>
-                                <option value="bank">Banking</option>
-                                <option value="boutique">Boutique</option>
-                                <option value="market">Supermarket</option>
-                                <option value="eng">Engineering</option>
-                                <option value="health">Healthcare</option>
-                                <option value="generic">Generic</option>
-                            </select>
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
+                            <textarea
+                                value={item.description}
+                                onInput={(e) => setEditing({ ...item, description: (e.target as any).value })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-32"
+                                required
+                            ></textarea>
                         </div>
-                        <div class="flex items-center gap-4 h-[41px] bg-charcoal-dark/50 border border-charcoal-light/20 rounded px-4">
-                            <input
-                                type="checkbox"
-                                checked={item.is_featured}
-                                onChange={(e) => setEditing({ ...item, is_featured: (e.target as any).checked })}
-                                class="w-4 h-4 accent-teal"
-                            />
-                            <label class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Featured Card</label>
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                        >
+                            {saving ? "SAVING..." : "[ Update Library Node ]"}
+                        </button>
+                    </form>
+
+                    {/* Live Preview */}
+                    <div class="space-y-4">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Card Preview</label>
+                        <div class="p-8 rounded-3xl border border-teal/20 bg-teal/[0.02] transition-all">
+                            <div class="flex flex-col md:flex-row items-start gap-6">
+                                <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center border border-teal/20 shrink-0">
+                                    <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-poppins font-bold text-offwhite mb-2 text-lg">{item.title || "Untitled Model"}</h3>
+                                    <p class="font-lora text-sm text-muted leading-relaxed mb-4">{item.description || "No description provided."}</p>
+                                    <div class="flex flex-wrap items-center gap-4">
+                                        {item.benchmark_name && (
+                                            <span class="text-[9px] font-mono text-muted uppercase tracking-widest">
+                                                Example: <span class="text-teal underline cursor-pointer">{item.benchmark_name}</span>
+                                            </span>
+                                        )}
+                                        <span class="text-[9px] font-mono text-teal uppercase border border-teal/20 px-2 py-0.5 rounded ml-auto">
+                                            {item.category}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: string) => setEditing({ ...item, sort_order: parseInt(v) })} />
                     </div>
-                    <div class="space-y-1">
-                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
-                        <textarea
-                            value={item.description}
-                            onInput={(e) => setEditing({ ...item, description: (e.target as any).value })}
-                            class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-32"
-                            required
-                        ></textarea>
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
-                    >
-                        {saving ? "SAVING..." : "[ Update Library Node ]"}
-                    </button>
-                </form>
+                </div>
             </div>
         );
     }
@@ -1348,7 +1408,15 @@ function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => 
     return (
         <div class="space-y-6">
             <div class="flex justify-between items-center">
-                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Models Library</h2>
+                <div class="flex items-center gap-4">
+                    <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Models Library</h2>
+                    <button 
+                        onClick={() => setShowConfig(!showConfig)}
+                        class={`text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded border transition-all ${showConfig ? 'bg-teal text-charcoal border-teal' : 'text-muted border-charcoal-light/30 hover:border-teal/50'}`}
+                    >
+                        {showConfig ? '[ Close Section Editor ]' : '[ Edit Section Header ]'}
+                    </button>
+                </div>
                 <button
                     onClick={() => setIsNew(true)}
                     class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
@@ -1356,6 +1424,41 @@ function ModelsManager({ models, onRefresh }: { models: any[]; onRefresh: () => 
                     + Add Model
                 </button>
             </div>
+
+            {showConfig && (
+                <div class="p-6 bg-charcoal-light/5 border border-teal/20 rounded-2xl space-y-6 animate-fadeIn">
+                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Industry Section Header</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <Input label="Section Title" value={localConfig.title} onChange={(v: string) => setLocalConfig({ ...localConfig, title: v })} />
+                            <div class="space-y-1">
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Section Description</label>
+                                <textarea
+                                    value={localConfig.description}
+                                    onInput={(e) => setLocalConfig({ ...localConfig, description: (e.target as any).value })}
+                                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-24"
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <Input label="Collage Image URL" value={localConfig.collage_url} onChange={(v: string) => setLocalConfig({ ...localConfig, collage_url: v })} />
+                            <div class="h-32 rounded-xl overflow-hidden border border-charcoal-light/20 relative group">
+                                <img src={localConfig.collage_url} alt="Collage" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                                <div class="absolute inset-0 bg-charcoal/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                    <span class="font-mono text-[8px] text-teal uppercase">Header Preview</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        onClick={saveSectionConfig}
+                        disabled={saving}
+                        class="w-full py-3 bg-teal/10 border border-teal/30 text-teal font-mono text-[10px] uppercase tracking-widest hover:bg-teal hover:text-charcoal transition-all rounded"
+                    >
+                        {saving ? "SAVING..." : "[ Save Section Changes ]"}
+                    </button>
+                </div>
+            )}
 
             <div class="grid gap-4">
                 {models.map((m) => (

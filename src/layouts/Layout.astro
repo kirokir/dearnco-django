@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Preloader from "../components/Preloader.astro";
+import { supabase } from "../lib/supabase";
 import "../styles/global.css";
 
 interface Props {
@@ -12,6 +13,20 @@ const {
   title = "Arjun Jayesh — Polymath · Engineer · Researcher",
   description = "Portfolio of Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building deterministic, constraint-bound systems.",
 } = Astro.props;
+
+let enterpriseAssets = {
+    logo_url: "",
+    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
+};
+
+if (supabase) {
+    const { data } = await supabase
+        .from('site_config')
+        .select('data')
+        .eq('key', 'enterprise_assets')
+        .single();
+    if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
+}
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -28,7 +43,7 @@ const navLinks = [
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>{title} — KINBO TECHNOLOGIES PRIVATE LIMITED</title>
+    <title>{title} — {enterpriseAssets.company_name}</title>
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
@@ -86,13 +101,19 @@ const navLinks = [
         <!-- Logo -->
         <a
           href="/"
-          class="flex items-center gap-3 font-poppins text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
+          class="flex items-center gap-3 font-inter text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
           aria-label="Go to home"
         >
-          <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
-            <span class="text-teal font-mono text-sm">K</span>
+          <div class="w-10 h-10 bg-teal/10 rounded-xl overflow-hidden flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
+            {enterpriseAssets.logo_url ? (
+              <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-cover" />
+            ) : (
+              <span class="text-teal font-mono text-sm">K</span>
+            )}
           </div>
-          <span class="tracking-widest">KINBO</span>
+          <span class="tracking-widest uppercase text-lg">
+            {enterpriseAssets.company_name.split(' ')[0]}
+          </span>
         </a>
 
         <!-- Desktop Nav Links -->
@@ -101,7 +122,7 @@ const navLinks = [
             <li>
               <a
                 href={link.href}
-                class="nav-link font-poppins text-sm font-medium uppercase tracking-widest text-muted hover:text-offwhite transition-colors duration-300 relative pb-1"
+                class="nav-link font-inter text-sm font-medium uppercase tracking-widest text-muted hover:text-offwhite transition-colors duration-300 relative pb-1"
               >
                 {link.label}
               </a>
@@ -145,11 +166,15 @@ const navLinks = [
       <div class="max-w-7xl mx-auto flex flex-col items-center gap-12">
         <!-- Brand/Logo Area -->
         <div class="flex flex-col items-center gap-4 text-center">
-            <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
-                <span class="text-teal font-poppins text-3xl font-bold">K</span>
+            <div class="w-20 h-20 bg-teal/10 rounded-[24px] overflow-hidden flex items-center justify-center border border-teal/20 mb-2">
+                {enterpriseAssets.logo_url ? (
+                  <img src={enterpriseAssets.logo_url} alt="Footer Logo" class="w-full h-full object-cover" />
+                ) : (
+                  <span class="text-teal font-inter text-3xl font-bold">K</span>
+                )}
             </div>
-            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">KINBO TECHNOLOGIES PRIVATE LIMITED</h2>
-            <p class="font-lora text-sm text-muted max-w-md">Building intelligent everyday apps that improve real-world outcomes through practical technology and user-focused design.</p>
+            <h2 class="font-inter text-xl font-black text-offwhite tracking-widest uppercase">{enterpriseAssets.company_name}</h2>
+            <p class="font-inter text-sm text-muted max-w-md font-light">Building intelligent everyday apps that improve real-world outcomes through practical technology and user-focused design.</p>
         </div>
 
         <!-- Locations -->
@@ -169,7 +194,7 @@ const navLinks = [
                 </svg>
                 <div class="flex flex-col">
                     <span class="text-[8px] font-mono leading-none">BUILDING ON</span>
-                    <span class="text-xs font-poppins font-bold leading-none">ANDROID</span>
+                    <span class="text-xs font-inter font-bold leading-none">ANDROID</span>
                 </div>
             </div>
             <div class="w-px h-8 bg-charcoal-light/20"></div>
@@ -179,7 +204,7 @@ const navLinks = [
                 </svg>
                 <div class="flex flex-col">
                     <span class="text-[8px] font-mono leading-none">GET IT ON</span>
-                    <span class="text-xs font-poppins font-bold leading-none">Play Store</span>
+                    <span class="text-xs font-inter font-bold leading-none">Play Store</span>
                 </div>
             </div>
             <div class="w-px h-8 bg-charcoal-light/20"></div>
@@ -189,7 +214,7 @@ const navLinks = [
                 </div>
                 <div class="flex flex-col">
                     <span class="text-[8px] font-mono leading-none text-muted">A PRODUCT OF</span>
-                    <span class="text-xs font-poppins font-bold leading-none text-offwhite">KINBO TECHNOLOGIES</span>
+                    <span class="text-xs font-inter font-bold leading-none text-offwhite">KINBO TECHNOLOGIES</span>
                 </div>
             </div>
         </div>
@@ -342,3 +367,4 @@ const navLinks = [
     </style>
   </body>
 </html>
+

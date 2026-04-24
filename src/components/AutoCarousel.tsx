@@ -58,3 +58,4 @@ export default function AutoCarousel({ items, speed = 20 }: AutoCarouselProps) {
         </div>
     );
 }
+

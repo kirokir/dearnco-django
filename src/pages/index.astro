@@ -47,8 +47,12 @@ if (supabase) {
   <!-- Startup Animation Overlay -->
   <div id="startup-overlay" class="fixed inset-0 z-[100] bg-charcoal hidden flex-col items-center justify-center overflow-hidden">
     <div class="relative">
-      <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0">
-        <span class="text-teal font-poppins text-4xl font-bold">K</span>
+      <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0 overflow-hidden">
+        {enterpriseAssets.logo_url ? (
+          <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-cover" />
+        ) : (
+          <span class="text-teal font-inter text-4xl font-bold">K</span>
+        )}
       </div>
       <div id="startup-bar" class="absolute -bottom-4 left-0 w-0 h-px bg-teal shadow-[0_0_10px_rgba(42,157,143,0.8)]"></div>
     </div>
@@ -387,3 +391,4 @@ if (supabase) {
   // Handle first load and navigation
   document.addEventListener("astro:page-load", initHome);
 </script>
+

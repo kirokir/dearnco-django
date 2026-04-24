@@ -89,7 +89,7 @@ export default function IdeasForm() {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                <h3 class="font-poppins text-2xl font-bold text-offwhite">Idea Received!</h3>
+                <h3 class="font-inter text-2xl font-bold text-offwhite">Idea Received!</h3>
                 <p class="font-lora text-muted max-w-md mx-auto">
                     Your submission has been logged. I'll review it and get back to you within 24-48 hours.
                 </p>
@@ -113,7 +113,7 @@ export default function IdeasForm() {
 
             {/* Section 1: About You */}
             <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
+                <h3 class="font-inter text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
                     <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">1</span>
                     About You
                 </h3>
@@ -130,7 +130,7 @@ export default function IdeasForm() {
 
             {/* Section 2: Project Type */}
             <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
+                <h3 class="font-inter text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
                     <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">2</span>
                     What Do You Need?
                 </h3>
@@ -153,7 +153,7 @@ export default function IdeasForm() {
 
             {/* Section 3: Your Idea */}
             <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
+                <h3 class="font-inter text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
                     <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">3</span>
                     Your Idea
                 </h3>
@@ -167,7 +167,7 @@ export default function IdeasForm() {
 
             {/* Section 4: Budget & Timeline */}
             <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
+                <h3 class="font-inter text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
                     <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">4</span>
                     Budget & Timeline
                 </h3>
@@ -213,7 +213,7 @@ export default function IdeasForm() {
 
             {/* Section 5: Additional */}
             <div class="space-y-2">
-                <h3 class="font-poppins text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
+                <h3 class="font-inter text-xs uppercase tracking-[0.3em] text-teal flex items-center gap-2">
                     <span class="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center text-teal text-[10px] font-bold">5</span>
                     Anything Else?
                 </h3>
@@ -224,7 +224,7 @@ export default function IdeasForm() {
             <button
                 type="submit"
                 disabled={sending || !form.name || !form.email || !form.project_type || !form.idea_title || !form.idea_description}
-                class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(42,157,143,0.3)] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(42,157,143,0.3)] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
             >
                 {sending ? "TRANSMITTING..." : "[ Submit Idea ]"}
             </button>
@@ -251,7 +251,7 @@ function FormField({ label, value, onChange, type = "text", required = false, pl
                 required={required}
                 placeholder={placeholder}
                 onInput={(e) => onChange((e.target as any).value)}
-                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded-lg px-4 py-3 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all placeholder:text-charcoal-light"
+                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded-lg px-4 py-3 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all placeholder:text-charcoal-light"
             />
         </div>
     );
@@ -281,3 +281,4 @@ function FormTextarea({ label, value, onChange, required = false, placeholder = 
         </div>
     );
 }
+

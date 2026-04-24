@@ -215,3 +215,4 @@ export default function BlogFilter({ posts }: { posts: BlogPost[] }) {
         </div>
     );
 }
+

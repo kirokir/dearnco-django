@@ -206,7 +206,7 @@ export default function AdminInterface() {
     return (
         <div class="space-y-8">
             {message && (
-                <div class="fixed bottom-8 right-8 bg-teal text-charcoal px-6 py-3 rounded-lg font-poppins text-sm font-bold shadow-xl z-[100] animate-bounce">
+                <div class="fixed bottom-8 right-8 bg-teal text-charcoal px-6 py-3 rounded-lg font-inter text-sm font-bold shadow-xl z-[100] animate-bounce">
                     {message}
                 </div>
             )}
@@ -215,56 +215,56 @@ export default function AdminInterface() {
             <div class="flex gap-4 border-b border-charcoal-light/30 pb-4">
                 <button
                     onClick={() => setActiveTab("blog")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "blog" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "blog" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Blog Manager
                 </button>
                 <button
                     onClick={() => setActiveTab("home")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "home" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "home" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Homepage Editor
                 </button>
                 <button
                     onClick={() => setActiveTab("ideas")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "ideas" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "ideas" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Ideas ({ideas.length})
                 </button>
                 <button
                     onClick={() => setActiveTab("products")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "products" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "products" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Products ({products.length})
                 </button>
                 <button
                     onClick={() => setActiveTab("enterprise")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "enterprise" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "enterprise" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Enterprise Assets
                 </button>
                 <button
                     onClick={() => setActiveTab("redirects")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "redirects" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "redirects" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Redirects ({redirects.length})
                 </button>
                 <button
                     onClick={() => setActiveTab("models")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "models" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "models" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Frameworks ({models.length})
                 </button>
                 <button
                     onClick={() => setActiveTab("works")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "works" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                    class={`font-inter text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "works" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
                     Portfolio ({works.length})
@@ -276,10 +276,10 @@ export default function AdminInterface() {
                     {!editingPost && !isNewPost ? (
                         <>
                             <div class="flex justify-between items-center">
-                                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Posts</h2>
+                                <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Posts</h2>
                                 <button
                                     onClick={() => setIsNewPost(true)}
-                                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                                    class="bg-teal text-charcoal px-4 py-2 rounded font-inter text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
                                 >
                                     + New Post
                                 </button>
@@ -288,7 +288,7 @@ export default function AdminInterface() {
                                 {posts.map((p) => (
                                     <div key={p.slug} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
                                         <div>
-                                            <h4 class="text-offwhite font-poppins font-medium">{p.slug}</h4>
+                                            <h4 class="text-offwhite font-inter font-medium">{p.slug}</h4>
                                             <p class="text-[10px] text-muted font-mono uppercase">MDX File Interface</p>
                                         </div>
                                         <div class="flex gap-4">
@@ -313,7 +313,7 @@ export default function AdminInterface() {
                 <div class="space-y-8 animate-fadeIn">
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="space-y-4">
-                            <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Hero Content</h3>
+                            <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal">Hero Content</h3>
                             <div class="space-y-4">
                                 <Input label="First Name" value={config.hero.firstName} onChange={(v: string) => setConfig({ ...config, hero: { ...config.hero, firstName: v } })} />
                                 <Input label="Last Name" value={config.hero.lastName} onChange={(v: string) => setConfig({ ...config, hero: { ...config.hero, lastName: v } })} />
@@ -328,7 +328,7 @@ export default function AdminInterface() {
                                 </div>
                             </div>
 
-                            <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal pt-4">Video Background</h3>
+                            <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal pt-4">Video Background</h3>
                             <div class="space-y-4">
                                 <Input label="Video URL" value={config.hero.video.url} onChange={(v: string) => setConfig({ ...config, hero: { ...config.hero, video: { ...config.hero.video, url: v } } })} />
                                 <Range label="Blur Intensity" value={config.hero.video.blur} min={0} max={20} step={1} unit="px" onChange={(v: number) => setConfig({ ...config, hero: { ...config.hero, video: { ...config.hero.video, blur: v } } })} />
@@ -338,7 +338,7 @@ export default function AdminInterface() {
                         </div>
 
                         <div class="space-y-4">
-                            <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">System Stats</h3>
+                            <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal">System Stats</h3>
                             <div class="grid gap-4">
                                 {config.stats.map((stat: any, i: number) => (
                                     <div key={i} class="grid grid-cols-2 gap-4">
@@ -359,7 +359,7 @@ export default function AdminInterface() {
                     </div>
                     <button
                         onClick={saveConfig}
-                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                        class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                     >
                         Update Production Site
                     </button>
@@ -415,7 +415,7 @@ function Input({ label, value, onChange, type = "text", required = false, upload
                             required={required}
                             onInput={(e) => { e.stopPropagation(); onChange((e.target as any).value); }}
                             onClick={(e) => e.stopPropagation()}
-                            class="w-full bg-transparent text-offwhite font-poppins text-sm focus:outline-none placeholder-muted/40"
+                            class="w-full bg-transparent text-offwhite font-inter text-sm focus:outline-none placeholder-muted/40"
                             placeholder="Paste URL or drag & drop a file here..."
                         />
                         {value && (
@@ -438,7 +438,7 @@ function Input({ label, value, onChange, type = "text", required = false, upload
                     value={value}
                     required={required}
                     onInput={(e) => onChange((e.target as any).value)}
-                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all"
                 />
             )}
         </div>
@@ -471,7 +471,7 @@ function PostEditor({ post, onSave, onCancel }: any) {
     return (
         <div class="space-y-6 animate-fadeIn">
             <div class="flex justify-between items-center bg-charcoal-light/10 p-4 rounded border-l-4 border-teal">
-                <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">Editing: {data.slug || "New Post"}</h3>
+                <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">Editing: {data.slug || "New Post"}</h3>
                 <button onClick={onCancel} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
             </div>
 
@@ -497,7 +497,7 @@ function PostEditor({ post, onSave, onCancel }: any) {
             </div>
             <button
                 onClick={() => onSave(data)}
-                class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all shadow-lg"
+                class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all shadow-lg"
             >
                 Save MDX Node
             </button>
@@ -555,7 +555,7 @@ function IdeasViewer({ ideas, onRefresh }: { ideas: any[]; onRefresh: () => void
     return (
         <div class="space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">
+                <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">
                     Idea Submissions
                 </h2>
                 <span class="font-mono text-xs text-teal">{ideas.length} total</span>
@@ -573,7 +573,7 @@ function IdeasViewer({ ideas, onRefresh }: { ideas: any[]; onRefresh: () => void
                     >
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-3 mb-1">
-                                <h4 class="text-offwhite font-poppins font-medium truncate">
+                                <h4 class="text-offwhite font-inter font-medium truncate">
                                     {idea.idea_title}
                                 </h4>
                                 <span
@@ -709,7 +709,7 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
         return (
             <div class="space-y-6 animate-fadeIn">
                 <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
-                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                    <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">
                         {isNew ? "New Product" : `Editing: ${prod.name}`}
                     </h3>
                     <button onClick={() => { setEditingProduct(null); setIsNew(false); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
@@ -768,7 +768,7 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
                             <select
                                 value={prod.status}
                                 onChange={(e) => setEditingProduct({ ...prod, status: (e.target as any).value })}
-                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all"
                             >
                                 <option value="active">Active</option>
                                 <option value="coming-soon">Coming Soon</option>
@@ -798,7 +798,7 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
                     <button
                         type="submit"
                         disabled={saving}
-                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                        class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                     >
                         {saving ? "SAVING..." : "[ Save Product Node ]"}
                     </button>
@@ -810,10 +810,10 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
     return (
         <div class="space-y-6">
             <div class="flex justify-between items-center">
-                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Products</h2>
+                <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Products</h2>
                 <button
                     onClick={() => setIsNew(true)}
-                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-inter text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
                 >
                     + Add Product
                 </button>
@@ -823,7 +823,7 @@ function ProductsManager({ products, onRefresh }: { products: any[]; onRefresh: 
                 {products.map((p) => (
                     <div key={p.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
                         <div>
-                            <h4 class="text-offwhite font-poppins font-medium">{p.name}</h4>
+                            <h4 class="text-offwhite font-inter font-medium">{p.name}</h4>
                             <div class="flex gap-2 items-center">
                                 <p class="text-[9px] text-muted font-mono uppercase tracking-widest">{p.category || "General"}</p>
                                 <span class={`text-[8px] px-1.5 py-0.5 rounded border ${p.status === 'active' ? 'border-teal/30 text-teal bg-teal/5' : 'border-muted/30 text-muted'}`}>{p.status}</span>
@@ -877,12 +877,12 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
 
     return (
         <div class="space-y-8 animate-fadeIn">
-            <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets & Hero Editor</h2>
+            <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Enterprise Assets & Hero Editor</h2>
             <form onSubmit={handleSave} class="space-y-8">
 
                 {/* Company & Founder Info */}
                 <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-charcoal-light/20 space-y-6">
-                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Company & Founder</h3>
+                    <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal">Company & Founder</h3>
                     
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="space-y-4">
@@ -933,7 +933,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
 
                 {/* KINBO HOME HERO EDITOR */}
                 <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-teal/20 space-y-6">
-                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal flex items-center gap-2">
+                    <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                         KINBO Home Hero Editor
                     </h3>
@@ -1032,7 +1032,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                             <div class="absolute inset-0 flex items-center justify-center z-10">
                                 <div class="text-center">
                                     <p class="font-mono text-[8px] text-teal uppercase tracking-[0.5em]">KINBO TECHNOLOGIES</p>
-                                    <h4 class="font-poppins text-xl font-bold text-offwhite">Intelligent technology</h4>
+                                    <h4 class="font-inter text-xl font-bold text-offwhite">Intelligent technology</h4>
                                     <p class="font-mono text-[8px] text-muted mt-1">Parallax: {localAssets.hero_parallax_intensity ?? 20}% | Blur: {localAssets.hero_bg_blur ?? 2}px | Dark: {((localAssets.hero_bg_darkness ?? 0.6) * 100).toFixed(0)}%</p>
                                 </div>
                             </div>
@@ -1043,7 +1043,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                 <button
                     type="submit"
                     disabled={saving}
-                    class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                    class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                 >
                     {saving ? "SAVING..." : "[ Update Enterprise Core ]"}
                 </button>
@@ -1105,7 +1105,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
             return (
                 <div class="space-y-6 animate-fadeIn">
                     <div class="flex justify-between items-center bg-red-500/10 p-4 rounded border-l-4 border-red-500">
-                        <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                        <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">
                             Failed to Create Redirector
                         </h3>
                         <button onClick={() => setDnsError(null)} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
@@ -1117,7 +1117,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                             </div>
                             <div class="space-y-2">
-                                <p class="text-offwhite font-poppins text-sm font-semibold">DNS failure for <span class="text-red-400">{dnsError.fqdn}</span>, the A record does not resolve to 18.133.72.105</p>
+                                <p class="text-offwhite font-inter text-sm font-semibold">DNS failure for <span class="text-red-400">{dnsError.fqdn}</span>, the A record does not resolve to 18.133.72.105</p>
                                 <p class="text-muted font-mono text-xs leading-relaxed">
                                     You may need to wait for DNS propagation to complete which can sometimes take a few minutes or hours.
                                 </p>
@@ -1125,7 +1125,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                         </div>
 
                         <div class="pt-6 border-t border-charcoal-light/20">
-                            <h4 class="font-poppins text-[10px] font-bold text-teal uppercase tracking-[0.2em] mb-4">Advanced DNS Information</h4>
+                            <h4 class="font-inter text-[10px] font-bold text-teal uppercase tracking-[0.2em] mb-4">Advanced DNS Information</h4>
                             <p class="text-[10px] text-muted font-mono mb-4 leading-relaxed">
                                 The following results were returned as part of the DNS query for your domain <span class="text-offwhite">{dnsError.fqdn}</span>. If you are having trouble setting up a redirector the most likely cause is DNS propagation, which in some cases can take up to 72 hours. Review the TTL values below, if you have recently transferred your domain or updated your name servers the SOA TTL will also impact DNS propagation.
                             </p>
@@ -1180,7 +1180,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
         return (
             <div class="space-y-6 animate-fadeIn">
                 <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
-                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                    <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">
                         {isNew ? "New Redirector" : "Edit Redirector"}
                     </h3>
                     <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
@@ -1189,7 +1189,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                 {/* DNS Configuration Alert */}
                 <div class="p-6 bg-charcoal-light/10 border border-teal/20 rounded-xl relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-teal"></div>
-                    <h4 class="font-poppins text-sm font-bold text-teal mb-3 uppercase tracking-widest flex items-center gap-2">
+                    <h4 class="font-inter text-sm font-bold text-teal mb-3 uppercase tracking-widest flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         DNS Configuration
                     </h4>
@@ -1218,7 +1218,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                     <button
                         type="submit"
                         disabled={saving}
-                        class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                        class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                     >
                         {saving ? "SAVING..." : "[ Establish New Redirector ]"}
                     </button>
@@ -1230,10 +1230,10 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
     return (
         <div class="space-y-6">
             <div class="flex justify-between items-center">
-                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Redirector Management</h2>
+                <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Redirector Management</h2>
                 <button
                     onClick={() => setIsNew(true)}
-                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-inter text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
                 >
                     + New Redirector
                 </button>
@@ -1243,7 +1243,7 @@ function RedirectsManager({ redirects, onRefresh }: { redirects: any[]; onRefres
                 {redirects.map((r) => (
                     <div key={r.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
                         <div class="flex-1 min-w-0 pr-4">
-                            <h4 class="text-offwhite font-poppins font-medium truncate">{r.fqdn}</h4>
+                            <h4 class="text-offwhite font-inter font-medium truncate">{r.fqdn}</h4>
                             <p class="text-[10px] text-teal/60 font-mono truncate">➜ {r.target_url}</p>
                         </div>
                         <div class="flex gap-4">
@@ -1326,7 +1326,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
         return (
             <div class="space-y-6 animate-fadeIn">
                 <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
-                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                    <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">
                         {isNew ? "New Industry Model" : `Editing: ${item.title}`}
                     </h3>
                     <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
@@ -1348,7 +1348,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                                 <select
                                     value={item.icon_type}
                                     onChange={(e) => setEditing({ ...item, icon_type: (e.target as any).value })}
-                                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all"
                                 >
                                     <option value="wp">WordPress</option>
                                     <option value="jewel">Jewellery</option>
@@ -1384,7 +1384,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                         <button
                             type="submit"
                             disabled={saving}
-                            class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                            class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                         >
                             {saving ? "SAVING..." : "[ Update Library Node ]"}
                         </button>
@@ -1399,7 +1399,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                                     <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-poppins font-bold text-offwhite mb-2 text-lg">{item.title || "Untitled Model"}</h3>
+                                    <h3 class="font-inter font-bold text-offwhite mb-2 text-lg">{item.title || "Untitled Model"}</h3>
                                     <p class="font-lora text-sm text-muted leading-relaxed mb-4">{item.description || "No description provided."}</p>
                                     <div class="flex flex-wrap items-center gap-4">
                                         {item.benchmark_name && (
@@ -1424,7 +1424,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
         <div class="space-y-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Models Library</h2>
+                    <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Models Library</h2>
                     <button 
                         onClick={() => setShowConfig(!showConfig)}
                         class={`text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded border transition-all ${showConfig ? 'bg-teal text-charcoal border-teal' : 'text-muted border-charcoal-light/30 hover:border-teal/50'}`}
@@ -1434,7 +1434,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                 </div>
                 <button
                     onClick={() => setIsNew(true)}
-                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-inter text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
                 >
                     + Add Model
                 </button>
@@ -1442,7 +1442,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
 
             {showConfig && (
                 <div class="p-6 bg-charcoal-light/5 border border-teal/20 rounded-2xl space-y-6 animate-fadeIn">
-                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Industry Section Header</h3>
+                    <h3 class="font-inter text-xs uppercase tracking-[0.2em] text-teal">Industry Section Header</h3>
                     <div class="grid md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <Input label="Section Title" value={localConfig.title} onChange={(v: string) => setLocalConfig({ ...localConfig, title: v })} />
@@ -1479,7 +1479,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                 {models.map((m) => (
                     <div key={m.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
                         <div>
-                            <h4 class="text-offwhite font-poppins font-medium">{m.title} {m.is_featured && <span class="text-[8px] text-teal border border-teal/20 px-1 rounded ml-2">FEATURED</span>}</h4>
+                            <h4 class="text-offwhite font-inter font-medium">{m.title} {m.is_featured && <span class="text-[8px] text-teal border border-teal/20 px-1 rounded ml-2">FEATURED</span>}</h4>
                             <p class="text-[10px] text-muted font-mono uppercase tracking-widest">{m.category} • {m.icon_type}</p>
                         </div>
                         <div class="flex gap-4">
@@ -1538,7 +1538,7 @@ function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => voi
         return (
             <div class="space-y-6 animate-fadeIn">
                 <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
-                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                    <h3 class="font-inter text-sm font-bold text-offwhite uppercase tracking-widest">
                         {isNew ? "New Portfolio Item" : `Editing: ${item.title}`}
                     </h3>
                     <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
@@ -1559,7 +1559,7 @@ function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => voi
                                 type="text"
                                 value={item.tags?.join(', ')}
                                 onChange={(e) => setEditing({ ...item, tags: (e.target as any).value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
-                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-inter text-sm focus:border-teal outline-none transition-all"
                                 placeholder="UI/UX, React, AI"
                             />
                         </div>
@@ -1589,7 +1589,7 @@ function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => voi
                         <button
                             type="submit"
                             disabled={saving}
-                            class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                            class="w-full py-4 bg-teal text-charcoal font-inter font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
                         >
                             {saving ? "SAVING..." : "[ Save Portfolio Item ]"}
                         </button>
@@ -1628,10 +1628,10 @@ function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => voi
     return (
         <div class="space-y-6">
             <div class="flex justify-between items-center">
-                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Portfolio Management</h2>
+                <h2 class="font-inter text-xl font-bold text-offwhite uppercase tracking-wider">Portfolio Management</h2>
                 <button
                     onClick={() => setIsNew(true)}
-                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-inter text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
                 >
                     + New Item
                 </button>
@@ -1647,7 +1647,7 @@ function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => voi
                                 <div class="w-12 h-12 bg-charcoal-dark rounded border border-white/5 flex items-center justify-center text-[8px] font-mono text-muted">IMG</div>
                             )}
                             <div>
-                                <h4 class="text-offwhite font-poppins font-medium">{w.title}</h4>
+                                <h4 class="text-offwhite font-inter font-medium">{w.title}</h4>
                                 <p class="text-[10px] text-muted font-mono uppercase tracking-widest">{w.category} • {w.tags?.length || 0} tags</p>
                             </div>
                         </div>
@@ -1679,3 +1679,4 @@ function InfoRow({ label, value, link }: { label: string; value: string; link?: 
         </div>
     );
 }
+

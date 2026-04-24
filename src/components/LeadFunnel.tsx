@@ -55,7 +55,7 @@ export default function LeadFunnel() {
             <button 
                 onClick={() => setIsOpen(true)}
                 id="cta-start-project"
-                class="fixed bottom-8 right-8 z-[100] px-8 py-4 bg-[#10B981] hover:bg-[#059669] text-white font-inter font-bold rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group"
+                class="fixed md:bottom-8 bottom-28 right-8 z-[100] px-8 py-4 bg-[#10B981] hover:bg-[#059669] text-white font-inter font-bold rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group"
             >
                 <span class="relative flex h-3 w-3">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
@@ -226,3 +226,4 @@ export default function LeadFunnel() {
         </div>
     );
 }
+

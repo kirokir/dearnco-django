@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ── Google Fonts ── */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Roboto+Mono:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap");
 
 /* ── Tailwind v4 Theme Tokens ── */
 @theme {
@@ -12,25 +12,55 @@
   --color-teal: var(--teal);
   --color-teal-dark: var(--teal-dark);
   --color-teal-glow: var(--teal-glow);
+  --color-emerald: var(--emerald);
+  --color-emerald-dark: var(--emerald-dark);
   --color-muted: var(--muted);
 
-  --font-poppins: "Poppins", sans-serif;
+  --font-inter: "Inter", sans-serif;
   --font-lora: "Lora", serif;
-  --font-mono: "Roboto Mono", monospace;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 :root {
-  --charcoal: #1E1E1E;
-  --charcoal-rgb: 30, 30, 30;
-  --charcoal-light: #2A2A2A;
-  --charcoal-light-rgb: 42, 42, 42;
-  --charcoal-dark: #141414;
-  --offwhite: #F5F5F7;
-  --teal: #2A9D8F;
-  --teal-rgb: 42, 157, 143;
-  --teal-dark: #1F7A6F;
-  --teal-glow: rgba(42, 157, 143, 0.35);
+  /* Midnight Void Theme */
+  --charcoal: #0A0F1C;
+  --charcoal-rgb: 10, 15, 28;
+  --charcoal-light: #111827;
+  --charcoal-light-rgb: 17, 24, 39;
+  --charcoal-dark: #000000;
+  --charcoal-dark-rgb: 0, 0, 0;
+  
+  /* Anti-Halation White Typography */
+  --offwhite: #F3F4F6;
+  --offwhite-rgb: 243, 244, 246;
+  
+  /* Electric Cyan Trust Accent */
+  --teal: #06B6D4;
+  --teal-rgb: 6, 182, 212;
+  --teal-dark: #0891B2;
+  --teal-glow: rgba(6, 182, 212, 0.35);
+  
+  /* Hyper-Visibility Emerald CTA */
+  --emerald: #10B981;
+  --emerald-rgb: 16, 185, 129;
+  --emerald-dark: #059669;
+  
   --muted: #9CA3AF;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 [data-theme="light"] {
@@ -40,10 +70,10 @@
   --charcoal-light-rgb: 229, 231, 235;
   --charcoal-dark: #FFFFFF;
   --offwhite: #1E1E1E;
-  --teal: #2A9D8F;
-  --teal-rgb: 42, 157, 143;
-  --teal-dark: #1F7A6F;
-  --teal-glow: rgba(42, 157, 143, 0.15);
+  --teal: #06B6D4;
+  --teal-rgb: 6, 182, 212;
+  --teal-dark: #0891B2;
+  --teal-glow: rgba(6, 182, 212, 0.15);
   --muted: #4B5563;
 }
 
@@ -62,7 +92,7 @@ body {
   margin: 0;
   background-color: var(--color-charcoal);
   color: var(--color-offwhite);
-  font-family: var(--font-lora);
+  font-family: var(--font-inter);
   line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -93,6 +123,12 @@ body {
 :focus-visible {
   outline: 2px dashed var(--color-teal);
   outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  body {
+    background-color: #000000;
+  }
 }
 
 /* ── Section utility ── */

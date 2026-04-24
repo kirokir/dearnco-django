@@ -89,13 +89,14 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "models">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "models" | "works">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
     const [redirects, setRedirects] = useState<any[]>([]);
     const [models, setModels] = useState<any[]>([]);
+    const [works, setWorks] = useState<any[]>([]);
     const [modelsConfig, setModelsConfig] = useState<any>({ title: "Framework Library", description: "Standardized architectural models...", collage_url: "/indian_business_models_collage_1776926783752.png" });
     const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
     const [editingPost, setEditingPost] = useState<any>(null);
@@ -110,7 +111,7 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, modelsRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, modelsRes, worksRes, modelsConfigRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
                 fetch("/api/config?key=enterprise_assets"),
@@ -118,6 +119,7 @@ export default function AdminInterface() {
                 fetch("/api/products"),
                 fetch("/api/redirects"),
                 fetch("/api/models"),
+                fetch("/api/works"),
                 fetch("/api/config?key=models_section"),
             ]);
             const postsData = await postsRes.json();
@@ -127,6 +129,7 @@ export default function AdminInterface() {
             const productsData = await productsRes.json();
             const redirectsData = await redirectsRes.json();
             const modelsData = await modelsRes.json();
+            const worksData = await worksRes.json();
             const modelsConfigData = await modelsConfigRes.json();
  
             setPosts(Array.isArray(postsData) ? postsData : []);
@@ -136,6 +139,7 @@ export default function AdminInterface() {
             setProducts(Array.isArray(productsData) ? productsData : []);
             setRedirects(Array.isArray(redirectsData) ? redirectsData : []);
             setModels(Array.isArray(modelsData) ? modelsData : []);
+            setWorks(Array.isArray(worksData) ? worksData : []);
             setModelsConfig(modelsConfigData && Object.keys(modelsConfigData).length ? modelsConfigData : { 
                 title: "Framework Library", 
                 description: "Standardized architectural models and business frameworks designed to solve specific operational challenges across Indian industry verticals.", 
@@ -256,7 +260,14 @@ export default function AdminInterface() {
                     class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "models" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
                 >
-                    Models ({models.length})
+                    Frameworks ({models.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("works")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "works" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Portfolio ({works.length})
                 </button>
             </div>
 
@@ -373,6 +384,10 @@ export default function AdminInterface() {
 
             {activeTab === "models" && (
                 <ModelsManager models={models} config={modelsConfig} onRefresh={fetchData} />
+            )}
+
+            {activeTab === "works" && (
+                <WorksManager works={works} onRefresh={fetchData} />
             )}
         </div>
     );
@@ -1355,7 +1370,7 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                                 />
                                 <label class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Featured Card</label>
                             </div>
-                            <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: string) => setEditing({ ...item, sort_order: parseInt(v) })} />
+                            <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: number) => setEditing({ ...item, sort_order: v })} />
                         </div>
                         <div class="space-y-1">
                             <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
@@ -1476,6 +1491,175 @@ function ModelsManager({ models, config, onRefresh }: { models: any[]; config: a
                 {models.length === 0 && (
                     <div class="text-center py-12 bg-charcoal-light/5 rounded-xl border border-dashed border-charcoal-light/30">
                         <p class="text-muted font-mono text-xs uppercase tracking-widest">No industry models configured</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function WorksManager({ works, onRefresh }: { works: any[]; onRefresh: () => void }) {
+    const [editing, setEditing] = useState<any>(null);
+    const [isNew, setIsNew] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    async function handleSave(e: Event) {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            const res = await fetch("/api/works", {
+                method: "POST",
+                body: JSON.stringify(editing),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setEditing(null);
+                setIsNew(false);
+                onRefresh();
+            }
+        } catch (e) {
+            console.error("Save error:", e);
+        }
+        setSaving(false);
+    }
+
+    async function handleDelete(id: any) {
+        if (!confirm("Delete this portfolio item?")) return;
+        try {
+            const res = await fetch(`/api/works?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+    }
+
+    if (isNew || editing) {
+        const item = editing || { title: "", description: "", category: "General", image_url: "", link: "", tags: [], sort_order: 0 };
+        return (
+            <div class="space-y-6 animate-fadeIn">
+                <div class="flex justify-between items-center bg-teal/5 p-4 rounded border-l-4 border-teal">
+                    <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">
+                        {isNew ? "New Portfolio Item" : `Editing: ${item.title}`}
+                    </h3>
+                    <button onClick={() => { setIsNew(false); setEditing(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X CLOSE ]</button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <form onSubmit={handleSave} class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <Input label="Project Title *" value={item.title} onChange={(v: string) => setEditing({ ...item, title: v })} required />
+                            <Input label="Category *" value={item.category} onChange={(v: string) => setEditing({ ...item, category: v })} required />
+                        </div>
+                        <Input label="Background Image URL" value={item.image_url} onChange={(v: string) => setEditing({ ...item, image_url: v })} uploadable />
+                        <Input label="Project Link" value={item.link} onChange={(v: string) => setEditing({ ...item, link: v })} />
+                        
+                        <div class="space-y-1">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Tags (comma separated)</label>
+                            <input
+                                type="text"
+                                value={item.tags?.join(', ')}
+                                onChange={(e) => setEditing({ ...item, tags: (e.target as any).value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-3 py-2 text-offwhite font-poppins text-sm focus:border-teal outline-none transition-all"
+                                placeholder="UI/UX, React, AI"
+                            />
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex items-center gap-4 h-[41px] bg-charcoal-dark/50 border border-charcoal-light/20 rounded px-4">
+                                <input
+                                    type="checkbox"
+                                    checked={item.is_featured}
+                                    onChange={(e) => setEditing({ ...item, is_featured: (e.target as any).checked })}
+                                    class="w-4 h-4 accent-teal"
+                                />
+                                <label class="font-mono text-[10px] text-offwhite uppercase tracking-widest">Featured Item</label>
+                            </div>
+                            <Input label="Sort Order" type="number" value={item.sort_order} onChange={(v: string) => setEditing({ ...item, sort_order: parseInt(v) })} />
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Description *</label>
+                            <textarea
+                                value={item.description}
+                                onInput={(e) => setEditing({ ...item, description: (e.target as any).value })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-32"
+                                required
+                            ></textarea>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+                        >
+                            {saving ? "SAVING..." : "[ Save Portfolio Item ]"}
+                        </button>
+                    </form>
+
+                    {/* Live Preview */}
+                    <div class="space-y-4">
+                        <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Homepage Card Preview</label>
+                        <div class="relative aspect-[16/10] overflow-hidden rounded-[24px] border border-white/5 bg-[#0A0F1C]">
+                            <div class="absolute inset-0 z-0">
+                                {item.image_url ? (
+                                    <img src={item.image_url} alt="Preview" class="w-full h-full object-cover" />
+                                ) : (
+                                    <div class="w-full h-full bg-charcoal-light/10 flex items-center justify-center text-muted font-mono text-[10px]">NO_IMAGE_DEPLOYED</div>
+                                )}
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0A0F1C] via-[#0A0F1C]/80 to-transparent z-10"></div>
+                            </div>
+                            <div class="absolute inset-0 z-20 p-6 flex flex-col justify-end">
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    {item.tags?.map((tag: string) => (
+                                        <span class="px-2 py-0.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-mono text-offwhite/80 uppercase tracking-wider">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                                <h3 class="font-inter text-xl font-bold text-offwhite mb-1">{item.title || "Project Alpha"}</h3>
+                                <p class="font-inter text-xs text-muted/80 line-clamp-2 font-light">{item.description || "Project architectural summary..."}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Portfolio Management</h2>
+                <button
+                    onClick={() => setIsNew(true)}
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                >
+                    + New Item
+                </button>
+            </div>
+
+            <div class="grid gap-4">
+                {works.map((w) => (
+                    <div key={w.id} class="p-4 bg-charcoal-light/20 border border-charcoal-light/30 rounded-lg flex justify-between items-center hover:border-teal/30 transition-all">
+                        <div class="flex items-center gap-4">
+                            {w.image_url ? (
+                                <img src={w.image_url} alt={w.title} class="w-12 h-12 object-cover rounded border border-white/5" />
+                            ) : (
+                                <div class="w-12 h-12 bg-charcoal-dark rounded border border-white/5 flex items-center justify-center text-[8px] font-mono text-muted">IMG</div>
+                            )}
+                            <div>
+                                <h4 class="text-offwhite font-poppins font-medium">{w.title}</h4>
+                                <p class="text-[10px] text-muted font-mono uppercase tracking-widest">{w.category} • {w.tags?.length || 0} tags</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onClick={() => setEditing(w)} class="text-teal font-mono text-[10px] uppercase hover:underline">[ EDIT ]</button>
+                            <button onClick={() => handleDelete(w.id)} class="text-red-400 font-mono text-[10px] uppercase hover:underline">[ DELETE ]</button>
+                        </div>
+                    </div>
+                ))}
+                {works.length === 0 && (
+                    <div class="text-center py-12 bg-charcoal-light/5 rounded-xl border border-dashed border-charcoal-light/30">
+                        <p class="text-muted font-mono text-xs uppercase tracking-widest">No portfolio items found</p>
                     </div>
                 )}
             </div>

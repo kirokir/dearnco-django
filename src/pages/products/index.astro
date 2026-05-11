@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
-import Layout from "../layouts/Layout.astro";
-import { supabase } from "../lib/supabase";
+import Layout from "../../layouts/Layout.astro";
+import { supabase } from "../../lib/supabase";
 
 let dynamicProducts: any[] = [];
 let industryModels: any[] = [];
@@ -41,8 +41,8 @@ if (supabase) {
   console.warn("Supabase client not available on Products SSR");
 }
 
-import Breadcrumbs from "../components/Breadcrumbs.astro";
-import AutoCarousel from "../components/AutoCarousel";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import AutoCarousel from "../../components/AutoCarousel";
 ---
 
 <Layout title="Products" description="Explore KINBO TECHNOLOGIES PRIVATE LIMITED's product ecosystem: Glowup for skin health insights and Relic for creator-focused marketplace.">

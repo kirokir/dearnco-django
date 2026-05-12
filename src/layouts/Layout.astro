@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Preloader from "../components/Preloader.astro";
+import { supabase } from "../lib/supabase";
 import "../styles/global.css";
 
 interface Props {
@@ -22,6 +23,21 @@ const navLinks = [
   { label: "Ideas", href: "/ideas" },
   { label: "Contact", href: "/chat" },
 ];
+
+let enterpriseAssets = {
+    logo_url: "",
+    favicon_url: "/favicon.svg",
+    company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
+};
+
+if (supabase) {
+    try {
+        const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
+        if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
+    } catch (e) {
+        console.error("Layout SSR:", e);
+    }
+}
 ---
 
 <!doctype html>
@@ -43,7 +59,7 @@ const navLinks = [
     <meta name="twitter:description" content={description} />
     
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type={enterpriseAssets.favicon_url?.endsWith('.svg') ? 'image/svg+xml' : 'image/png'} href={enterpriseAssets.favicon_url || "/favicon.svg"} />
     <meta name="generator" content={Astro.generator} />
     <ViewTransitions />
   </head>
@@ -89,10 +105,14 @@ const navLinks = [
           class="flex items-center gap-3 font-poppins text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
           aria-label="Go to home"
         >
-          <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20">
-            <span class="text-teal font-mono text-sm">K</span>
+          <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20 overflow-hidden">
+            {enterpriseAssets.logo_url ? (
+                <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-contain" />
+            ) : (
+                <span class="text-teal font-mono text-sm">K</span>
+            )}
           </div>
-          <span class="tracking-widest">KINBO</span>
+          <span class="tracking-widest">{enterpriseAssets.company_name?.split(' ')[0] || "KINBO"}</span>
         </a>
 
         <!-- Desktop Nav Links -->
@@ -151,10 +171,14 @@ const navLinks = [
       <div class="max-w-7xl mx-auto flex flex-col items-center gap-12">
         <!-- Brand/Logo Area -->
         <div class="flex flex-col items-center gap-4 text-center">
-            <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2">
-                <span class="text-teal font-poppins text-3xl font-bold">K</span>
+            <div class="w-16 h-16 bg-teal/10 rounded-2xl flex items-center justify-center border border-teal/20 mb-2 overflow-hidden">
+                {enterpriseAssets.logo_url ? (
+                    <img src={enterpriseAssets.logo_url} alt="Logo" class="w-full h-full object-contain" />
+                ) : (
+                    <span class="text-teal font-poppins text-3xl font-bold">K</span>
+                )}
             </div>
-            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">KINBO TECHNOLOGIES PRIVATE LIMITED</h2>
+            <h2 class="font-poppins text-xl font-bold text-offwhite tracking-widest uppercase">{enterpriseAssets.company_name || "KINBO TECHNOLOGIES PRIVATE LIMITED"}</h2>
             <p class="font-lora text-sm text-muted max-w-md">Building intelligent everyday apps that improve real-world outcomes through practical technology and user-focused design.</p>
         </div>
 

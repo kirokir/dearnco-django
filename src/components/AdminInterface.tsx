@@ -812,6 +812,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
         hero_bg_blur: 2,
         hero_parallax_intensity: 20,
         logo_url: '',
+        favicon_url: '',
         locations: 'INDIA | CHINA | GCC',
         company_name: 'KINBO TECHNOLOGIES PRIVATE LIMITED',
         founder_photo_url: '/arjun-portrait.png',
@@ -851,6 +852,7 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                             <Input label="Company Name" value={localAssets.company_name} onChange={(v: string) => setLocalAssets({ ...localAssets, company_name: v })} />
                             <Input label="Locations (separator |)" value={localAssets.locations} onChange={(v: string) => setLocalAssets({ ...localAssets, locations: v })} />
                             <Input label="Global Logo URL" value={localAssets.logo_url} onChange={(v: string) => setLocalAssets({ ...localAssets, logo_url: v })} />
+                            <Input label="Global Favicon URL" value={localAssets.favicon_url} onChange={(v: string) => setLocalAssets({ ...localAssets, favicon_url: v })} />
                         </div>
 
                         {/* Dedicated Founder Portrait Upload */}

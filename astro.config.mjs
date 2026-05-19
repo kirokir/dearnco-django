@@ -13,6 +13,9 @@ export default defineConfig({
   site: 'https://portfolio-sage-two-43.vercel.app',
   output: 'server',
   compressHTML: true,
+  security: {
+    checkOrigin: false
+  },
   integrations: [
     preact(),
     mdx(),

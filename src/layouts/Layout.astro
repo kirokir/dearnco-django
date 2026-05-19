@@ -1,7 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Preloader from "../components/Preloader.astro";
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 import "../styles/global.css";
 
 interface Props {
@@ -36,9 +36,9 @@ let enterpriseAssets = {
     company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
 };
 
-if (supabase) {
+if (supabaseAdmin) {
     try {
-        const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
+        const { data } = await supabaseAdmin.from('site_config').select('data').eq('key', 'enterprise_assets').single();
         if (data?.data) enterpriseAssets = { ...enterpriseAssets, ...data.data };
     } catch (e) {
         console.error("Layout SSR:", e);

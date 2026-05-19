@@ -4,12 +4,12 @@ import Layout from "../layouts/Layout.astro";
 import Works from "../components/Works.astro";
 import Socials from "../components/Socials.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 
 let founderPhoto = "/arjun-portrait.png";
-if (supabase) {
+if (supabaseAdmin) {
   try {
-    const { data } = await supabase.from('site_config').select('data').eq('key', 'enterprise_assets').single();
+    const { data } = await supabaseAdmin.from('site_config').select('data').eq('key', 'enterprise_assets').single();
     if (data?.data?.founder_photo_url) founderPhoto = data.data.founder_photo_url;
   } catch (e) {
     console.error("Founder SSR:", e);

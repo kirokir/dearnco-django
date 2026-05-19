@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import { supabase } from "../lib/supabase";
+import { supabaseAdmin } from "../lib/supabase";
 
 let enterpriseAssets = {
     hero_video_url: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1113-large.mp4",
@@ -10,9 +10,9 @@ let enterpriseAssets = {
     company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED"
 };
 
-if (supabase) {
+if (supabaseAdmin) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from('site_config')
             .select('data')
             .eq('key', 'enterprise_assets')

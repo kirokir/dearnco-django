@@ -1,0 +1,120 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Payment Successful — Kinbo Technologies" description="Your payment has been received successfully.">
+  <section class="min-h-screen flex items-center justify-center px-6 py-24">
+    <div class="max-w-lg w-full text-center">
+      <!-- Success Animation -->
+      <div class="relative mx-auto mb-8 w-24 h-24">
+        <div class="absolute inset-0 rounded-full bg-teal/10 animate-ping" style="animation-duration: 2s;"></div>
+        <div class="relative w-24 h-24 rounded-full bg-teal/20 border-2 border-teal flex items-center justify-center success-check" style="opacity: 0; transform: scale(0.5);">
+          <svg class="w-10 h-10 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Confetti dots (CSS only) -->
+      <div class="confetti-container absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="confetti-dot" style="--x: 20%; --delay: 0s; --color: #2A9D8F;"></div>
+        <div class="confetti-dot" style="--x: 40%; --delay: 0.3s; --color: #8A2BE2;"></div>
+        <div class="confetti-dot" style="--x: 60%; --delay: 0.1s; --color: #D4A017;"></div>
+        <div class="confetti-dot" style="--x: 80%; --delay: 0.5s; --color: #2A9D8F;"></div>
+        <div class="confetti-dot" style="--x: 30%; --delay: 0.2s; --color: #8A2BE2;"></div>
+        <div class="confetti-dot" style="--x: 70%; --delay: 0.4s; --color: #D4A017;"></div>
+      </div>
+
+      <!-- Content -->
+      <div class="success-content" style="opacity: 0; transform: translateY(20px);">
+        <h1 class="font-poppins text-2xl sm:text-3xl font-bold text-offwhite mb-3">
+          Payment received successfully.
+        </h1>
+        <p class="font-lora text-sm text-muted mb-2">
+          Thank you for choosing Kinbo Technologies. You will receive a confirmation email shortly.
+        </p>
+
+        <!-- Payment Details Card -->
+        <div class="mt-6 p-6 rounded-2xl border border-teal/15 bg-teal/[0.03] text-left">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-2 h-2 rounded-full bg-teal animate-pulse"></div>
+            <span class="font-mono text-[10px] text-teal uppercase tracking-widest">Transaction Confirmed</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3 font-mono text-[11px]">
+            <div>
+              <span class="text-muted/60 block">Status</span>
+              <span class="text-teal font-semibold">Verified</span>
+            </div>
+            <div>
+              <span class="text-muted/60 block">Platform</span>
+              <span class="text-offwhite">Razorpay</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="https://chat.whatsapp.com/PLACEHOLDER"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#25D366]/15 border border-[#25D366]/30 text-[#25D366] font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:bg-[#25D366]/25 hover:translate-y-[-2px]"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            Join the Kinbo Circle
+          </a>
+
+          <a
+            href="/services"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-charcoal-light/30 text-muted font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:border-teal/30 hover:text-offwhite hover:translate-y-[-2px]"
+          >
+            Return to Services
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/chat" class="font-mono text-[10px] text-muted/50 uppercase tracking-widest hover:text-teal transition-colors">
+            Contact Support →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .confetti-dot {
+    position: absolute;
+    top: -10px;
+    left: var(--x);
+    width: 8px;
+    height: 8px;
+    background: var(--color);
+    border-radius: 50%;
+    animation: confetti-fall 3s ease-in var(--delay) forwards;
+    opacity: 0;
+  }
+
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initSuccess() {
+    gsap.to(".success-check", {
+      opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)", delay: 0.3
+    });
+    gsap.to(".success-content", {
+      opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.7
+    });
+  }
+
+  document.addEventListener("astro:page-load", initSuccess);
+</script>

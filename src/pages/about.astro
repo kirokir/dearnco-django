@@ -1,126 +1,305 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import Breadcrumbs from "../components/Breadcrumbs.astro";
 ---
 
 <Layout title="About" description="Learn about KINBO TECHNOLOGIES PRIVATE LIMITED's mission to build intelligent everyday applications that deliver real outcomes.">
-  <section class="max-w-7xl mx-auto pt-24 px-6">
-    <Breadcrumbs />
-    <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="text-center mb-16">
-      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">About Us</span>
-      <h1 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite mb-4">
-        Building technology that<br/><span class="text-teal">actually helps.</span>
-      </h1>
-      <div class="mt-6 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
+
+  <div class="ks-page">
+    <!-- HERO -->
+    <div class="sub-hero">
+      <div class="sub-crumb hero-anim">
+        HOME <span class="sep">/</span> <span style="color: var(--ks-teal);">ABOUT KINBO</span>
+      </div>
+      <h1 class="sub-h hero-anim">Building technology that<br><span class="accent-teal">actually helps.</span></h1>
+      <p class="sub-tagline hero-anim">Consumer technology today often prioritizes engagement metrics over meaningful outcomes. KINBO was created to address this gap. Every application we build starts with a simple question: does this make someone's day measurably better?</p>
     </div>
 
-    <!-- Story -->
-    <div class="space-y-16">
-      <div class="about-section" style="opacity:0; transform:translateY(20px);">
-        <h2 class="font-poppins text-xl font-bold text-offwhite mb-4 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-lg bg-teal/10 flex items-center justify-center text-teal text-sm">01</span>
-          Why KINBO Exists
-        </h2>
-        <div class="font-lora text-muted leading-relaxed space-y-4 pl-11">
-          <p>Consumer technology today often prioritizes engagement metrics over meaningful outcomes. Many applications are designed to capture attention rather than deliver genuine value. Users are left navigating complex interfaces, intrusive data practices, and features that create dependency instead of independence.</p>
-          <p>KINBO was created to address this gap. We believe that technology should serve its users clearly and transparently. Every application we build starts with a simple question: does this make someone's day measurably better?</p>
-          <p>Based in India, China, and the GCC, KINBO TECHNOLOGIES PRIVATE LIMITED develops mobile applications that solve everyday problems through intelligent software, practical automation, and integrated digital tools. Our focus remains on usable technology that improves outcomes rather than adding complexity.</p>
-        </div>
-      </div>
-
-      <div class="about-section" style="opacity:0; transform:translateY(20px);">
-        <h2 class="font-poppins text-xl font-bold text-offwhite mb-4 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-lg bg-teal/10 flex items-center justify-center text-teal text-sm">02</span>
-          Our Philosophy
-        </h2>
-        <div class="font-lora text-muted leading-relaxed space-y-4 pl-11">
-          <p>We build applications in areas where practical technology can make a direct difference: productivity tools, consumer utilities, digital marketplaces, communication tools, and AI-assisted everyday services.</p>
-          <p>Our approach centers on three commitments:</p>
-          <ul class="list-disc list-inside space-y-2 ml-4">
-            <li><strong class="text-offwhite">Intelligent Assistance</strong> — Our applications use technology to provide actionable insights, not empty notifications. Every recommendation is grounded in data and presented with context.</li>
-            <li><strong class="text-offwhite">User Transparency</strong> — We clearly explain how our tools work, what data they use, and what their limitations are. Users deserve to understand the technology they rely on.</li>
-            <li><strong class="text-offwhite">Real Outcomes</strong> — We measure success by whether our users achieve better results, not by how much time they spend in our applications.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="about-section" style="opacity:0; transform:translateY(20px);">
-        <h2 class="font-poppins text-xl font-bold text-offwhite mb-4 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-lg bg-teal/10 flex items-center justify-center text-teal text-sm">03</span>
-          Technology Approach
-        </h2>
-        <div class="font-lora text-muted leading-relaxed space-y-4 pl-11">
-          <p>KINBO's engineering philosophy emphasizes practical functionality and reliability. We build software designed to scale and evolve with user needs, using:</p>
-          <ul class="list-disc list-inside space-y-2 ml-4">
-            <li><strong class="text-offwhite">Scalable Architecture</strong> — Systems designed to handle growth without compromising performance or user experience.</li>
-            <li><strong class="text-offwhite">Responsible AI</strong> — Artificial intelligence applied thoughtfully, with clear boundaries between automated insights and human decision-making.</li>
-            <li><strong class="text-offwhite">Data Privacy</strong> — User data handled with care, transparency, and compliance with applicable regulations.</li>
-            <li><strong class="text-offwhite">User-Focused Development</strong> — Every feature validated against actual user needs, not industry trends or competitive pressure.</li>
-          </ul>
-          <p>We emphasize practical functionality and reliability rather than novelty. Technology is a tool, and tools should work consistently.</p>
-        </div>
-      </div>
-
-      <!-- Values -->
-      <div class="about-section" style="opacity:0; transform:translateY(20px);">
-        <h2 class="font-poppins text-xl font-bold text-offwhite mb-6 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-lg bg-teal/10 flex items-center justify-center text-teal text-sm">04</span>
-          Company Values
-        </h2>
-        <div class="grid sm:grid-cols-2 gap-4 pl-11">
-          <div class="p-5 rounded-xl border border-charcoal-light/20 bg-charcoal-light/5">
-            <h4 class="font-poppins text-sm font-bold text-teal mb-2">Practical Innovation</h4>
-            <p class="font-lora text-xs text-muted leading-relaxed">Technology should solve real problems. We build what's useful, not what's trendy.</p>
-          </div>
-          <div class="p-5 rounded-xl border border-charcoal-light/20 bg-charcoal-light/5">
-            <h4 class="font-poppins text-sm font-bold text-teal mb-2">User Transparency</h4>
-            <p class="font-lora text-xs text-muted leading-relaxed">Applications should clearly explain their insights and operate without hidden agendas.</p>
-          </div>
-          <div class="p-5 rounded-xl border border-charcoal-light/20 bg-charcoal-light/5">
-            <h4 class="font-poppins text-sm font-bold text-teal mb-2">Creator Empowerment</h4>
-            <p class="font-lora text-xs text-muted leading-relaxed">Platforms should enable individuals to participate, grow, and build independently.</p>
-          </div>
-          <div class="p-5 rounded-xl border border-charcoal-light/20 bg-charcoal-light/5">
-            <h4 class="font-poppins text-sm font-bold text-teal mb-2">Responsible Technology</h4>
-            <p class="font-lora text-xs text-muted leading-relaxed">Tools should improve outcomes rather than create distractions or dependencies.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Company Info -->
-      <div class="about-section p-8 rounded-2xl border border-teal/10 bg-teal/5" style="opacity:0; transform:translateY(20px);">
-        <h2 class="font-poppins text-lg font-bold text-offwhite mb-4">Company Information</h2>
-        <div class="grid sm:grid-cols-3 gap-6 font-mono text-xs">
-          <div>
-            <span class="text-muted uppercase tracking-widest block mb-1">Company</span>
-            <span class="text-offwhite">Kinbo Technologies Private Limited</span>
-          </div>
-          <div>
-            <span class="text-muted uppercase tracking-widest block mb-1">Locations</span>
-            <span class="text-offwhite">India | China | GCC</span>
-          </div>
-          <div>
-            <span class="text-muted uppercase tracking-widest block mb-1">Business Type</span>
-            <span class="text-offwhite">Software & Mobile App Development</span>
-          </div>
-        </div>
+    <!-- PHILOSOPHY -->
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">01</div>
+      <h3 class="info-title">Our Philosophy</h3>
+      <div class="info-content">
+        <p>We build applications in areas where practical technology can make a direct difference: productivity tools, consumer utilities, digital marketplaces, communication tools, and AI-assisted everyday services.</p>
+        <p>Our approach centers on three commitments:</p>
+        <ul class="info-list">
+          <li><strong>Intelligent Assistance</strong> — Our applications use technology to provide actionable insights, not empty notifications. Every recommendation is grounded in data and presented with context.</li>
+          <li><strong>User Transparency</strong> — We clearly explain how our tools work, what data they use, and what their limitations are. Users deserve to understand the technology they rely on.</li>
+          <li><strong>Real Outcomes</strong> — We measure success by whether our users achieve better results, not by how much time they spend in our applications.</li>
+        </ul>
       </div>
     </div>
-  </section>
+
+    <!-- TECHNOLOGY -->
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">02</div>
+      <h3 class="info-title">Technology Approach</h3>
+      <div class="info-content">
+        <p>KINBO's engineering philosophy emphasizes practical functionality and reliability. We build software designed to scale and evolve with user needs, using:</p>
+        <ul class="info-list">
+          <li><strong>Scalable Architecture</strong> — Systems designed to handle growth without compromising performance or user experience.</li>
+          <li><strong>Responsible AI</strong> — Artificial intelligence applied thoughtfully, with clear boundaries between automated insights and human decision-making.</li>
+          <li><strong>Data Privacy</strong> — User data handled with care, transparency, and compliance with applicable regulations.</li>
+          <li><strong>User-Focused Development</strong> — Every feature validated against actual user needs, not industry trends or competitive pressure.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- VALUES GRID -->
+    <div class="service-grid hero-anim">
+      <div class="svc-card">
+        <i class="ti ti-bulb svc-icon svc-icon--teal" aria-hidden="true"></i>
+        <h3 class="svc-title">Practical Innovation</h3>
+        <p class="svc-one">Technology should solve real problems. We build what's useful, not what's trendy.</p>
+      </div>
+      <div class="svc-card">
+        <i class="ti ti-eye svc-icon svc-icon--teal" aria-hidden="true"></i>
+        <h3 class="svc-title">User Transparency</h3>
+        <p class="svc-one">Applications should clearly explain their insights and operate without hidden agendas.</p>
+      </div>
+      <div class="svc-card">
+        <i class="ti ti-rocket svc-icon svc-icon--teal" aria-hidden="true"></i>
+        <h3 class="svc-title">Creator Empowerment</h3>
+        <p class="svc-one">Platforms should enable individuals to participate, grow, and build independently.</p>
+      </div>
+      <div class="svc-card">
+        <i class="ti ti-shield-check svc-icon svc-icon--teal" aria-hidden="true"></i>
+        <h3 class="svc-title">Responsible Tech</h3>
+        <p class="svc-one">Tools should improve outcomes rather than create distractions or dependencies.</p>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="sub-bottom">
+      <div class="flex flex-col gap-1">
+        <span class="font-mono text-xs text-teal uppercase tracking-[0.15em] mb-2">Corporate Information</span>
+        <p class="sub-bottom-statement" style="font-size: 20px;">Kinbo Technologies Pvt Ltd.</p>
+        <span class="text-[11px] text-[var(--ks-text-muted)] mt-2 font-mono">INDIA | CHINA | GCC</span>
+      </div>
+      <a href="/chat" class="sub-cta-btn sub-cta-btn--teal">Contact Us →</a>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-label: rgba(240, 240, 236, 0.7);
+    --ks-teal: #2dd4bf;
+    --ks-teal-bg: rgba(45, 212, 191, 0.08);
+    --ks-teal-border: rgba(45, 212, 191, 0.22);
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* SUB HERO */
+  .sub-hero {
+    padding: 48px 28px 44px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .sub-crumb {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
+  .sub-h {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -1.5px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .sub-h .accent-teal { color: var(--ks-teal); }
+  .sub-tagline {
+    font-size: 14px;
+    color: var(--ks-text-muted);
+    margin-top: 16px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* INFO SECTIONS */
+  .info-section {
+    padding: 44px 28px;
+    border-bottom: 0.5px solid var(--ks-border);
+    position: relative;
+    overflow: hidden;
+  }
+  .info-ghost-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: var(--ks-teal);
+    opacity: 0.03;
+    letter-spacing: -4px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .info-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--ks-text-primary);
+    margin-bottom: 20px;
+  }
+  .info-content {
+    font-size: 13px;
+    color: var(--ks-text-muted);
+    line-height: 1.7;
+    max-width: 680px;
+  }
+  .info-content p {
+    margin-bottom: 16px;
+  }
+  .info-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .info-list li {
+    padding-left: 20px;
+    position: relative;
+  }
+  .info-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ks-teal);
+    font-family: monospace;
+    opacity: 0.7;
+  }
+  .info-list strong {
+    color: var(--ks-text-primary);
+    font-weight: 500;
+  }
+
+  /* SERVICE CARDS GRID */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  @media (max-width: 540px) {
+    .service-grid { grid-template-columns: 1fr; }
+  }
+  .svc-card {
+    padding: 28px;
+    border-right: 0.5px solid var(--ks-border);
+    border-bottom: 0.5px solid var(--ks-border);
+    display: flex;
+    flex-direction: column;
+  }
+  .svc-card:nth-child(even) { border-right: none; }
+  .svc-card:nth-last-child(-n+2):nth-child(odd),
+  .svc-card:last-child { border-bottom: none; }
+
+  .svc-icon {
+    font-size: 22px;
+    margin-bottom: 16px;
+    opacity: 0.65;
+  }
+  .svc-icon--teal { color: var(--ks-teal); }
+
+  .svc-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--ks-text-primary);
+    margin: 0 0 6px 0;
+    line-height: 1.15;
+  }
+  .svc-one {
+    font-size: 12px;
+    color: rgba(240, 240, 236, 0.45);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  /* BOTTOM BAR */
+  .sub-bottom {
+    padding: 32px 28px;
+    border-bottom: 0.5px solid var(--ks-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .sub-bottom-statement {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: rgba(240, 240, 236, 0.85);
+    line-height: 1.1;
+    margin: 0;
+  }
+  .sub-cta-btn {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 0.5px solid;
+    background: none;
+    transition: opacity 0.18s;
+    white-space: nowrap;
+  }
+  .sub-cta-btn:hover { opacity: 0.65; }
+  .sub-cta-btn--teal { color: var(--ks-teal); border-color: var(--ks-teal-border); }
+
+  @media (max-width: 640px) {
+    .sub-hero { padding: 40px 16px 32px; }
+    .info-section { padding: 32px 16px; }
+    .svc-card { padding: 28px 16px; border-right: none !important; }
+    .svc-card:nth-last-child(-n+2):nth-child(odd) { border-bottom: 0.5px solid var(--ks-border); }
+    .svc-card:last-child { border-bottom: none; }
+    .sub-bottom { padding: 32px 16px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
 
 <script>
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.utils.toArray(".about-section").forEach((el: any) => {
-    gsap.to(el, {
-      scrollTrigger: { trigger: el, start: "top 85%" },
-      opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
-    });
-  });
+  function initAbout() {
+    gsap.fromTo(".hero-anim", 
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
+    );
+  }
+  document.addEventListener("astro:page-load", initAbout);
 </script>

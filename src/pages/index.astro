@@ -32,10 +32,45 @@ if (supabase) {
 }
 ---
 
-<Layout title="Home" description="KINBO TECHNOLOGIES PRIVATE LIMITED builds intelligent everyday applications that combine practical technology with user-focused design.">
+<Layout title="Home" description="KINBO TECHNOLOGIES PRIVATE LIMITED builds intelligent everyday applications that combine practical technology with user-focused design. Enterprise software, AI systems, healthcare technology, and research infrastructure.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
   
-  <!-- Startup Animation Overlay -->
-  <div id="startup-overlay" class="fixed inset-0 z-[100] bg-charcoal hidden flex-col items-center justify-center overflow-hidden">
+  <!-- Organization + WebSite JSON-LD -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
+      "alternateName": "Kinbo Technologies",
+      "url": "https://portfolio-sage-two-43.vercel.app",
+      "logo": enterpriseAssets.logo_url || "https://portfolio-sage-two-43.vercel.app/favicon.svg",
+      "description": "KINBO TECHNOLOGIES builds intelligent everyday applications combining practical technology with user-focused design. Specializing in enterprise software, AI systems, healthcare technology, and research infrastructure.",
+      "founder": {
+        "@type": "Person",
+        "name": "Arjun Jayesh",
+        "jobTitle": "Founder & Systems Architect",
+        "url": "https://portfolio-sage-two-43.vercel.app/founder"
+      },
+      "foundingDate": "2024",
+      "areaServed": ["India", "China", "GCC"],
+      "knowsAbout": ["Artificial Intelligence", "Healthcare Technology", "Enterprise Software", "Computer Vision", "RAG Systems", "Clinical Workflow Optimization", "Research Infrastructure"],
+      "sameAs": ["https://dear.is-a.dev/", "https://dearnco.is-a.dev/"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "KINBO TECHNOLOGIES",
+      "url": "https://portfolio-sage-two-43.vercel.app",
+      "publisher": {
+        "@type": "Organization",
+        "name": "KINBO TECHNOLOGIES PRIVATE LIMITED"
+      }
+    }
+  ])} />
+  
+  <div class="ks-page">
+    <!-- Startup Animation Overlay -->
+    <div id="startup-overlay" class="fixed inset-0 z-[100] bg-charcoal hidden flex-col items-center justify-center overflow-hidden">
     <div class="relative">
       <div id="startup-logo" class="w-24 h-24 bg-teal/10 rounded-2xl border border-teal/20 flex items-center justify-center mb-8 scale-0 overflow-hidden">
         {enterpriseAssets.logo_url ? (
@@ -83,7 +118,7 @@ if (supabase) {
       <span class="font-mono text-xs text-teal uppercase tracking-[0.5em] block mb-6 hero-anim opacity-0 translate-y-8">
         {enterpriseAssets.company_name}
       </span>
-      <h1 class="font-poppins text-4xl sm:text-5xl md:text-7xl font-bold text-offwhite leading-tight mb-8 hero-anim opacity-0 translate-y-8">
+      <h1 class="hero-title-syne text-4xl sm:text-5xl md:text-7xl text-offwhite leading-[0.95] mb-8 hero-anim opacity-0 translate-y-8">
         Intelligent technology<br/>
         <span class="text-teal">for real outcomes.</span>
       </h1>
@@ -110,20 +145,20 @@ if (supabase) {
   <!-- Products Preview Section (Simplified version for quick loading) -->
   <section class="section-padding max-w-7xl mx-auto px-6" id="products-preview">
     <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-      <div class="reveal p-10 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 transition-all group overflow-hidden relative">
+      <div class="reveal p-10 rounded-3xl border border-[var(--ks-border)] bg-[rgba(255,255,255,0.01)] hover:border-teal/30 hover:bg-teal/[0.01] transition-all group overflow-hidden relative">
         <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
             <svg class="w-32 h-32 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h3 class="font-poppins text-2xl font-bold text-offwhite mb-4">Glowup</h3>
+        <h3 class="card-title-syne text-2xl text-offwhite mb-4">Glowup</h3>
         <p class="font-lora text-muted mb-8 text-sm leading-relaxed">Understanding skin health through image intelligence and structured progress tracking.</p>
         <a href="/products#glowup" class="text-teal font-mono text-xs uppercase tracking-widest hover:underline">View Product →</a>
       </div>
 
-      <div class="reveal p-10 rounded-3xl border border-charcoal-light/10 bg-charcoal-light/5 hover:border-teal/30 transition-all group overflow-hidden relative">
+      <div class="reveal p-10 rounded-3xl border border-[var(--ks-border)] bg-[rgba(255,255,255,0.01)] hover:border-teal/30 hover:bg-teal/[0.01] transition-all group overflow-hidden relative">
         <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
             <svg class="w-32 h-32 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
         </div>
-        <h3 class="font-poppins text-2xl font-bold text-offwhite mb-4">Relic</h3>
+        <h3 class="card-title-syne text-2xl text-offwhite mb-4">Relic</h3>
         <p class="font-lora text-muted mb-8 text-sm leading-relaxed">A digital multivendor marketplace empowering creators and students to reach global customers.</p>
         <a href="/products#relic" class="text-teal font-mono text-xs uppercase tracking-widest hover:underline">View Product →</a>
       </div>
@@ -133,28 +168,62 @@ if (supabase) {
   <!-- Enterprise Values Banner -->
   <section class="py-24 bg-charcoal-dark/30 border-y border-charcoal-light/10 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 text-center">
-        <div class="flex flex-wrap justify-center gap-x-16 gap-y-12 items-center opacity-40">
-            <div class="flex flex-col items-center gap-2">
-                <span class="font-poppins text-lg font-bold">PRACTICAL</span>
-                <span class="font-mono text-[9px] tracking-widest">INNOVATION</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="font-poppins text-lg font-bold">USER</span>
-                <span class="font-mono text-[9px] tracking-widest">TRANSPARENCY</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="font-poppins text-lg font-bold">CREATOR</span>
-                <span class="font-mono text-[9px] tracking-widest">EMPOWERMENT</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="font-poppins text-lg font-bold">RESPONSIBLE</span>
-                <span class="font-mono text-[9px] tracking-widest">TECHNOLOGY</span>
-            </div>
+    <div class="flex flex-wrap justify-center gap-x-16 gap-y-12 items-center opacity-45">
+        <div class="flex flex-col items-center gap-2">
+            <span class="value-title-syne text-lg">PRACTICAL</span>
+            <span class="font-mono text-[9px] tracking-widest text-teal">INNOVATION</span>
         </div>
+        <div class="flex flex-col items-center gap-2">
+            <span class="value-title-syne text-lg">USER</span>
+            <span class="font-mono text-[9px] tracking-widest text-teal">TRANSPARENCY</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+            <span class="value-title-syne text-lg">CREATOR</span>
+            <span class="font-mono text-[9px] tracking-widest text-teal">EMPOWERMENT</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+            <span class="value-title-syne text-lg">RESPONSIBLE</span>
+            <span class="font-mono text-[9px] tracking-widest text-teal">TECHNOLOGY</span>
+        </div>
+    </div>
     </div>
   </section>
 
+  </div>
 </Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-teal: #2dd4bf;
+    background: var(--ks-bg);
+    min-height: 100vh;
+    color: var(--ks-text-primary);
+  }
+  .hero-title-syne {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+  }
+  .card-title-syne {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+  .value-title-syne {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
+    color: var(--ks-text-primary);
+  }
+</style>
 
 <script>
   import { gsap } from "gsap";

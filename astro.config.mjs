@@ -12,10 +12,20 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://portfolio-sage-two-43.vercel.app',
   output: 'server',
+  compressHTML: true,
   security: {
-    checkOrigin: false
+    checkOrigin: true
   },
-  integrations: [preact(), mdx(), sitemap()],
+  integrations: [
+    preact(),
+    mdx(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/admin') &&
+        !page.includes('/api/') &&
+        !page.includes('/apply'),
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss()]

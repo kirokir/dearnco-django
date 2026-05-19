@@ -1,0 +1,60 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Payment Cancelled — Kinbo Technologies" description="Your payment was not completed.">
+  <section class="min-h-screen flex items-center justify-center px-6 py-24">
+    <div class="max-w-lg w-full text-center">
+      <!-- Icon -->
+      <div class="mx-auto mb-8 w-20 h-20 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center cancelled-icon" style="opacity:0; transform:scale(0.5);">
+        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+
+      <div class="cancelled-content" style="opacity:0; transform:translateY(20px);">
+        <h1 class="font-poppins text-2xl sm:text-3xl font-bold text-offwhite mb-3">
+          Payment was not completed.
+        </h1>
+        <p class="font-lora text-sm text-muted mb-8">
+          No charges were made. You can try again or reach out if you need assistance.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/services"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-teal/10 border border-teal/30 text-teal font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:bg-teal/20 hover:translate-y-[-2px]"
+          >
+            Try Again
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </a>
+
+          <a
+            href="/chat"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-charcoal-light/30 text-muted font-poppins text-xs font-semibold uppercase tracking-widest transition-all hover:border-teal/30 hover:text-offwhite hover:translate-y-[-2px]"
+          >
+            Contact Support
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initCancelled() {
+    gsap.to(".cancelled-icon", {
+      opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)", delay: 0.2
+    });
+    gsap.to(".cancelled-content", {
+      opacity: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.5
+    });
+  }
+
+  document.addEventListener("astro:page-load", initCancelled);
+</script>

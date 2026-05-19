@@ -1,0 +1,21 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "KINBO TECHNOLOGIES",
+  "name_for_model": "kinbo_technologies",
+  "description_for_human": "Enterprise technology company building intelligent everyday applications — AI systems, healthcare technology, and research infrastructure.",
+  "description_for_model": "KINBO TECHNOLOGIES PRIVATE LIMITED is an enterprise technology company founded by Arjun Jayesh. It builds intelligent applications spanning healthcare AI (QueueZero/Q0), enterprise software, computer vision, RAG systems, and clinical workflow optimization. The company operates across India, China, and the GCC region. Key products include QueueZero (clinical infrastructure), Glowup (consumer tech), and Relic (digital preservation). Services include KINBO Hub (product development), KINBO Cares (research mentorship), KINBO Expert (technical consulting), and KINBO Consultancy (strategic advisory). Official websites: https://portfolio-sage-two-43.vercel.app, https://dear.is-a.dev/, https://dearnco.is-a.dev/",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "none",
+    "url": "https://portfolio-sage-two-43.vercel.app"
+  },
+  "logo_url": "https://portfolio-sage-two-43.vercel.app/favicon.svg",
+  "contact_email": "support@kinbo.in",
+  "legal_info_url": "https://portfolio-sage-two-43.vercel.app",
+  "additional_urls": [
+    "https://dear.is-a.dev/",
+    "https://dearnco.is-a.dev/"
+  ]
+}

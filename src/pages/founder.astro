@@ -18,9 +18,38 @@ if (supabase) {
 ---
 
 <Layout title="Founder" description="Arjun Jayesh — Systems Architect, Independent Researcher, and Developer building KINBO TECHNOLOGIES PRIVATE LIMITED.">
-  <section class="max-w-7xl mx-auto pt-24 px-6 mb-[-4rem]">
-    <Breadcrumbs />
-  </section>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  
+  <!-- Person JSON-LD -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Arjun Jayesh",
+    "jobTitle": "Founder & Systems Architect",
+    "url": "https://portfolio-sage-two-43.vercel.app/founder",
+    "image": founderPhoto,
+    "worksFor": {
+      "@type": "Organization",
+      "name": "KINBO TECHNOLOGIES PRIVATE LIMITED",
+      "url": "https://portfolio-sage-two-43.vercel.app"
+    },
+    "knowsAbout": [
+      "Artificial Intelligence",
+      "Healthcare Technology",
+      "Computer Vision",
+      "RAG Systems",
+      "Clinical Workflow Optimization",
+      "Enterprise Software Architecture",
+      "Biomechanics",
+      "Research Methodology"
+    ],
+    "description": "Systems Architect, Independent Researcher, and Developer building KINBO TECHNOLOGIES PRIVATE LIMITED. Specializes in AI engineering, healthcare technology, and enterprise software systems."
+  })} />
+
+  <div class="ks-page">
+    <section class="max-w-7xl mx-auto pt-24 px-6 mb-[-4rem]">
+      <Breadcrumbs />
+    </section>
 
   <!-- Founder Hero with Parallax Portrait -->
   <section id="founder-hero" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
@@ -240,6 +269,7 @@ if (supabase) {
 
   <Works />
   <Socials />
+  </div>
 </Layout>
 
 <script>
@@ -312,3 +342,35 @@ if (supabase) {
 
   document.addEventListener("astro:page-load", initFounder);
 </script>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-teal: #2dd4bf;
+    background: var(--ks-bg);
+    min-height: 100vh;
+    color: var(--ks-text-primary);
+  }
+  .ks-page h1, 
+  .ks-page h2, 
+  .ks-page h3, 
+  .ks-page h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  
+  /* Retain specific tracking/leading adjustments for main layout headings */
+  .ks-page h1 {
+    line-height: 0.95;
+    letter-spacing: -2px;
+  }
+  .ks-page h2 {
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+</style>

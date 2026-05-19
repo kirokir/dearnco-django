@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import EmployeeApplicationForm from "../components/forms/EmployeeApplicationForm";
+import "../styles/forms.css";
+---
+
+<Layout title="Apply to Kinbo" description="Submit your application to join Kinbo Technologies.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <div class="ks-form-page">
+    <EmployeeApplicationForm client:load />
+  </div>
+</Layout>

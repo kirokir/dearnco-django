@@ -1,0 +1,20 @@
+---
+/**
+ * JsonLd.astro — Reusable JSON-LD structured data injector
+ * 
+ * Usage:
+ *   <JsonLd schema={{
+ *     "@context": "https://schema.org",
+ *     "@type": "Organization",
+ *     "name": "KINBO TECHNOLOGIES"
+ *   }} />
+ */
+
+interface Props {
+  schema: Record<string, any> | Record<string, any>[];
+}
+
+const { schema } = Astro.props;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

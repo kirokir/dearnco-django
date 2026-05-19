@@ -89,13 +89,20 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team">("blog");
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
+    const [serviceLeads, setServiceLeads] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
     const [redirects, setRedirects] = useState<any[]>([]);
+    const [servicesConfig, setServicesConfig] = useState<any>({ cares_hero: "", expert_hero: "", consultancy_hero: "", hub_hero: "" });
     const [enterprise, setEnterprise] = useState<any>({ hero_video_url: "", locations: "INDIA | CHINA | GCC", company_name: "KINBO TECHNOLOGIES PRIVATE LIMITED" });
+    const [teamAssets, setTeamAssets] = useState<any>({
+        heading: "We bring a wealth of skills and experience from a wide range of backgrounds.",
+        subtitle: "Our philosophy is simple; hire great people and give them the resources and support to do their best work.",
+        members: []
+    });
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -108,13 +115,16 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, leadsRes, srvConfigRes, teamRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
                 fetch("/api/config?key=enterprise_assets"),
                 fetch("/api/ideas"),
                 fetch("/api/products"),
                 fetch("/api/redirects"),
+                fetch("/api/service-leads"),
+                fetch("/api/config?key=services_assets"),
+                fetch("/api/config?key=team_assets"),
             ]);
             const postsData = await postsRes.json();
             const configData = await configRes.json();
@@ -122,6 +132,9 @@ export default function AdminInterface() {
             const ideasData = await ideasRes.json();
             const productsData = await productsRes.json();
             const redirectsData = await redirectsRes.json();
+            const leadsData = await leadsRes.json();
+            const srvConfigData = await srvConfigRes.json();
+            const teamData = await teamRes.json();
 
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
@@ -129,6 +142,18 @@ export default function AdminInterface() {
             setIdeas(Array.isArray(ideasData) ? ideasData : []);
             setProducts(Array.isArray(productsData) ? productsData : []);
             setRedirects(Array.isArray(redirectsData) ? redirectsData : []);
+            setServiceLeads(Array.isArray(leadsData) ? leadsData : []);
+            setServicesConfig(srvConfigData || { cares_hero: "", expert_hero: "", consultancy_hero: "", hub_hero: "" });
+            setTeamAssets(teamData && teamData.members ? teamData : {
+                heading: "We bring a wealth of skills and experience from a wide range of backgrounds.",
+                subtitle: "Our philosophy is simple; hire great people and give them the resources and support to do their best work.",
+                members: [
+                    { name: "Jessica Dobrev", role: "Backend Lead", photo_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" },
+                    { name: "Drew Cano", role: "Head of UX", photo_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600" },
+                    { name: "Sasha Kindred", role: "VP of Marketing", photo_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=600" },
+                    { name: "Emily Donnavan", role: "Product Lead", photo_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600" }
+                ]
+            });
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -239,6 +264,27 @@ export default function AdminInterface() {
                 >
                     Redirects ({redirects.length})
                 </button>
+                <button
+                    onClick={() => setActiveTab("service_leads")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "service_leads" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Service Leads ({serviceLeads.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("services_config")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "services_config" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Services Config
+                </button>
+                <button
+                    onClick={() => setActiveTab("team")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "team" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Team Manager
+                </button>
             </div>
 
             {activeTab === "blog" && (
@@ -348,9 +394,10 @@ export default function AdminInterface() {
                 <EnterpriseManager assets={enterprise} onRefresh={fetchData} />
             )}
 
-            {activeTab === "redirects" && (
-                <RedirectsManager redirects={redirects} onRefresh={fetchData} />
-            )}
+            {activeTab === "redirects" && <RedirectsManager redirects={redirects} onRefresh={fetchData} />}
+            {activeTab === "service_leads" && <ServiceLeadsViewer leads={serviceLeads} onRefresh={fetchData} />}
+            {activeTab === "services_config" && <ServicesConfigManager config={servicesConfig} setConfig={setServicesConfig} onRefresh={fetchData} setMessage={setMessage} />}
+            {activeTab === "team" && <TeamManager config={teamAssets} setConfig={setTeamAssets} onRefresh={fetchData} setMessage={setMessage} />}
         </div>
     );
 }
@@ -816,6 +863,8 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
         locations: 'INDIA | CHINA | GCC',
         company_name: 'KINBO TECHNOLOGIES PRIVATE LIMITED',
         founder_photo_url: '/arjun-portrait.png',
+        whatsapp_number: '+91 9846547132',
+        whatsapp_message: 'hi kinbo , can you help me',
     };
     const [localAssets, setLocalAssets] = useState({ ...defaultHero, ...assets });
     const [saving, setSaving] = useState(false);
@@ -892,6 +941,15 @@ function EnterpriseManager({ assets, onRefresh }: { assets: any; onRefresh: () =
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* WHATSAPP WIDGET CONFIG */}
+                <div class="bg-charcoal-light/5 p-6 rounded-2xl border border-charcoal-light/20 space-y-6">
+                    <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">WhatsApp Floating Widget</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <Input label="WhatsApp Number (e.g. +91 9846547132)" value={localAssets.whatsapp_number} onChange={(v: string) => setLocalAssets({ ...localAssets, whatsapp_number: v })} />
+                        <Input label="Preloaded Message" value={localAssets.whatsapp_message} onChange={(v: string) => setLocalAssets({ ...localAssets, whatsapp_message: v })} />
                     </div>
                 </div>
 
@@ -1235,6 +1293,372 @@ function InfoRow({ label, value, link }: { label: string; value: string; link?: 
             ) : (
                 <span class="text-offwhite capitalize">{value}</span>
             )}
+        </div>
+    );
+}
+
+function ServiceLeadsViewer({ leads, onRefresh }: { leads: any[]; onRefresh: () => void }) {
+    const [expanded, setExpanded] = useState<string | null>(null);
+
+    async function handleDelete(id: string) {
+        if (!confirm("Delete this service lead?")) return;
+        try {
+            const res = await fetch(`/api/service-leads?id=${id}`, { method: "DELETE" });
+            if (res.ok) onRefresh();
+        } catch (e) {
+            console.error("Delete error:", e);
+        }
+    }
+
+    function handleExportCSV() {
+        if (!leads.length) return;
+        
+        const rows = leads.map(l => {
+            const base = {
+                Date: new Date(l.created_at).toLocaleString(),
+                Type: l.form_type,
+                Name: l.name,
+                Email: l.email,
+                Phone: l.phone || "",
+                Organization: l.organization || "",
+                Status: l.status,
+            };
+            const meta = typeof l.metadata === 'object' ? l.metadata : {};
+            return { ...base, ...meta };
+        });
+
+        // Get all unique keys
+        const keys = Array.from(new Set(rows.flatMap(r => Object.keys(r))));
+        
+        // Escape CSV logic
+        const csvContent = [
+            keys.join(","),
+            ...rows.map(r => keys.map(k => {
+                let val = r[k] === null || r[k] === undefined ? "" : String(r[k]);
+                return `"${val.replace(/"/g, '""')}"`;
+            }).join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `service_leads_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    if (!leads.length) {
+        return (
+            <div class="text-center py-16 space-y-4">
+                <div class="text-5xl opacity-30">📋</div>
+                <p class="font-mono text-sm text-muted">No service leads yet.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Service Leads</h2>
+                <button 
+                    onClick={handleExportCSV}
+                    class="bg-teal/20 text-teal border border-teal/30 px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal hover:text-charcoal transition-all"
+                >
+                    [ Export CSV ]
+                </button>
+            </div>
+
+            {leads.map((lead) => (
+                <div key={lead.id} class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl overflow-hidden hover:border-teal/30 transition-all">
+                    <div class="p-4 flex justify-between items-start cursor-pointer" onClick={() => setExpanded(expanded === lead.id ? null : lead.id)}>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="text-offwhite font-poppins font-medium">{lead.name}</h4>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase border border-teal/30 text-teal bg-teal/5">
+                                    {lead.form_type}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-4 text-[10px] font-mono text-muted">
+                                <span>{lead.email}</span>
+                                <span>•</span>
+                                <span>{lead.organization || "N/A"}</span>
+                                <span>•</span>
+                                <span>{new Date(lead.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <button onClick={(e) => { e.stopPropagation(); handleDelete(lead.id); }} class="text-red-400 font-mono text-[10px] uppercase hover:underline">
+                                [ DEL ]
+                            </button>
+                            <span class="text-muted text-xs">{expanded === lead.id ? "▲" : "▼"}</span>
+                        </div>
+                    </div>
+
+                    {expanded === lead.id && (
+                        <div class="border-t border-charcoal-light/20 p-4 space-y-4 animate-fadeIn">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-3">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Base Info</h5>
+                                    <InfoRow label="Email" value={lead.email} link={`mailto:${lead.email}`} />
+                                    {lead.phone && <InfoRow label="Phone" value={lead.phone} />}
+                                    {lead.organization && <InfoRow label="Org" value={lead.organization} />}
+                                </div>
+                                <div class="space-y-3">
+                                    <h5 class="font-mono text-[10px] text-teal uppercase tracking-widest">Form Specific Data</h5>
+                                    {Object.entries(lead.metadata || {}).map(([k, v]: [string, any]) => (
+                                        <InfoRow key={k} label={k.replace(/_/g, ' ')} value={Array.isArray(v) ? v.join(", ") : String(v)} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function ServicesConfigManager({ config, setConfig, onRefresh, setMessage }: { config: any, setConfig: any, onRefresh: () => void, setMessage: (msg: string) => void }) {
+    const [saving, setSaving] = useState(false);
+
+    async function handleSave() {
+        setSaving(true);
+        try {
+            const res = await fetch("/api/config", {
+                method: "POST",
+                body: JSON.stringify({ key: "services_assets", value: config }),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setMessage("Services assets saved successfully!");
+                onRefresh();
+            }
+        } catch (e) {
+            setMessage("Error saving config.");
+        }
+        setSaving(false);
+    }
+
+    const imageSlots = [
+        { key: "hub_hero", label: "Hub Hero Image" },
+        { key: "cares_hero", label: "Cares Hero Image" },
+        { key: "expert_hero", label: "Expert Hero Image" },
+        { key: "consultancy_hero", label: "Consultancy Hero Image" },
+    ];
+
+    return (
+        <div class="space-y-6">
+            <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Services Page Assets</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                {imageSlots.map((slot) => (
+                    <div key={slot.key} class="bg-charcoal-light/10 p-4 border border-charcoal-light/30 rounded-xl space-y-3">
+                        <h4 class="font-mono text-xs text-teal uppercase tracking-widest">{slot.label}</h4>
+                        {config[slot.key] ? (
+                            <div class="relative group">
+                                <img src={config[slot.key]} alt={slot.label} class="w-full h-40 object-cover rounded border border-charcoal-light/30" />
+                                <button 
+                                    onClick={() => setConfig({ ...config, [slot.key]: "" })} 
+                                    class="absolute top-2 right-2 bg-red-500/90 text-white font-mono text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    REMOVE
+                                </button>
+                            </div>
+                        ) : (
+                            <DragDropZone 
+                                accept="image/*" 
+                                className="border border-dashed rounded-xl h-40" 
+                                onUpload={(urls) => setConfig({ ...config, [slot.key]: urls[0] })} 
+                            />
+                        )}
+                    </div>
+                ))}
+            </div>
+            <button
+                onClick={handleSave}
+                disabled={saving}
+                class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+            >
+                {saving ? "SAVING..." : "[ Save Assets Configuration ]"}
+            </button>
+        </div>
+    );
+}
+
+function TeamManager({ config, setConfig, onRefresh, setMessage }: { config: any, setConfig: any, onRefresh: () => void, setMessage: (msg: string) => void }) {
+    const [saving, setSaving] = useState(false);
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [tempMember, setTempMember] = useState<any>({ name: "", role: "", photo_url: "" });
+    const [isAdding, setIsAdding] = useState(false);
+
+    async function handleSave() {
+        setSaving(true);
+        try {
+            const res = await fetch("/api/config", {
+                method: "POST",
+                body: JSON.stringify({ key: "team_assets", value: config }),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setMessage("Team assets saved successfully!");
+                onRefresh();
+            }
+        } catch (e) {
+            setMessage("Error saving team configuration.");
+        }
+        setSaving(false);
+    }
+
+    function removeMember(idx: number) {
+        if (!confirm("Are you sure you want to remove this team member?")) return;
+        const newMembers = config.members.filter((_: any, i: number) => i !== idx);
+        setConfig({ ...config, members: newMembers });
+    }
+
+    function startEdit(idx: number) {
+        setEditingIndex(idx);
+        setTempMember({ ...config.members[idx] });
+        setIsAdding(false);
+    }
+
+    function saveMemberEdit() {
+        if (!tempMember.name.trim() || !tempMember.role.trim()) {
+            alert("Name and Role are required.");
+            return;
+        }
+        const newMembers = [...config.members];
+        if (editingIndex !== null) {
+            newMembers[editingIndex] = tempMember;
+        }
+        setConfig({ ...config, members: newMembers });
+        setEditingIndex(null);
+    }
+
+    function startAdd() {
+        setIsAdding(true);
+        setTempMember({ name: "", role: "", photo_url: "" });
+        setEditingIndex(null);
+    }
+
+    function addMember() {
+        if (!tempMember.name.trim() || !tempMember.role.trim()) {
+            alert("Name and Role are required.");
+            return;
+        }
+        setConfig({ ...config, members: [...config.members, tempMember] });
+        setIsAdding(false);
+    }
+
+    return (
+        <div class="space-y-6 animate-fadeIn">
+            <div class="flex justify-between items-center">
+                <h2 class="font-poppins text-xl font-bold text-offwhite uppercase tracking-wider">Team Page Settings</h2>
+                <button
+                    onClick={startAdd}
+                    class="bg-teal text-charcoal px-4 py-2 rounded font-poppins text-xs font-bold uppercase tracking-widest hover:bg-teal-dark transition-all"
+                >
+                    + Add Member
+                </button>
+            </div>
+
+            <div class="bg-charcoal-light/10 p-6 rounded-xl border border-charcoal-light/20 space-y-4">
+                <Input label="Section Heading" value={config.heading} onChange={(v: string) => setConfig({ ...config, heading: v })} />
+                <div class="space-y-1">
+                    <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Section Subtitle</label>
+                    <textarea
+                        value={config.subtitle}
+                        onInput={(e) => setConfig({ ...config, subtitle: (e.target as any).value })}
+                        class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-3 text-offwhite font-lora text-sm focus:border-teal outline-none transition-all h-20"
+                    ></textarea>
+                </div>
+            </div>
+
+            {/* Editor Popup/Drawer */}
+            {(isAdding || editingIndex !== null) && (
+                <div class="bg-charcoal-light/20 p-6 rounded-xl border border-teal/30 space-y-4 animate-fadeIn">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-poppins text-xs font-bold text-teal uppercase tracking-widest">
+                            {isAdding ? "Add Team Member" : "Edit Team Member"}
+                        </h4>
+                        <button onClick={() => { setIsAdding(false); setEditingIndex(null); }} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase">[ X ]</button>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <Input label="Member Name *" value={tempMember.name} onChange={(v: string) => setTempMember({ ...tempMember, name: v })} />
+                            <Input label="Role/Job Title *" value={tempMember.role} onChange={(v: string) => setTempMember({ ...tempMember, role: v })} />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block font-mono text-[10px] text-muted uppercase tracking-widest">Portrait Photo</label>
+                            <DragDropZone
+                                accept="image/*"
+                                className="border border-dashed rounded-xl h-24 flex items-center justify-center"
+                                onUpload={(urls) => setTempMember({ ...tempMember, photo_url: urls[0] })}
+                            >
+                                {tempMember.photo_url ? (
+                                    <div class="relative w-full h-full">
+                                        <img src={tempMember.photo_url} class="w-full h-full object-cover rounded-xl" />
+                                        <div class="absolute inset-0 bg-charcoal/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                            <span class="text-[9px] font-mono text-teal bg-charcoal/80 px-2 py-1 rounded">Replace Image</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <span class="font-mono text-[9px] text-muted uppercase tracking-widest">Upload Portrait</span>
+                                )}
+                            </DragDropZone>
+                            <input
+                                type="text"
+                                value={tempMember.photo_url}
+                                onInput={(e) => setTempMember({ ...tempMember, photo_url: (e.target as any).value })}
+                                class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded px-2 py-1 text-offwhite font-mono text-[10px] focus:outline-none focus:border-teal"
+                                placeholder="Or paste Photo URL..."
+                            />
+                        </div>
+                    </div>
+                    <button
+                        onClick={isAdding ? addMember : saveMemberEdit}
+                        class="w-full py-2.5 bg-teal/20 border border-teal/40 hover:bg-teal hover:text-charcoal text-teal font-poppins text-xs font-bold uppercase tracking-widest rounded transition-all"
+                    >
+                        {isAdding ? "[ Add Member Node ]" : "[ Save Member Node ]"}
+                    </button>
+                </div>
+            )}
+
+            {/* Members List */}
+            <div class="space-y-4">
+                <h3 class="font-poppins text-xs uppercase tracking-[0.2em] text-teal">Team Members ({config.members.length})</h3>
+                <div class="grid gap-3">
+                    {config.members.map((m: any, idx: number) => (
+                        <div key={idx} class="p-3 bg-charcoal-light/10 border border-charcoal-light/20 rounded-xl flex items-center justify-between hover:border-teal/20 transition-all">
+                            <div class="flex items-center gap-3">
+                                {m.photo_url ? (
+                                    <img src={m.photo_url} class="w-10 h-10 rounded-full object-cover border border-charcoal-light/30" />
+                                ) : (
+                                    <div class="w-10 h-10 rounded-full bg-charcoal-dark border border-charcoal-light/30 flex items-center justify-center font-mono text-xs text-muted">👤</div>
+                                )}
+                                <div>
+                                    <h4 class="text-offwhite font-poppins font-medium text-sm">{m.name}</h4>
+                                    <p class="text-[10px] text-muted font-mono uppercase tracking-wider">{m.role}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <button onClick={() => startEdit(idx)} class="text-teal font-mono text-[10px] uppercase hover:underline">[ EDIT ]</button>
+                                <button onClick={() => removeMember(idx)} class="text-red-400 font-mono text-[10px] uppercase hover:underline">[ DELETE ]</button>
+                            </div>
+                        </div>
+                    ))}
+                    {config.members.length === 0 && (
+                        <p class="text-center py-8 text-muted font-mono text-xs uppercase">No team members added yet.</p>
+                    )}
+                </div>
+            </div>
+
+            <button
+                onClick={handleSave}
+                disabled={saving}
+                class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all"
+            >
+                {saving ? "SAVING..." : "[ Save Team Page Settings ]"}
+            </button>
         </div>
     );
 }

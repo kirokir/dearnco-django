@@ -1,4 +1,54 @@
+# ============================================
+# KINBO TECHNOLOGIES — robots.txt
+# Enterprise Crawl Configuration
+# ============================================
+
+# ─── Search Engine Crawlers ───
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# ─── AI System Crawlers ───
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# ─── General Crawlers ───
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /apply
 
-Sitemap: https://arjun-jayesh.com/sitemap-index.xml
+# ─── Sitemap ───
+Sitemap: https://portfolio-sage-two-43.vercel.app/sitemap-index.xml
+
+# ─── AI Context Files ───
+# LLMs.txt: https://portfolio-sage-two-43.vercel.app/llms.txt

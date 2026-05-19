@@ -3,16 +3,26 @@ export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import AdminInterface from "../components/AdminInterface";
 
-const adminPassword = "local"; // Hardcoded default key
+const adminPassword = import.meta.env.ADMIN_PASSWORD || "local";
 let isAuthenticated = Astro.cookies.has("admin_session");
 let error = "";
 
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
   const password = data.get("password");
+  const honeypot = data.get("_hp_website") as string;
   
-  if (password === adminPassword) {
-    Astro.cookies.set("admin_session", "true", { path: "/", httpOnly: true, secure: true, maxAge: 60 * 60 * 24 });
+  // Bot detection — honeypot field should be empty
+  if (honeypot && honeypot.trim() !== "") {
+    error = "Invalid connection key.";
+  } else if (password === adminPassword) {
+    Astro.cookies.set("admin_session", "true", {
+      path: "/",
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24,
+    });
     isAuthenticated = true;
   } else {
     error = "Invalid connection key.";
@@ -59,6 +69,10 @@ if (Astro.request.method === "POST") {
         )}
 
         <form method="POST" data-astro-reload class="flex flex-col gap-4">
+          <!-- Honeypot — invisible to humans, bots fill it -->
+          <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <input type="text" name="_hp_website" tabindex="-1" autocomplete="off" />
+          </div>
           <div>
             <label for="password" class="block font-mono text-xs text-muted mb-2 uppercase tracking-widest">Master Key</label>
             <input 

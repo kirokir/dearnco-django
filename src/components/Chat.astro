@@ -1,16 +1,7 @@
 <!-- Chat Section — IDE terminal/chat widget styled contact form -->
 
-<section id="chat" class="section-padding bg-charcoal-dark/30">
+<section id="chat" class="bg-charcoal-dark/30">
   <div class="max-w-4xl mx-auto">
-    <!-- Section Header -->
-    <div class="text-center mb-12 chat-header" style="opacity:0; transform:translateY(20px);">
-      <span class="font-mono text-xs text-teal uppercase tracking-[0.3em] block mb-3">Contact</span>
-      <h2 class="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-offwhite">
-        Start a <span class="text-teal">Conversation</span>
-      </h2>
-      <div class="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-teal to-transparent"></div>
-    </div>
-
     <!-- Terminal/Chat Widget -->
     <div class="chat-widget rounded-2xl border border-charcoal-light/30 overflow-hidden shadow-2xl" style="opacity:0; transform:translateY(20px);">
       <!-- Terminal Title Bar -->
@@ -140,13 +131,7 @@
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.to(".chat-header", {
-    scrollTrigger: { trigger: ".chat-header", start: "top 85%" },
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    ease: "power2.out",
-  });
+
 
   gsap.to(".chat-widget", {
     scrollTrigger: { trigger: ".chat-widget", start: "top 85%" },

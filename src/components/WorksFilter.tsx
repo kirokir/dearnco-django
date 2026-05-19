@@ -45,22 +45,7 @@ export default function WorksFilter() {
     return (
         <div>
             {/* Filter pills */}
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "0.75rem",
-                    justifyContent: "center",
-                    marginBottom: "3rem",
-                    position: "sticky",
-                    top: "4.5rem",
-                    zIndex: 20,
-                    paddingTop: "1rem",
-                    paddingBottom: "1rem",
-                    background:
-                        "linear-gradient(to bottom, #1E1E1E 60%, transparent)",
-                }}
-            >
+            <div class="works-filter-pills">
                 {categories.map((cat) => (
                     <button
                         key={cat}
@@ -75,6 +60,7 @@ export default function WorksFilter() {
                             borderRadius: "9999px",
                             cursor: "pointer",
                             transition: "all 0.3s ease",
+                            flexShrink: 0,
                             border:
                                 active === cat
                                     ? "2px solid #2A9D8F"
@@ -347,6 +333,36 @@ export default function WorksFilter() {
           border-color: rgba(42,157,143,0.3) !important;
           transform: translateY(-3px);
           box-shadow: 0 8px 30px rgba(42,157,143,0.1);
+        }
+        .works-filter-pills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          justify-content: center;
+          margin-bottom: 3rem;
+          position: sticky;
+          top: 4.5rem;
+          z-index: 20;
+          padding: 1rem 0.5rem;
+          background: linear-gradient(to bottom, #0a0a0c 60%, transparent);
+        }
+        @media (max-width: 768px) {
+          .works-filter-pills {
+            position: relative;
+            top: 0;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            justify-content: flex-start;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100vw;
+            margin-left: -1.5rem;
+          }
+          .works-filter-pills::-webkit-scrollbar {
+            display: none;
+          }
         }
       `}</style>
         </div>

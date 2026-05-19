@@ -1,0 +1,327 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import { supabaseAdmin } from "../../lib/supabase";
+
+let servicesAssets: any = {};
+if (supabaseAdmin) {
+  const { data } = await supabaseAdmin.from('site_config').select('data').eq('key', 'services_assets').single();
+  if (data) servicesAssets = data.data;
+}
+---
+
+<Layout title="Services — Kinbo Technologies" description="Three specialized service arms: Kinbo Cares (product support), Kinbo Expert (research, workshops, prototypes), Kinbo Consultancy (architecture, hiring, advisory).">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
+  
+  <!-- Service + BreadcrumbList JSON-LD -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://portfolio-sage-two-43.vercel.app" },
+        { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://portfolio-sage-two-43.vercel.app/services" }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Technology Consulting & Product Development",
+      "provider": { "@type": "Organization", "name": "KINBO TECHNOLOGIES PRIVATE LIMITED" },
+      "areaServed": ["India", "China", "GCC"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Service Divisions",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "KINBO Hub", "description": "Full-stack product development and technology consulting" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "KINBO Cares", "description": "Research mentorship, academic guidance, and educational programs" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "KINBO Expert", "description": "Technical consulting and engineering expertise" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "KINBO Consultancy", "description": "Strategic technology advisory and startup infrastructure" } }
+        ]
+      }
+    }
+  ])} />
+
+  <div class="ks-page">
+    <!-- HERO -->
+    <div class="hub-hero">
+      <div class="hub-label">Kinbo Technologies — Service Divisions</div>
+      <h1 class="hub-h1 hero-anim">Built to deliver.<br><span class="accent">Not to impress.</span></h1>
+      <p class="hub-sub hero-anim">Three arms. Each designed for a specific need. Executed with the same discipline behind every Kinbo system.</p>
+      
+      {servicesAssets.hub_hero && (
+        <div class="hero-image-slot hero-anim mt-12 rounded-xl overflow-hidden border border-[var(--ks-border)] aspect-video max-h-[500px]">
+           <img src={servicesAssets.hub_hero} alt="Service Divisions" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      )}
+    </div>
+
+    <!-- TILES -->
+    <div class="tiles">
+      <a href="/services/cares" class="tile">
+        <div class="tile-ghost-num">01</div>
+        <div class="tile-tag tile-tag--teal">Support</div>
+        <h2 class="tile-name">Kinbo<br>Cares</h2>
+        <p class="tile-line">Support for what you've already built.</p>
+        <ul class="tile-pills">
+          <li>Product queries answered, not ignored</li>
+          <li>Troubleshooting & optimization</li>
+          <li>Dedicated Kinbo product support</li>
+        </ul>
+        <span class="tile-cta tile-cta--teal">Get Support →</span>
+      </a>
+
+      <a href="/services/expert" class="tile">
+        <div class="tile-ghost-num">02</div>
+        <div class="tile-tag tile-tag--purple">Expertise</div>
+        <h2 class="tile-name">Kinbo<br>Expert</h2>
+        <p class="tile-line">Domain knowledge, delivered.</p>
+        <ul class="tile-pills">
+          <li>Research, workshops & academic help</li>
+          <li>Prototype & final-year project builds</li>
+          <li>Interview prep & proposal writing</li>
+        </ul>
+        <span class="tile-cta tile-cta--purple">Explore Services →</span>
+      </a>
+
+      <a href="/services/consultancy" class="tile">
+        <div class="tile-ghost-num">03</div>
+        <div class="tile-tag tile-tag--amber">Advisory</div>
+        <h2 class="tile-name">Kinbo<br>Consultancy</h2>
+        <p class="tile-line">Architecture, hiring, strategy.</p>
+        <ul class="tile-pills">
+          <li>Technical architecture reviews</li>
+          <li>Job posting & talent advisory</li>
+          <li>Engineering decision advisory</li>
+        </ul>
+        <span class="tile-cta tile-cta--amber">Start a Conversation →</span>
+      </a>
+    </div>
+
+    <!-- TRUST STRIP -->
+    <div class="trust-strip">
+      <span class="trust-item">Best Paper — NEXTGEN ECI 2026</span>
+      <span class="trust-item">BIRAC Final Round — Govt. of India</span>
+      <span class="trust-item">DOI-Published Research</span>
+      <span class="trust-item">Independently Executed</span>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-label: rgba(240, 240, 236, 0.7);
+    --ks-teal: #2dd4bf;
+    --ks-teal-bg: rgba(45, 212, 191, 0.08);
+    --ks-teal-border: rgba(45, 212, 191, 0.22);
+    --ks-purple: #a78bfa;
+    --ks-purple-bg: rgba(167, 139, 250, 0.08);
+    --ks-purple-border: rgba(167, 139, 250, 0.22);
+    --ks-amber: #fbbf24;
+    --ks-amber-bg: rgba(251, 191, 36, 0.08);
+    --ks-amber-border: rgba(251, 191, 36, 0.22);
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* HERO */
+  .hub-hero {
+    padding: 56px 28px 44px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .hub-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ks-label);
+    margin-bottom: 20px;
+  }
+  .hub-h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 800;
+    line-height: 0.93;
+    letter-spacing: -2px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .hub-h1 .accent { color: var(--ks-teal); }
+  .hub-sub {
+    font-size: 15px;
+    color: var(--ks-text-muted);
+    margin-top: 20px;
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  /* TILES */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 640px) {
+    .tiles { grid-template-columns: 1fr; }
+    .tile { border-right: none !important; border-bottom: 0.5px solid var(--ks-border); }
+  }
+  .tile {
+    padding: 32px 28px 36px;
+    border-right: 0.5px solid var(--ks-border);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .tile:last-child { border-right: none; }
+  .tile:hover { background: rgba(255,255,255,0.028); }
+
+  .tile-ghost-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    color: var(--ks-text-primary);
+    opacity: 0.055;
+    letter-spacing: -3px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .tile-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .tile-tag--teal   { color: var(--ks-teal);   background: var(--ks-teal-bg);   border: 0.5px solid var(--ks-teal-border); }
+  .tile-tag--purple { color: var(--ks-purple); background: var(--ks-purple-bg); border: 0.5px solid var(--ks-purple-border); }
+  .tile-tag--amber  { color: var(--ks-amber);  background: var(--ks-amber-bg);  border: 0.5px solid var(--ks-amber-border); }
+
+  .tile-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.0;
+    color: var(--ks-text-primary);
+    margin: 0 0 10px 0;
+  }
+  .tile-line {
+    font-size: 13px;
+    color: var(--ks-text-muted);
+    margin: 0 0 28px 0;
+    line-height: 1.5;
+  }
+
+  .tile-pills {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 28px 0;
+    padding: 0;
+    flex: 1;
+  }
+  .tile-pills li {
+    font-size: 11px;
+    color: rgba(240, 240, 236, 0.5);
+    padding: 7px 0;
+    border-top: 0.5px solid var(--ks-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tile-pills li::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .tile-cta {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+  }
+  .tile-cta--teal   { color: var(--ks-teal); }
+  .tile-cta--purple { color: var(--ks-purple); }
+  .tile-cta--amber  { color: var(--ks-amber); }
+
+  /* TRUST STRIP */
+  .trust-strip {
+    padding: 18px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 0.5px solid var(--ks-border);
+  }
+  .trust-item {
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    padding: 0 20px;
+    border-right: 0.5px solid var(--ks-border);
+  }
+  .trust-item:first-child { padding-left: 0; }
+  .trust-item:last-child  { border-right: none; }
+
+  @media (max-width: 640px) {
+    .hub-hero { padding: 40px 16px 32px; }
+    .tile { padding: 28px 16px 32px; }
+    .trust-strip { padding: 14px 16px; flex-direction: column; gap: 6px; }
+    .trust-item { border-right: none; padding: 3px 0; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initServicesHub() {
+    gsap.fromTo(".hero-anim", 
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
+    );
+    gsap.from(".tile", {
+      opacity: 0, y: 20, duration: 0.5, stagger: 0.12, ease: "power2.out",
+      scrollTrigger: { trigger: ".tiles", start: "top 85%" }
+    });
+    gsap.from(".trust-strip", {
+      opacity: 0, duration: 0.5, ease: "power2.out",
+      scrollTrigger: { trigger: ".trust-strip", start: "top 95%" }
+    });
+  }
+  document.addEventListener("astro:page-load", initServicesHub);
+</script>

@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+import Layout from "../../../layouts/Layout.astro";
+import ProjectScopingForm from "../../../components/forms/ProjectScopingForm";
+import "../../../styles/forms.css";
+---
+
+<Layout title="Project Scoping — Kinbo Consultancy" description="Functional prototypes, healthcare systems, AI applications, IoT platforms.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <div class="ks-form-page">
+    <ProjectScopingForm client:load />
+  </div>
+</Layout>

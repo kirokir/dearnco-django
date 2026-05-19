@@ -1,11 +1,131 @@
 ---
 export const prerender = false;
 import Layout from "../layouts/Layout.astro";
-import WorksSection from "../components/Works.astro";
+import WorksFilter from "../components/WorksFilter";
 ---
 
-<Layout title="Works — Arjun Jayesh">
-  <div class="pt-20">
-    <WorksSection />
+<Layout title="Works — Kinbo" description="Selected software engineering and product works by Kinbo Technologies.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  
+  <div class="ks-page">
+    <!-- HERO -->
+    <div class="sub-hero">
+      <div class="sub-crumb hero-anim">
+        HOME <span class="sep">/</span> <span style="color: var(--ks-teal);">WORKS</span>
+      </div>
+      <h1 class="sub-h hero-anim">Selected<br><span class="accent-teal">Works.</span></h1>
+      <p class="sub-tagline hero-anim">A curated collection of intelligent applications, scalable systems, and experimental interfaces engineered by Kinbo.</p>
+    </div>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper hero-anim">
+      <WorksFilter client:load />
+    </div>
   </div>
 </Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-label: rgba(240, 240, 236, 0.7);
+    --ks-teal: #2dd4bf;
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* SUB HERO */
+  .sub-hero {
+    padding: 48px 28px 44px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .sub-crumb {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
+  .sub-h {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -1.5px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .sub-h .accent-teal { color: var(--ks-teal); }
+  .sub-tagline {
+    font-size: 14px;
+    color: var(--ks-text-muted);
+    margin-top: 16px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* CONTENT WRAPPER */
+  .content-wrapper {
+    padding: 44px 28px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  
+  /* OVERRIDE WORKS FILTER STYLES TO MATCH DARK AESTHETIC */
+  :global(.content-wrapper button) {
+    background: transparent !important;
+    border: 1px solid var(--ks-border) !important;
+    color: var(--ks-text-primary) !important;
+  }
+  :global(.content-wrapper button.bg-teal) {
+    background: rgba(45, 212, 191, 0.1) !important;
+    border-color: rgba(45, 212, 191, 0.3) !important;
+    color: var(--ks-teal) !important;
+  }
+  :global(.content-wrapper .bg-charcoal-light\\/5) {
+    background: var(--ks-surface) !important;
+    border: 1px solid var(--ks-border) !important;
+    border-radius: 16px !important;
+  }
+  :global(.content-wrapper h3) {
+    font-family: 'Syne', sans-serif !important;
+    color: var(--ks-text-primary) !important;
+  }
+  :global(.content-wrapper p) {
+    color: var(--ks-text-muted) !important;
+  }
+  :global(.content-wrapper span) {
+    border-color: var(--ks-border) !important;
+  }
+
+  @media (max-width: 640px) {
+    .sub-hero { padding: 40px 16px 32px; }
+    .content-wrapper { padding: 32px 16px; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initWorks() {
+    gsap.fromTo(".hero-anim", 
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
+    );
+  }
+  document.addEventListener("astro:page-load", initWorks);
+</script>

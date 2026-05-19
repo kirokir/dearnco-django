@@ -1,0 +1,333 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import { supabaseAdmin } from "../../lib/supabase";
+
+let servicesAssets: any = {};
+if (supabaseAdmin) {
+  const { data } = await supabaseAdmin.from('site_config').select('data').eq('key', 'services_assets').single();
+  if (data) servicesAssets = data.data;
+}
+---
+
+<Layout title="Kinbo Expert — Research, Workshops & Prototypes" description="Award-caliber research mentorship, workshops, prototype builds, and interview prep.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
+
+  <div class="ks-page">
+    <!-- HERO -->
+    <div class="sub-hero">
+      <div class="sub-crumb hero-anim">
+        HOME <span class="sep">/</span> SERVICES <span class="sep">/</span> <span style="color: var(--ks-purple);">KINBO EXPERT</span>
+      </div>
+      <h1 class="sub-h hero-anim">The gap between<br>where you are<br><span class="accent-purple">is a systems problem.</span></h1>
+      <p class="sub-tagline hero-anim">Kinbo Expert delivers targeted, high-signal sessions across research, engineering, and academic execution. No generic courses. No pre-recorded tutorials. Live, applied, and outcomes-oriented.</p>
+      
+      {servicesAssets.expert_hero && (
+        <div class="hero-image-slot hero-anim mt-12 rounded-xl overflow-hidden border border-[var(--ks-border)] aspect-video max-h-[500px]">
+           <img src={servicesAssets.expert_hero} alt="Kinbo Expert" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      )}
+    </div>
+
+    <!-- SERVICE CARDS GRID -->
+    <div class="service-grid">
+      <div class="svc-card">
+        <i class="ti ti-file-text svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">Research Paper Mentorship</h3>
+        <p class="svc-one">From idea to published paper — award-caliber methodology.</p>
+        <div class="svc-chips">
+          <span class="chip">Ideation</span>
+          <span class="chip">Methodology</span>
+          <span class="chip">Submission</span>
+          <span class="chip">Conference prep</span>
+        </div>
+        <a href="/services/forms/research-mentorship" class="svc-link svc-link--purple">Inquire →</a>
+      </div>
+
+      <div class="svc-card">
+        <i class="ti ti-writing svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">Proposal & Grant Writing</h3>
+        <p class="svc-one">Technical work into fundable narratives — BIRAC, DST, incubators.</p>
+        <div class="svc-chips">
+          <span class="chip">BIRAC</span>
+          <span class="chip">DST / DBT</span>
+          <span class="chip">Incubators</span>
+          <span class="chip">Grant framing</span>
+        </div>
+        <a href="/ideas" class="svc-link svc-link--purple">Inquire →</a>
+      </div>
+
+      <div class="svc-card">
+        <i class="ti ti-presentation svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">AI, Research & Startup Workshops</h3>
+        <p class="svc-one">1-day intensives. Online or offline. 5 modules available.</p>
+        <div class="svc-chips">
+          <span class="chip">₹150–₹499 / student</span>
+          <span class="chip">Min 30 students</span>
+          <span class="chip">Institutional booking</span>
+        </div>
+        <a href="/services/forms/workshop-booking" class="svc-link svc-link--purple">Book Workshop →</a>
+      </div>
+
+      <div class="svc-card">
+        <i class="ti ti-pencil svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">Handwritten Assignment Support</h3>
+        <p class="svc-one">Accurate, legible, and submitted on time.</p>
+        <div class="svc-chips">
+          <span class="chip">BPT / Nursing</span>
+          <span class="chip">Engineering</span>
+          <span class="chip">Per-page pricing</span>
+        </div>
+        <a href="/chat" class="svc-link svc-link--purple">Inquire →</a>
+      </div>
+
+      <div class="svc-card">
+        <i class="ti ti-cpu svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">Prototype & Final-Year Projects</h3>
+        <p class="svc-one">Built to actually work — not just to demonstrate.</p>
+        <div class="svc-chips">
+          <span class="chip">Healthcare tech</span>
+          <span class="chip">AI / IoT</span>
+          <span class="chip">Android</span>
+          <span class="chip">Web platform</span>
+        </div>
+        <a href="/services/forms/project-scoping" class="svc-link svc-link--purple">Scope Project →</a>
+      </div>
+
+      <div class="svc-card">
+        <i class="ti ti-users svc-icon svc-icon--purple" aria-hidden="true"></i>
+        <h3 class="svc-title">Mock Interviews</h3>
+        <p class="svc-one">Practice with someone who knows how panels actually evaluate.</p>
+        <div class="svc-chips">
+          <span class="chip">Campus placement</span>
+          <span class="chip">Incubation panels</span>
+          <span class="chip">Research roles</span>
+        </div>
+        <a href="/chat" class="svc-link svc-link--purple">Book Session →</a>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="sub-bottom">
+      <p class="sub-bottom-statement">Not sure<br>which fits?</p>
+      <a href="/ideas" class="sub-cta-btn sub-cta-btn--purple">Describe Your Need →</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-label: rgba(240, 240, 236, 0.7);
+    --ks-teal: #2dd4bf;
+    --ks-teal-bg: rgba(45, 212, 191, 0.08);
+    --ks-teal-border: rgba(45, 212, 191, 0.22);
+    --ks-purple: #a78bfa;
+    --ks-purple-bg: rgba(167, 139, 250, 0.08);
+    --ks-purple-border: rgba(167, 139, 250, 0.22);
+    --ks-amber: #fbbf24;
+    --ks-amber-bg: rgba(251, 191, 36, 0.08);
+    --ks-amber-border: rgba(251, 191, 36, 0.22);
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* SUB HERO */
+  .sub-hero {
+    padding: 48px 28px 36px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .sub-crumb {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
+  .sub-h {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -1.5px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .sub-h .accent-teal   { color: var(--ks-teal); }
+  .sub-h .accent-purple { color: var(--ks-purple); }
+  .sub-h .accent-amber  { color: var(--ks-amber); }
+  .sub-tagline {
+    font-size: 14px;
+    color: var(--ks-text-muted);
+    margin-top: 16px;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  /* SERVICE CARDS GRID */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  @media (max-width: 540px) {
+    .service-grid { grid-template-columns: 1fr; }
+  }
+  .svc-card {
+    padding: 28px;
+    border-right: 0.5px solid var(--ks-border);
+    border-bottom: 0.5px solid var(--ks-border);
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+  }
+  .svc-card:hover { background: rgba(255,255,255,0.028); }
+  .svc-card:nth-child(even) { border-right: none; }
+  /* fix bottom border for last row to avoid double border */
+  .svc-card:nth-last-child(-n+2):nth-child(odd),
+  .svc-card:last-child {
+    border-bottom: none;
+  }
+
+  .svc-icon {
+    font-size: 22px;
+    margin-bottom: 16px;
+    opacity: 0.65;
+  }
+  .svc-icon--teal   { color: var(--ks-teal); }
+  .svc-icon--purple { color: var(--ks-purple); }
+  .svc-icon--amber  { color: var(--ks-amber); }
+
+  .svc-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--ks-text-primary);
+    margin: 0 0 6px 0;
+    line-height: 1.15;
+  }
+
+  .svc-one {
+    font-size: 12px;
+    color: rgba(240, 240, 236, 0.35);
+    margin: 0 0 16px 0;
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  .svc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 18px;
+    flex: 1;
+    align-content: flex-start;
+  }
+  .chip {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: rgba(240, 240, 236, 0.38);
+    background: rgba(255, 255, 255, 0.04);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .svc-link {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: auto;
+    transition: opacity 0.18s;
+  }
+  .svc-link:hover { opacity: 0.6; }
+  .svc-link--teal   { color: var(--ks-teal); }
+  .svc-link--purple { color: var(--ks-purple); }
+  .svc-link--amber  { color: var(--ks-amber); }
+
+  /* BOTTOM BAR */
+  .sub-bottom {
+    padding: 32px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .sub-bottom-statement {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: rgba(240, 240, 236, 0.55);
+    line-height: 1.1;
+    margin: 0;
+  }
+  .sub-cta-btn {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 0.5px solid;
+    background: none;
+    transition: opacity 0.18s;
+    white-space: nowrap;
+  }
+  .sub-cta-btn:hover { opacity: 0.65; }
+  .sub-cta-btn--teal   { color: var(--ks-teal);   border-color: var(--ks-teal-border); }
+  .sub-cta-btn--purple { color: var(--ks-purple); border-color: var(--ks-purple-border); }
+  .sub-cta-btn--amber  { color: var(--ks-amber);  border-color: var(--ks-amber-border); }
+
+  @media (max-width: 640px) {
+    .sub-hero { padding: 40px 16px 32px; }
+    .svc-card { padding: 28px 16px; border-right: none !important; }
+    .svc-card:nth-last-child(-n+2):nth-child(odd) { border-bottom: 0.5px solid var(--ks-border); } /* Reset mobile border */
+    .svc-card:last-child { border-bottom: none; }
+    .sub-bottom { padding: 32px 16px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initExpert() {
+    gsap.fromTo(".hero-anim", 
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
+    );
+    gsap.from(".svc-card", {
+      opacity: 0, y: 20, duration: 0.5, stagger: 0.1, ease: "power2.out",
+      scrollTrigger: { trigger: ".service-grid", start: "top 85%" }
+    });
+    gsap.from(".sub-bottom", {
+      opacity: 0, y: 20, duration: 0.5, ease: "power2.out",
+      scrollTrigger: { trigger: ".sub-bottom", start: "top 95%" }
+    });
+  }
+  document.addEventListener("astro:page-load", initExpert);
+</script>

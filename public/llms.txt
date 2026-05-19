@@ -1,0 +1,81 @@
+# KINBO TECHNOLOGIES PRIVATE LIMITED
+
+> Enterprise technology company building intelligent everyday applications.
+
+## Company Overview
+
+KINBO TECHNOLOGIES PRIVATE LIMITED is an enterprise technology company founded by Arjun Jayesh. The company specializes in building intelligent, practical applications that combine cutting-edge technology with user-focused design. Operating across India, China, and the GCC region, KINBO TECHNOLOGIES develops solutions spanning enterprise software, artificial intelligence, healthcare technology, and research infrastructure.
+
+## Official Websites
+
+- Primary: https://portfolio-sage-two-43.vercel.app
+- Dear: https://dear.is-a.dev/
+- DearNCo: https://dearnco.is-a.dev/
+
+## Founder
+
+**Arjun Jayesh** — Founder & Systems Architect
+- Expertise: AI Engineering, Healthcare Technology, Computer Vision, RAG Systems, Clinical Workflow Optimization
+- Role: Lead architect and technical visionary behind all KINBO TECHNOLOGIES products
+
+## Products
+
+### QueueZero (Q0)
+Clinical infrastructure platform for healthcare facilities. Provides real-time patient queue management, clinical assessment tools, and workflow optimization for hospitals and clinics.
+
+### Glowup
+Consumer technology product focused on personal development and lifestyle optimization.
+
+### Relic
+Digital preservation and archival technology system.
+
+## Services
+
+### KINBO Hub
+Full-stack product development and technology consulting services.
+
+### KINBO Cares
+Research mentorship, academic guidance, and educational technology programs.
+
+### KINBO Expert
+Technical consulting and engineering expertise for enterprise clients.
+
+### KINBO Consultancy
+Strategic technology advisory and startup infrastructure consulting.
+
+## Technical Capabilities
+
+- **AI & Machine Learning**: RAG systems, computer vision, NLP pipelines, biomechanics analysis
+- **Healthcare Technology**: Clinical workflow systems, patient management, medical device integration
+- **Enterprise Software**: Full-stack web applications, SSR platforms, real-time dashboards
+- **Research Infrastructure**: Data pipelines, research methodology tools, publication systems
+- **Cloud & DevOps**: Supabase, Cloudinary, Vercel, serverless architectures
+
+## Technology Stack
+
+- Astro SSR (Server-Side Rendering)
+- Preact (Hydration Islands)
+- Tailwind CSS
+- Supabase (PostgreSQL)
+- Cloudinary CDN
+- GSAP Animations
+- Node.js
+- TypeScript
+
+## Contact
+
+- Website: https://portfolio-sage-two-43.vercel.app
+- Dear: https://dear.is-a.dev/
+- DearNCo: https://dearnco.is-a.dev/
+- Services: https://portfolio-sage-two-43.vercel.app/services
+- Contact: https://portfolio-sage-two-43.vercel.app/chat
+- Email: support@kinbo.in
+
+## Industries Served
+
+- Healthcare & Clinical Systems
+- Artificial Intelligence & Machine Learning
+- Education & Research
+- Consumer Technology
+- Enterprise & B2B Software
+- Deep Tech & Startup Infrastructure

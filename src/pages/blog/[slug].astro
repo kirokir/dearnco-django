@@ -7,6 +7,8 @@ import { marked } from 'marked';
 const { slug } = Astro.params;
 let post = null;
 let content = "";
+let headings = [];
+let readTime = 1;
 
 if (!supabase) {
   console.error("Supabase client not initialized.");
@@ -19,58 +21,173 @@ if (!supabase) {
 
   if (!error && data) {
     post = data;
-    content = await marked(data.body);
+    
+    // Calculate reading time
+    const wordCount = data.body.split(/\s+/).length;
+    readTime = Math.max(1, Math.ceil(wordCount / 200));
+
+    // Parse headings for TOC
+    const headingRegex = /^(#{2,3})\s+(.*)$/gm;
+    let match;
+    while ((match = headingRegex.exec(data.body)) !== null) {
+        const level = match[1].length;
+        const text = match[2].trim();
+        // Clean markdown syntax for display and slug
+        const cleanText = text.replace(/[*_`\[\]]/g, '');
+        const slugStr = cleanText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        headings.push({ level, text: cleanText, slug: slugStr });
+    }
+
+    const rawHtml = await marked(data.body);
+    // Inject IDs into HTML headings for TOC jumping
+    content = rawHtml.replace(/<(h[23])>(.*?)<\/\1>/gi, (m, tag, innerHtml) => {
+      const cleanInner = innerHtml.replace(/<[^>]+>/g, '').replace(/[*_`\[\]]/g, '');
+      const slugStr = cleanInner.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return `<${tag} id="${slugStr}">${innerHtml}</${tag}>`;
+    });
   }
 }
 
 if (!post) {
   return Astro.redirect('/404');
 }
+
+const currentUrl = Astro.url.href;
+const encodedUrl = encodeURIComponent(currentUrl);
+const encodedTitle = encodeURIComponent(post.title);
 ---
 
 <Layout title={`${post.title} — Arjun Jayesh`} description={post.excerpt}>
-  <article class="section-padding max-w-4xl mx-auto mt-16">
-    <div class="mb-12">
-      <a href="/blog" class="inline-flex items-center gap-2 text-teal font-poppins text-xs uppercase tracking-widest hover:translate-x-[-4px] transition-transform duration-300 mb-8">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back to Journal
-      </a>
-      
-      <div class="flex items-center gap-4 mb-4">
-        <span class="font-mono text-xs text-teal border border-teal/30 px-3 py-1 rounded-full bg-teal/5">
-          {post.category}
-        </span>
-        <span class="font-mono text-xs text-muted">
-          {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </span>
-      </div>
-      
-      <h1 class="font-poppins text-4xl sm:text-5xl md:text-6xl font-bold text-offwhite leading-tight mb-8">
+  <div class="max-w-7xl mx-auto px-6 py-12 lg:py-20 mt-16">
+    
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-muted mb-8 overflow-x-auto whitespace-nowrap">
+      <a href="/" class="hover:text-teal transition-colors">Home</a>
+      <span class="text-charcoal-light/50">></span>
+      <a href="/blog" class="hover:text-teal transition-colors">Blog</a>
+      <span class="text-charcoal-light/50">></span>
+      <span class="text-teal border border-teal/20 px-2 py-0.5 rounded bg-teal/5">{post.category}</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-12 lg:mb-16 max-w-4xl">
+      <h1 class="font-poppins text-4xl sm:text-5xl lg:text-6xl font-bold text-offwhite leading-[1.15] mb-6">
         {post.title}
       </h1>
       
-      <div class="w-full h-px bg-gradient-to-r from-teal/50 via-teal/10 to-transparent"></div>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] sm:text-xs text-muted uppercase tracking-widest">
+        <span>Author: <span class="text-teal">Arjun Jayesh</span></span>
+        <span class="text-charcoal-light/50">|</span>
+        <span>{readTime} min read</span>
+        <span class="text-charcoal-light/50">|</span>
+        <span>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+      </div>
     </div>
+    
+    <div class="w-full h-px bg-gradient-to-r from-charcoal-light/50 to-transparent mb-12"></div>
 
-    <div class="prose prose-invert prose-teal max-w-none font-lora text-offwhite/80 leading-relaxed
-      prose-headings:font-poppins prose-headings:text-offwhite
-      prose-p:mb-6 prose-li:mb-2
-      prose-a:text-teal prose-a:no-underline hover:prose-a:underline
-      prose-strong:text-offwhite prose-code:text-teal prose-code:bg-charcoal-light/50 prose-code:px-1 prose-code:rounded
-      prose-pre:bg-charcoal-dark prose-pre:border prose-pre:border-charcoal-light/30"
-      set:html={content}
-    />
-  </article>
+    <!-- Main Content Layout -->
+    <div class="flex flex-col lg:flex-row gap-16 items-start">
+      
+      <!-- Left: Article Content -->
+      <article class="flex-1 w-full min-w-0">
+        <div class="prose prose-invert prose-teal max-w-none font-lora text-offwhite/80 leading-relaxed
+          prose-headings:font-poppins prose-headings:text-offwhite prose-headings:font-bold prose-headings:scroll-mt-32
+          prose-p:mb-6 prose-li:mb-2
+          prose-a:text-teal prose-a:no-underline hover:prose-a:underline
+          prose-strong:text-offwhite prose-code:text-teal prose-code:bg-charcoal-light/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+          prose-pre:bg-charcoal-dark prose-pre:border prose-pre:border-charcoal-light/30 prose-pre:p-4 prose-pre:rounded-xl"
+          set:html={content}
+        />
+      </article>
+
+      <!-- Right: Sidebar -->
+      <aside class="w-full lg:w-[320px] flex-shrink-0 lg:sticky lg:top-32 space-y-12 order-first lg:order-last border-b lg:border-b-0 border-charcoal-light/30 pb-12 lg:pb-0">
+        
+        <!-- Author Block -->
+        <div class="bg-charcoal-light/10 border border-charcoal-light/30 rounded-2xl p-6 flex items-start gap-4 hover:border-teal/30 transition-colors">
+          <img src="/founder.jpg" alt="Arjun Jayesh" class="w-14 h-14 rounded-full object-cover border border-teal/30 shadow-[0_0_15px_rgba(42,157,143,0.1)]" onerror="this.src='https://ui-avatars.com/api/?name=Arjun+Jayesh&background=2dd4bf&color=0f1117'" />
+          <div>
+            <h4 class="font-poppins text-sm font-bold text-offwhite mb-1">Arjun Jayesh</h4>
+            <p class="font-lora text-[11px] text-muted leading-relaxed">
+              Founder & Technologist building intelligent applications and enterprise systems at Kinbo.
+            </p>
+          </div>
+        </div>
+
+        <!-- Share Buttons -->
+        <div>
+          <h4 class="font-mono text-[10px] uppercase tracking-widest text-muted mb-4 border-b border-charcoal-light/20 pb-2">Share this article</h4>
+          <div class="flex items-center gap-3">
+            <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-charcoal-light/30 bg-charcoal-light/10 flex items-center justify-center text-muted hover:text-teal hover:border-teal/50 hover:bg-teal/5 transition-all" aria-label="Share on LinkedIn">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-charcoal-light/30 bg-charcoal-light/10 flex items-center justify-center text-muted hover:text-teal hover:border-teal/50 hover:bg-teal/5 transition-all" aria-label="Share on X (Twitter)">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 3.827H5.053z"/></svg>
+            </a>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-charcoal-light/30 bg-charcoal-light/10 flex items-center justify-center text-muted hover:text-teal hover:border-teal/50 hover:bg-teal/5 transition-all" aria-label="Share on Facebook">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.597 1.323-1.325V1.325C24 .597 23.403 0 22.675 0z"/></svg>
+            </a>
+            <button id="copy-link-btn" data-url={currentUrl} class="w-10 h-10 rounded-full border border-charcoal-light/30 bg-charcoal-light/10 flex items-center justify-center text-muted hover:text-teal hover:border-teal/50 hover:bg-teal/5 transition-all group relative" aria-label="Copy Link">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              <span id="copy-tooltip" class="absolute -top-10 left-1/2 -translate-x-1/2 bg-teal text-charcoal px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest opacity-0 transition-opacity whitespace-nowrap pointer-events-none">Copied!</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Table of Contents -->
+        {headings.length > 0 && (
+          <div class="hidden lg:block">
+            <h4 class="font-mono text-[10px] uppercase tracking-widest text-muted mb-4 border-b border-charcoal-light/20 pb-2">Table of Contents</h4>
+            <ul class="space-y-3 font-poppins text-xs text-muted/80 border-l border-charcoal-light/20 ml-2 pl-4">
+              {headings.map((heading) => (
+                <li class={`leading-relaxed ${heading.level === 3 ? 'ml-4 opacity-70' : ''}`}>
+                  <a href={`#${heading.slug}`} class="hover:text-teal transition-colors block relative group">
+                    <span class="absolute -left-[21px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-teal opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </aside>
+
+    </div>
+  </div>
 </Layout>
 
 <style is:global>
   /* Base prose styles for MDX content */
-  .prose h1, .prose h2, .prose h3 { margin-top: 2.5rem; margin-bottom: 1.5rem; }
+  .prose h2, .prose h3 { margin-top: 3.5rem; margin-bottom: 1.5rem; scroll-margin-top: 100px; }
   .prose p { margin-bottom: 1.5rem; }
   .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; }
   .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.5rem; }
   .prose blockquote { border-left: 4px solid var(--color-teal); padding-left: 1.5rem; font-style: italic; color: #9CA3AF; margin: 2rem 0; }
-  .prose pre { padding: 1.5rem; border-radius: 0.75rem; margin: 2rem 0; overflow-x: auto; }
+  .prose pre { margin: 2rem 0; overflow-x: auto; }
 </style>
+
+<script>
+  function initShareButtons() {
+    const btn = document.getElementById('copy-link-btn');
+    const tooltip = document.getElementById('copy-tooltip');
+    
+    if (btn && tooltip) {
+      btn.addEventListener('click', () => {
+        const url = btn.getAttribute('data-url');
+        if (url) {
+          navigator.clipboard.writeText(url).then(() => {
+            tooltip.classList.remove('opacity-0');
+            setTimeout(() => {
+              tooltip.classList.add('opacity-0');
+            }, 2000);
+          });
+        }
+      });
+    }
+  }
+
+  // Handle both initial load and Astro ViewTransitions
+  initShareButtons();
+  document.addEventListener('astro:page-load', initShareButtons);
+</script>

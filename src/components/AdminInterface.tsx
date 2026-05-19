@@ -89,7 +89,10 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "bulk_blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team">("blog");
+    const [bulkText, setBulkText] = useState("");
+    const [parsedBlogs, setParsedBlogs] = useState<any[]>([]);
+    const [bulkSaving, setBulkSaving] = useState(false);
     const [posts, setPosts] = useState<any[]>([]);
     const [config, setConfig] = useState<any>(null);
     const [ideas, setIdeas] = useState<any[]>([]);
@@ -230,6 +233,13 @@ export default function AdminInterface() {
                     Blog Manager
                 </button>
                 <button
+                    onClick={() => setActiveTab("bulk_blog")}
+                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "bulk_blog" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
+                        }`}
+                >
+                    Bulk Import
+                </button>
+                <button
                     onClick={() => setActiveTab("home")}
                     class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "home" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
                         }`}
@@ -323,6 +333,38 @@ export default function AdminInterface() {
                         />
                     )}
                 </div>
+            )}
+
+            {activeTab === "bulk_blog" && (
+                <BulkBlogManager 
+                    bulkText={bulkText} 
+                    setBulkText={setBulkText} 
+                    parsedBlogs={parsedBlogs} 
+                    setParsedBlogs={setParsedBlogs} 
+                    onSaveAll={async () => {
+                        setBulkSaving(true);
+                        let successCount = 0;
+                        for (const blog of parsedBlogs) {
+                            try {
+                                const res = await fetch("/api/blog", {
+                                    method: "POST",
+                                    body: JSON.stringify(blog),
+                                    headers: { "Content-Type": "application/json" },
+                                });
+                                if (res.ok) successCount++;
+                            } catch (e) {
+                                console.error("Error saving blog:", blog.slug);
+                            }
+                        }
+                        setMessage(`Successfully saved ${successCount}/${parsedBlogs.length} blogs!`);
+                        setParsedBlogs([]);
+                        setBulkText("");
+                        setBulkSaving(false);
+                        fetchData();
+                        setActiveTab("blog");
+                    }}
+                    bulkSaving={bulkSaving}
+                />
             )}
 
             {activeTab === "home" && config && (
@@ -527,6 +569,129 @@ function parseMDX(content: string, slug: string) {
         });
     }
     return { slug, body, ...fm };
+}
+
+function BulkBlogManager({ bulkText, setBulkText, parsedBlogs, setParsedBlogs, onSaveAll, bulkSaving }: any) {
+    if (parsedBlogs.length > 0) {
+        // Image Fulfillment Grid Mode
+        const allFulfilled = parsedBlogs.every((b: any) => b.isFulfilled);
+        
+        return (
+            <div class="space-y-6 animate-fadeIn">
+                <div class="flex justify-between items-center bg-teal/10 p-4 rounded border-l-4 border-teal">
+                    <div>
+                        <h3 class="font-poppins text-sm font-bold text-offwhite uppercase tracking-widest">Image Fulfillment Grid</h3>
+                        <p class="font-mono text-[10px] text-muted uppercase mt-1">Upload required images for {parsedBlogs.length} extracted drafts.</p>
+                    </div>
+                    <button 
+                        onClick={() => setParsedBlogs([])} 
+                        class="text-muted hover:text-offwhite font-mono text-[10px] uppercase border border-charcoal-light/30 px-3 py-1 rounded hover:bg-charcoal-light/20 transition-all"
+                    >
+                        [ Cancel & Restart ]
+                    </button>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    {parsedBlogs.map((blog: any, bIdx: number) => (
+                        <div key={bIdx} class="p-6 bg-charcoal-light/10 border border-charcoal-light/30 rounded-xl space-y-4 relative">
+                            {blog.isFulfilled && (
+                                <div class="absolute top-4 right-4 text-teal">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            )}
+                            <div>
+                                <h4 class="font-poppins font-bold text-offwhite text-lg">{blog.title}</h4>
+                                <div class="flex gap-2 mt-1">
+                                    <span class="font-mono text-[9px] text-teal border border-teal/30 px-2 py-0.5 rounded-full">{blog.category}</span>
+                                    <span class="font-mono text-[9px] text-muted border border-charcoal-light/30 px-2 py-0.5 rounded-full">{blog.slug}</span>
+                                </div>
+                            </div>
+                            
+                            {blog.required_image_slots && blog.required_image_slots.length > 0 ? (
+                                <div class="space-y-3 mt-4">
+                                    <h5 class="font-mono text-[10px] uppercase text-muted tracking-widest">Required Media Slots:</h5>
+                                    <div class="grid gap-3">
+                                        {blog.required_image_slots.map((slot: string, sIdx: number) => (
+                                            <div key={sIdx} class="space-y-1">
+                                                <div class="font-mono text-[9px] text-offwhite/80">{slot}</div>
+                                                <DragDropZone
+                                                    accept="image/*"
+                                                    className="border border-dashed rounded-lg p-2 min-h-[60px]"
+                                                    onUpload={(urls: string[]) => {
+                                                        if (urls[0]) {
+                                                            const newBlogs = [...parsedBlogs];
+                                                            // Replace placeholder in body
+                                                            const regex = new RegExp(slot, 'g');
+                                                            newBlogs[bIdx].body = newBlogs[bIdx].body.replace(regex, urls[0]);
+                                                            // Remove from required slots
+                                                            newBlogs[bIdx].required_image_slots = newBlogs[bIdx].required_image_slots.filter((s: string) => s !== slot);
+                                                            if (newBlogs[bIdx].required_image_slots.length === 0) {
+                                                                newBlogs[bIdx].isFulfilled = true;
+                                                            }
+                                                            setParsedBlogs(newBlogs);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <p class="font-mono text-[10px] text-muted mt-4 p-4 bg-charcoal-dark/30 rounded border border-charcoal-light/20">No pending images required.</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                <div class="pt-6 border-t border-charcoal-light/30">
+                    <button
+                        onClick={onSaveAll}
+                        disabled={!allFulfilled || bulkSaving}
+                        class={`w-full py-4 font-poppins font-bold uppercase tracking-widest rounded transition-all shadow-lg ${
+                            allFulfilled && !bulkSaving ? 'bg-teal text-charcoal hover:bg-teal-dark cursor-pointer' : 'bg-charcoal-light/30 text-muted cursor-not-allowed'
+                        }`}
+                    >
+                        {bulkSaving ? "Saving..." : "Save All Drafts"}
+                    </button>
+                    {!allFulfilled && <p class="text-center mt-2 font-mono text-[9px] text-red-400">Please fulfill all image slots before saving.</p>}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div class="space-y-6 animate-fadeIn">
+            <div class="bg-charcoal-light/10 p-6 rounded-xl border border-charcoal-light/30 space-y-4">
+                <h3 class="font-poppins text-lg font-bold text-offwhite uppercase tracking-wider">Bulk Markdown Ingestion</h3>
+                <p class="font-lora text-sm text-muted">Paste your massive markdown file here. Separate individual posts with <code class="bg-charcoal-dark px-1 py-0.5 rounded text-teal">=== NEW BLOG ===</code>.</p>
+                <textarea
+                    value={bulkText}
+                    onInput={(e) => setBulkText((e.target as any).value)}
+                    class="w-full bg-charcoal-dark border border-charcoal-light/50 rounded p-4 text-offwhite font-mono text-xs focus:border-teal outline-none transition-all h-96 resize-y"
+                    placeholder="=== NEW BLOG ===\n---\ntitle: My First Post\ncategory: Tech\n---\n\n# Welcome\n![Hero](IMAGE_SLOT_HERO)\n\n=== NEW BLOG ===\n..."
+                ></textarea>
+                <button
+                    onClick={() => {
+                        import('../utils/markdownParser').then(({ parseBulkMarkdown }) => {
+                            const parsed = parseBulkMarkdown(bulkText);
+                            if (parsed.length > 0) {
+                                setParsedBlogs(parsed);
+                            } else {
+                                alert("No valid blogs found. Ensure you use '=== NEW BLOG ===' delimiter.");
+                            }
+                        }).catch(err => {
+                            console.error("Failed to load parser utility", err);
+                            alert("Failed to load parser utility.");
+                        });
+                    }}
+                    disabled={!bulkText.trim()}
+                    class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Extract Blogs & Identify Image Slots
+                </button>
+            </div>
+        </div>
+    );
 }
 
 function IdeasViewer({ ideas, onRefresh }: { ideas: any[]; onRefresh: () => void }) {

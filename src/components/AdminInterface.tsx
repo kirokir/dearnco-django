@@ -89,7 +89,7 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "bulk_blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "bulk_blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team" | "events">("blog");
     const [bulkText, setBulkText] = useState("");
     const [parsedBlogs, setParsedBlogs] = useState<any[]>([]);
     const [bulkSaving, setBulkSaving] = useState(false);
@@ -106,6 +106,9 @@ export default function AdminInterface() {
         subtitle: "Our philosophy is simple; hire great people and give them the resources and support to do their best work.",
         members: []
     });
+    const [events, setEvents] = useState<any[]>([]);
+    const [editingEvent, setEditingEvent] = useState<any>(null);
+    const [isNewEvent, setIsNewEvent] = useState(false);
     const [editingPost, setEditingPost] = useState<any>(null);
     const [isNewPost, setIsNewPost] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -118,7 +121,7 @@ export default function AdminInterface() {
     async function fetchData() {
         setLoading(true);
         try {
-            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, leadsRes, srvConfigRes, teamRes] = await Promise.all([
+            const [postsRes, configRes, enterpriseRes, ideasRes, productsRes, redirectsRes, leadsRes, srvConfigRes, teamRes, eventsRes] = await Promise.all([
                 fetch("/api/blog"),
                 fetch("/api/config"),
                 fetch("/api/config?key=enterprise_assets"),
@@ -128,16 +131,24 @@ export default function AdminInterface() {
                 fetch("/api/service-leads"),
                 fetch("/api/config?key=services_assets"),
                 fetch("/api/config?key=team_assets"),
+                fetch("/api/admin/events")
             ]);
-            const postsData = await postsRes.json();
-            const configData = await configRes.json();
-            const enterpriseData = await enterpriseRes.json();
-            const ideasData = await ideasRes.json();
-            const productsData = await productsRes.json();
-            const redirectsData = await redirectsRes.json();
-            const leadsData = await leadsRes.json();
-            const srvConfigData = await srvConfigRes.json();
-            const teamData = await teamRes.json();
+
+            const safeJson = async (res: Response) => {
+                try { return res.ok ? await res.json() : null; } 
+                catch (e) { return null; }
+            };
+
+            const postsData = await safeJson(postsRes);
+            const configData = await safeJson(configRes);
+            const enterpriseData = await safeJson(enterpriseRes);
+            const ideasData = await safeJson(ideasRes);
+            const productsData = await safeJson(productsRes);
+            const redirectsData = await safeJson(redirectsRes);
+            const leadsData = await safeJson(leadsRes);
+            const srvConfigData = await safeJson(srvConfigRes);
+            const teamData = await safeJson(teamRes);
+            const eventsData = await safeJson(eventsRes);
 
             setPosts(Array.isArray(postsData) ? postsData : []);
             setConfig(configData);
@@ -150,13 +161,9 @@ export default function AdminInterface() {
             setTeamAssets(teamData && teamData.members ? teamData : {
                 heading: "We bring a wealth of skills and experience from a wide range of backgrounds.",
                 subtitle: "Our philosophy is simple; hire great people and give them the resources and support to do their best work.",
-                members: [
-                    { name: "Jessica Dobrev", role: "Backend Lead", photo_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" },
-                    { name: "Drew Cano", role: "Head of UX", photo_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600" },
-                    { name: "Sasha Kindred", role: "VP of Marketing", photo_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=600" },
-                    { name: "Emily Donnavan", role: "Product Lead", photo_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600" }
-                ]
+                members: []
             });
+            setEvents(Array.isArray(eventsData) ? eventsData : []);
         } catch (e) {
             console.error("Fetch error:", e);
         }
@@ -213,90 +220,101 @@ export default function AdminInterface() {
         setTimeout(() => setMessage(""), 3000);
     }
 
-    if (loading) return <div class="text-teal font-mono">INITIALIZING_SESSION...</div>;
+    const SidebarItem = ({ id, icon, label, count }: any) => (
+        <button
+            onClick={() => setActiveTab(id)}
+            class={`w-full flex items-center justify-between px-4 py-3 text-sm font-inter transition-all rounded-lg ${
+                activeTab === id 
+                ? 'bg-teal/10 text-teal border border-teal/20 shadow-sm shadow-teal/5' 
+                : 'text-muted hover:bg-white/5 hover:text-offwhite border border-transparent'
+            }`}
+        >
+            <div class="flex items-center gap-3">
+                {icon}
+                <span class="font-medium tracking-wide">{label}</span>
+            </div>
+            {count !== undefined && (
+                <span class="text-[10px] font-mono bg-black/40 px-2 py-0.5 rounded-full border border-white/10">
+                    {count}
+                </span>
+            )}
+        </button>
+    );
+
+    if (loading) return (
+        <div class="flex items-center justify-center h-64 text-teal font-mono text-sm tracking-widest gap-3">
+            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            INITIALIZING WORKSPACE...
+        </div>
+    );
 
     return (
-        <div class="space-y-8">
-            {message && (
-                <div class="fixed bottom-8 right-8 bg-teal text-charcoal px-6 py-3 rounded-lg font-poppins text-sm font-bold shadow-xl z-[100] animate-bounce">
-                    {message}
+        <div class="flex h-screen w-full bg-[#050505] overflow-hidden absolute top-0 left-0 z-50">
+            {/* Left Sidebar Navigation */}
+            <aside class="w-72 bg-[#0a0a0c] border-r border-white/5 flex flex-col h-full overflow-y-auto shrink-0 shadow-2xl">
+                <div class="p-6 border-b border-white/5 bg-[#0a0a0c] sticky top-0 z-10">
+                    <h2 class="font-syne text-xl font-bold text-offwhite flex items-center gap-2">
+                        <span class="text-teal">●</span> Kinbo Admin
+                    </h2>
+                    <p class="font-mono text-[10px] text-muted uppercase tracking-widest mt-2 opacity-70">Command Workspace</p>
                 </div>
-            )}
+                
+                <div class="p-4 space-y-8 flex-1 overflow-y-auto custom-scrollbar">
+                    {/* Content Group */}
+                    <div>
+                        <h3 class="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-3 px-4">Content</h3>
+                        <div class="space-y-1">
+                            <SidebarItem id="blog" label="Blog Manager" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20" /></svg>} count={posts.length} />
+                            <SidebarItem id="bulk_blog" label="Bulk Import" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>} />
+                            <SidebarItem id="ideas" label="Ideas Vault" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>} count={ideas.length} />
+                        </div>
+                    </div>
 
-            {/* Tabs */}
-            <div class="flex gap-4 border-b border-charcoal-light/30 pb-4">
-                <button
-                    onClick={() => setActiveTab("blog")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "blog" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Blog Manager
-                </button>
-                <button
-                    onClick={() => setActiveTab("bulk_blog")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "bulk_blog" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Bulk Import
-                </button>
-                <button
-                    onClick={() => setActiveTab("home")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "home" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Homepage Editor
-                </button>
-                <button
-                    onClick={() => setActiveTab("ideas")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "ideas" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Ideas ({ideas.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab("products")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "products" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Products ({products.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab("enterprise")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "enterprise" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Enterprise Assets
-                </button>
-                <button
-                    onClick={() => setActiveTab("redirects")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "redirects" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Redirects ({redirects.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab("service_leads")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "service_leads" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Service Leads ({serviceLeads.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab("services_config")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "services_config" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Services Config
-                </button>
-                <button
-                    onClick={() => setActiveTab("team")}
-                    class={`font-poppins text-xs uppercase tracking-widest pb-2 px-4 transition-all ${activeTab === "team" ? "text-teal border-b-2 border-teal" : "text-muted hover:text-offwhite"
-                        }`}
-                >
-                    Team Manager
-                </button>
-            </div>
+                    {/* Business Group */}
+                    <div>
+                        <h3 class="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-3 px-4">Business</h3>
+                        <div class="space-y-1">
+                            <SidebarItem id="products" label="Products" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>} count={products.length} />
+                            <SidebarItem id="events" label="Events Manager" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>} count={events.length} />
+                            <SidebarItem id="service_leads" label="Service Leads" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>} count={serviceLeads.length} />
+                        </div>
+                    </div>
 
+                    {/* Assets Group */}
+                    <div>
+                        <h3 class="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-3 px-4">Site Assets</h3>
+                        <div class="space-y-1">
+                            <SidebarItem id="home" label="Homepage" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>} />
+                            <SidebarItem id="services_config" label="Services Config" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>} />
+                            <SidebarItem id="enterprise" label="Enterprise Data" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>} />
+                            <SidebarItem id="team" label="Team Members" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>} />
+                        </div>
+                    </div>
+                    
+                    {/* System Group */}
+                    <div>
+                        <h3 class="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-3 px-4">System</h3>
+                        <div class="space-y-1">
+                            <SidebarItem id="redirects" label="Redirects" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>} count={redirects.length} />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t border-white/5 text-[10px] text-center font-mono text-muted/50">
+                    KINBO ADMIN v4.0
+                </div>
+            </aside>
+
+            {/* Main Content Workspace */}
+            <main class="flex-1 h-full overflow-y-auto bg-[#050505] relative custom-scrollbar">
+                {message && (
+                    <div class="fixed top-8 right-8 bg-teal text-charcoal px-6 py-3 rounded-lg font-inter text-sm font-bold shadow-xl shadow-teal/20 z-[100] animate-bounce flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                        {message}
+                    </div>
+                )}
+                
+                <div class="max-w-7xl mx-auto p-8 lg:p-12 pb-32">
             {activeTab === "blog" && (
                 <div class="space-y-6">
                     {!editingPost && !isNewPost ? (
@@ -440,6 +458,9 @@ export default function AdminInterface() {
             {activeTab === "service_leads" && <ServiceLeadsViewer leads={serviceLeads} onRefresh={fetchData} />}
             {activeTab === "services_config" && <ServicesConfigManager config={servicesConfig} setConfig={setServicesConfig} onRefresh={fetchData} setMessage={setMessage} />}
             {activeTab === "team" && <TeamManager config={teamAssets} setConfig={setTeamAssets} onRefresh={fetchData} setMessage={setMessage} />}
+            {activeTab === "events" && <EventsManager events={events} fetchData={fetchData} setMessage={setMessage} />}
+                </div>
+            </main>
         </div>
     );
 }
@@ -1824,6 +1845,185 @@ function TeamManager({ config, setConfig, onRefresh, setMessage }: { config: any
             >
                 {saving ? "SAVING..." : "[ Save Team Page Settings ]"}
             </button>
+        </div>
+    );
+}
+
+// EVENTS MANAGER COMPONENT
+function EventsManager({ events, fetchData, setMessage }: any) {
+    const [editingEvent, setEditingEvent] = useState<any>(null);
+    const [isNewEvent, setIsNewEvent] = useState(false);
+    const [tempEvent, setTempEvent] = useState({
+        title: "", description: "", date: "", time: "", location: "",
+        cost: "", duration: "", target_audience: "", image_url: "", benefitsText: ""
+    });
+
+    const resetForm = () => {
+        setEditingEvent(null);
+        setIsNewEvent(false);
+        setTempEvent({
+            title: "", description: "", date: "", time: "", location: "",
+            cost: "", duration: "", target_audience: "", image_url: "", benefitsText: ""
+        });
+    };
+
+    const startNewEvent = () => {
+        resetForm();
+        setIsNewEvent(true);
+    };
+
+    const startEditEvent = (evt: any) => {
+        setTempEvent({
+            ...evt,
+            benefitsText: Array.isArray(evt.benefits) ? evt.benefits.join('\n') : ""
+        });
+        setEditingEvent(evt);
+        setIsNewEvent(false);
+    };
+
+    const saveEvent = async () => {
+        setMessage("Saving event...");
+        const payload = {
+            ...tempEvent,
+            benefits: tempEvent.benefitsText.split('\n').map((b: string) => b.trim()).filter((b: string) => b)
+        };
+        delete (payload as any).benefitsText;
+        
+        try {
+            const res = await fetch("/api/admin/events", {
+                method: isNewEvent ? "POST" : "PUT",
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "application/json" },
+            });
+            if (res.ok) {
+                setMessage("Event saved successfully!");
+                resetForm();
+                fetchData();
+            } else {
+                setMessage("Failed to save event.");
+            }
+        } catch (e) {
+            setMessage("Error saving event.");
+        }
+        setTimeout(() => setMessage(""), 3000);
+    };
+
+    const deleteEvent = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this event?")) return;
+        setMessage("Deleting...");
+        try {
+            const res = await fetch(`/api/admin/events?id=${id}`, { method: "DELETE" });
+            if (res.ok) {
+                setMessage("Event deleted.");
+                fetchData();
+            }
+        } catch (e) {
+            setMessage("Error deleting event.");
+        }
+        setTimeout(() => setMessage(""), 3000);
+    };
+
+    return (
+        <div class="space-y-6">
+            {!isNewEvent && !editingEvent ? (
+                <>
+                    <div class="flex justify-between items-center bg-charcoal-light/10 p-6 rounded-xl border border-white/5">
+                        <div>
+                            <h2 class="font-syne text-xl font-bold text-offwhite uppercase tracking-wider">Events Manager</h2>
+                            <p class="font-mono text-[10px] text-muted uppercase mt-1">Manage platform events</p>
+                        </div>
+                        <button onClick={startNewEvent} class="px-6 py-2 bg-teal/20 text-teal border border-teal/40 font-poppins text-xs font-bold tracking-widest uppercase rounded hover:bg-teal hover:text-charcoal transition-all shadow-lg shadow-teal/10">
+                            + New Event
+                        </button>
+                    </div>
+
+                    <div class="grid gap-4">
+                        {events.map((evt: any) => (
+                            <div key={evt.id} class="bg-[#0a0a0c] border border-white/5 p-5 rounded-xl hover:border-teal/20 transition-all flex justify-between items-center shadow-lg">
+                                <div class="flex items-center gap-4">
+                                    {evt.image_url ? (
+                                        <img src={evt.image_url} class="w-16 h-16 rounded object-cover border border-white/10" />
+                                    ) : (
+                                        <div class="w-16 h-16 rounded bg-charcoal flex items-center justify-center font-mono text-[10px] text-muted">No Img</div>
+                                    )}
+                                    <div>
+                                        <h3 class="font-inter font-bold text-offwhite">{evt.title}</h3>
+                                        <p class="font-mono text-xs text-muted mt-1">{evt.date} at {evt.time} • {evt.location}</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button onClick={() => startEditEvent(evt)} class="px-4 py-1.5 border border-white/10 text-offwhite font-mono text-[10px] uppercase rounded hover:border-teal hover:text-teal transition-all">Edit</button>
+                                    <button onClick={() => deleteEvent(evt.id)} class="px-4 py-1.5 border border-red-500/20 text-red-400 font-mono text-[10px] uppercase rounded hover:bg-red-500/10 transition-all">Delete</button>
+                                </div>
+                            </div>
+                        ))}
+                        {events.length === 0 && (
+                            <div class="text-center py-12 border border-dashed border-white/10 rounded-xl bg-[#0a0a0c]">
+                                <p class="text-muted font-mono text-xs uppercase">No events scheduled.</p>
+                            </div>
+                        )}
+                    </div>
+                </>
+            ) : (
+                <div class="bg-[#0a0a0c] p-8 rounded-xl border border-white/5 shadow-2xl">
+                    <div class="flex justify-between items-center mb-6 pb-6 border-b border-white/5">
+                        <h2 class="font-syne text-xl font-bold text-teal tracking-wider">{isNewEvent ? "Create Event" : "Edit Event"}</h2>
+                        <button onClick={resetForm} class="text-muted hover:text-offwhite font-mono text-[10px] uppercase px-3 py-1 border border-white/10 rounded hover:border-white/30">Cancel</button>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Event Title *</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" value={tempEvent.title} onInput={(e: any) => setTempEvent({...tempEvent, title: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Date *</label>
+                                <input type="date" class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" value={tempEvent.date} onInput={(e: any) => setTempEvent({...tempEvent, date: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Time *</label>
+                                <input type="time" class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" value={tempEvent.time} onInput={(e: any) => setTempEvent({...tempEvent, time: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Location *</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" value={tempEvent.location} onInput={(e: any) => setTempEvent({...tempEvent, location: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Image URL</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" value={tempEvent.image_url} onInput={(e: any) => setTempEvent({...tempEvent, image_url: e.target.value})} />
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Cost (Text)</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" placeholder="e.g. Free, ₹499" value={tempEvent.cost} onInput={(e: any) => setTempEvent({...tempEvent, cost: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Duration (Text)</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" placeholder="e.g. 2 Hours, 3 Days" value={tempEvent.duration} onInput={(e: any) => setTempEvent({...tempEvent, duration: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Target Audience</label>
+                                <input class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none" placeholder="e.g. Founders, Devs" value={tempEvent.target_audience} onInput={(e: any) => setTempEvent({...tempEvent, target_audience: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Description</label>
+                                <textarea class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none h-20" value={tempEvent.description} onInput={(e: any) => setTempEvent({...tempEvent, description: e.target.value})} />
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] text-muted uppercase tracking-widest mb-1">Benefits (One per line)</label>
+                                <textarea class="w-full bg-charcoal border border-white/10 rounded p-3 text-offwhite text-sm focus:border-teal outline-none h-24" placeholder="Networking&#10;Q&A Session" value={tempEvent.benefitsText} onInput={(e: any) => setTempEvent({...tempEvent, benefitsText: e.target.value})} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <button onClick={saveEvent} class="w-full py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest rounded hover:bg-teal-dark transition-all shadow-lg shadow-teal/20">
+                            [ Save Event ]
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

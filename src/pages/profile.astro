@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import UserProfile from "../components/UserProfile";
+---
+
+<Layout title="Your Profile — Kinbo" description="View your Kinbo profile, purchases, and connected ecosystems.">
+  <div class="ks-page">
+    <div class="sub-hero">
+      <div class="sub-crumb hero-anim">
+        HOME <span class="sep">/</span> <span style="color: var(--ks-teal);">PROFILE</span>
+      </div>
+      <h1 class="sub-h hero-anim">Your <span class="accent-teal">Hub.</span></h1>
+      <p class="sub-tagline hero-anim">Manage your account, view your purchases, and access your connected applications.</p>
+    </div>
+
+    <div class="p-8">
+      <UserProfile client:load />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-teal: #2dd4bf;
+    --ks-purple: #a78bfa;
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+  }
+  
+  .sub-hero {
+    padding: 48px 28px 44px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .sub-crumb {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-family: 'Roboto Mono', monospace;
+  }
+  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
+  .sub-h {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -1.5px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .sub-h .accent-teal { color: var(--ks-teal); }
+  .sub-tagline {
+    font-size: 14px;
+    color: var(--ks-text-muted);
+    margin-top: 16px;
+    max-width: 600px;
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+  }
+</style>

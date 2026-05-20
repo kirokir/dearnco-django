@@ -1,0 +1,26 @@
+{
+  "name": "Kinbo Technologies",
+  "short_name": "Kinbo",
+  "description": "Intelligent technology for real outcomes — KINBO TECHNOLOGIES PRIVATE LIMITED",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["technology", "business"],
+  "lang": "en",
+  "dir": "ltr"
+}

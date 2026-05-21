@@ -277,7 +277,7 @@ const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURICompon
             <p class="footer-contact-address">INDIA | CHINA | GCC</p>
             
             <p class="footer-copyright">
-              © {new Date().getFullYear()} Kinbo Technologies Private Limited. All rights reserved.
+              © {new Date().getFullYear()} Kinbo Technologies Private Limited. All rights reserved. <span class="footer-sep">|</span> <a href="/terms">Terms of Service</a>
             </p>
           </div>
 
@@ -599,6 +599,18 @@ const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURICompon
         color: rgba(240, 240, 236, 0.22);
         letter-spacing: 0.05em;
         margin-top: 48px;
+      }
+      .footer-copyright a {
+        color: rgba(240, 240, 236, 0.4);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+      .footer-copyright a:hover {
+        color: var(--color-teal, #2dd4bf);
+      }
+      .footer-sep {
+        margin: 0 6px;
+        color: rgba(240, 240, 236, 0.1);
       }
       .footer-right {
         display: flex;

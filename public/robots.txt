@@ -48,7 +48,7 @@ Disallow: /api/
 Disallow: /apply
 
 # ─── Sitemap ───
-Sitemap: https://portfolio-sage-two-43.vercel.app/sitemap-index.xml
+Sitemap: https://dear.is-a.dev/sitemap-index.xml
 
 # ─── AI Context Files ───
-# LLMs.txt: https://portfolio-sage-two-43.vercel.app/llms.txt
+# LLMs.txt: https://dear.is-a.dev/llms.txt

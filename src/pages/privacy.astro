@@ -1,0 +1,243 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Privacy Policy" description="Privacy Policy for using the Dear & Co / Kinbo Technologies website and services.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" slot="head" />
+
+  <div class="ks-page">
+    <!-- HERO -->
+    <div class="sub-hero">
+      <div class="sub-crumb hero-anim">
+        HOME <span class="sep">/</span> <span style="color: var(--ks-teal);">PRIVACY</span>
+      </div>
+      <h1 class="sub-h hero-anim">Privacy<br><span class="accent-teal">Policy.</span></h1>
+      <p class="sub-tagline hero-anim">Last updated: May 2026. Your privacy and trust are fundamental to how we build technology.</p>
+    </div>
+
+    <!-- PRIVACY SECTIONS -->
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">01</div>
+      <h3 class="info-title">1. Information Collection</h3>
+      <div class="info-content">
+        <p>We only collect personal information (such as name, email address, or billing details) when you voluntarily submit it to us. We collect it by fair and lawful means, with your explicit knowledge and consent. We do not track users across third-party websites.</p>
+      </div>
+    </div>
+
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">02</div>
+      <h3 class="info-title">2. Use of Information</h3>
+      <div class="info-content">
+        <p>Any information we collect is used solely to provide, operate, and maintain our services. Specifically, we use your data to:</p>
+        <ul class="info-list">
+          <li>Deliver and process updates for products and services you purchase.</li>
+          <li>Communicate with you directly for customer support and scoping requests.</li>
+          <li>Ensure website stability and prevent unauthorized access or abuse.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">03</div>
+      <h3 class="info-title">3. Data Security</h3>
+      <div class="info-content">
+        <p>We protect the data we store using industry-standard security measures. We do not share or sell any personally identifying information with third parties except when required by law, or when necessary to complete transactions (e.g., payment gateways).</p>
+      </div>
+    </div>
+
+    <div class="info-section hero-anim">
+      <div class="info-ghost-num">04</div>
+      <h3 class="info-title">4. User Rights</h3>
+      <div class="info-content">
+        <p>You are free to refuse our request for your personal information, with the understanding that we may be unable to provide some of your desired services. You have the right to request access to, correction of, or deletion of the personal data we hold about you by contacting us.</p>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="sub-bottom">
+      <div class="flex flex-col gap-1">
+        <span class="font-mono text-xs text-teal uppercase tracking-[0.15em] mb-2">Data Privacy Questions?</span>
+        <p class="sub-bottom-statement" style="font-size: 20px;">Want to request data deletion?</p>
+        <span class="text-[11px] text-[var(--ks-text-muted)] mt-2 font-mono">Our team will assist you promptly.</span>
+      </div>
+      <a href="/chat" class="sub-cta-btn sub-cta-btn--teal">Contact DPO →</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .ks-page {
+    --ks-bg: #0a0a0c;
+    --ks-surface: #0f1117;
+    --ks-border: rgba(255, 255, 255, 0.07);
+    --ks-text-primary: #f0f0ec;
+    --ks-text-muted: rgba(240, 240, 236, 0.40);
+    --ks-text-faint: rgba(240, 240, 236, 0.6);
+    --ks-label: rgba(240, 240, 236, 0.7);
+    --ks-teal: #2dd4bf;
+    --ks-teal-bg: rgba(45, 212, 191, 0.08);
+    --ks-teal-border: rgba(45, 212, 191, 0.22);
+
+    background: var(--ks-bg);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 72px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* SUB HERO */
+  .sub-hero {
+    padding: 48px 28px 44px;
+    border-bottom: 0.5px solid var(--ks-border);
+  }
+  .sub-crumb {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ks-text-faint);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .sub-crumb .sep { color: rgba(240,240,236,0.12); }
+  .sub-h {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -1.5px;
+    color: var(--ks-text-primary);
+    margin: 0;
+  }
+  .sub-h .accent-teal { color: var(--ks-teal); }
+  .sub-tagline {
+    font-size: 14px;
+    color: var(--ks-text-muted);
+    margin-top: 16px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* INFO SECTIONS */
+  .info-section {
+    padding: 44px 28px;
+    border-bottom: 0.5px solid var(--ks-border);
+    position: relative;
+    overflow: hidden;
+  }
+  .info-ghost-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: var(--ks-teal);
+    opacity: 0.03;
+    letter-spacing: -4px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .info-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--ks-text-primary);
+    margin-bottom: 20px;
+  }
+  .info-content {
+    font-size: 13px;
+    color: var(--ks-text-muted);
+    line-height: 1.7;
+    max-width: 680px;
+  }
+  .info-content p {
+    margin-bottom: 16px;
+  }
+  .info-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .info-list li {
+    padding-left: 20px;
+    position: relative;
+  }
+  .info-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ks-teal);
+    font-family: monospace;
+    opacity: 0.7;
+  }
+  .info-list strong {
+    color: var(--ks-text-primary);
+    font-weight: 500;
+  }
+
+  /* BOTTOM BAR */
+  .sub-bottom {
+    padding: 32px 28px;
+    border-bottom: 0.5px solid var(--ks-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .sub-bottom-statement {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: rgba(240, 240, 236, 0.85);
+    line-height: 1.1;
+    margin: 0;
+  }
+  .sub-cta-btn {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 0.5px solid;
+    background: none;
+    transition: opacity 0.18s;
+    white-space: nowrap;
+  }
+  .sub-cta-btn:hover { opacity: 0.65; }
+  .sub-cta-btn--teal { color: var(--ks-teal); border-color: var(--ks-teal-border); }
+
+  @media (max-width: 640px) {
+    .sub-hero { padding: 40px 16px 32px; }
+    .info-section { padding: 32px 16px; }
+    .sub-bottom { padding: 32px 16px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initPrivacy() {
+    gsap.fromTo(".hero-anim", 
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 }
+    );
+  }
+  document.addEventListener("astro:page-load", initPrivacy);
+</script>

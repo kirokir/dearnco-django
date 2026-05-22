@@ -1,26 +1,44 @@
-import { useState, useEffect, useRef } from "preact/hooks";
+import { useState, useEffect, useMemo, useRef } from "preact/hooks";
 
 const CATEGORIES = ["All", "Websites", "AI Platforms", "Dashboards", "Mobile Apps", "Healthcare Systems", "E-commerce", "Startup Platforms"];
-const SUBCATEGORIES = ["Astro", "React", "Next.js", "Flutter", "Django", "AI", "IoT"];
 
 export default function ShowcaseGallery({ initialProjects }: { initialProjects: any[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeTech, setActiveTech] = useState<string | null>(null);
-  const [projects, setProjects] = useState(initialProjects);
+
+  const domainProjects = useMemo(() => {
+    if (activeCategory === "All") return initialProjects;
+    return initialProjects.filter(p => p.category === activeCategory);
+  }, [activeCategory, initialProjects]);
+
+  const availableTechs = useMemo(() => {
+    const techSet = new Set<string>();
+    domainProjects.forEach(p => {
+      const stack = Array.isArray(p.tech_stack) ? p.tech_stack : (p.tech_stack || "").split(",");
+      stack.forEach((tech: string) => {
+        const t = tech.trim();
+        if (t) techSet.add(t);
+      });
+    });
+    return Array.from(techSet).sort();
+  }, [domainProjects]);
 
   useEffect(() => {
-    let filtered = initialProjects;
-    if (activeCategory !== "All") {
-      filtered = filtered.filter(p => p.category === activeCategory);
+    if (activeTech && !availableTechs.includes(activeTech)) {
+      setActiveTech(null);
     }
-    if (activeTech) {
+  }, [activeTech, availableTechs]);
+
+  const projects = useMemo(() => {
+    let filtered = domainProjects;
+    if (activeTech && availableTechs.includes(activeTech)) {
       filtered = filtered.filter(p => {
         const stack = Array.isArray(p.tech_stack) ? p.tech_stack : (p.tech_stack || "").split(",");
         return stack.some((s: string) => s.trim().toLowerCase() === activeTech.toLowerCase());
       });
     }
-    setProjects(filtered);
-  }, [activeCategory, activeTech, initialProjects]);
+    return filtered;
+  }, [domainProjects, activeTech, availableTechs]);
 
   return (
     <div class="flex flex-col lg:flex-row gap-12 relative items-start">
@@ -49,7 +67,7 @@ export default function ShowcaseGallery({ initialProjects }: { initialProjects: 
         <div>
           <h3 class="font-mono text-[10px] text-muted uppercase tracking-widest mb-4 border-b border-white/5 pb-2">Technologies</h3>
           <div class="flex flex-wrap gap-2">
-            {SUBCATEGORIES.map(tech => (
+            {availableTechs.length > 0 ? availableTechs.map(tech => (
               <button
                 key={tech}
                 onClick={() => setActiveTech(activeTech === tech ? null : tech)}
@@ -61,7 +79,9 @@ export default function ShowcaseGallery({ initialProjects }: { initialProjects: 
               >
                 {tech}
               </button>
-            ))}
+            )) : (
+              <span class="text-[10px] font-mono text-muted uppercase tracking-widest">No technologies</span>
+            )}
           </div>
         </div>
       </aside>

@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import B2BCollaborationForm from "../components/forms/B2BCollaborationForm";
+import "../styles/forms.css";
+---
+
+<Layout title="B2B Collaboration — Kinbo Technologies" description="Submit corporate proposals, joint venture requests, and project specifications to Kinbo Technologies.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <div class="ks-form-page">
+    <B2BCollaborationForm client:load />
+  </div>
+</Layout>

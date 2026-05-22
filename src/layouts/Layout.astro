@@ -51,6 +51,9 @@ const rawWhatsappNum = enterpriseAssets.whatsapp_number || "+91 9846547132";
 const whatsappMsg = enterpriseAssets.whatsapp_message || "hi kinbo , can you help me";
 const cleanWhatsappNumber = rawWhatsappNum.replace(/[^0-9]/g, '');
 const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURIComponent(whatsappMsg)}`;
+const activeFavicon = (enterpriseAssets.favicon_url && enterpriseAssets.favicon_url !== "/favicon.svg" && enterpriseAssets.favicon_url.trim() !== "")
+    ? enterpriseAssets.favicon_url
+    : (enterpriseAssets.logo_url || "/favicon.svg");
 ---
 
 <!doctype html>
@@ -86,7 +89,7 @@ const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURICompon
     <link rel="canonical" href={Astro.url.href} />
     
     <!-- Favicon -->
-    <link rel="icon" type={enterpriseAssets.favicon_url?.endsWith('.svg') ? 'image/svg+xml' : 'image/png'} href={enterpriseAssets.favicon_url || "/favicon.svg"} />
+    <link rel="icon" type={activeFavicon.includes('.svg') ? 'image/svg+xml' : 'image/png'} href={activeFavicon} />
     <meta name="generator" content={Astro.generator} />
     
     <!-- Preconnect for Performance -->
@@ -102,7 +105,7 @@ const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURICompon
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Kinbo" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href={activeFavicon} />
     
     <!-- JSON-LD Slot (pages inject structured data here) -->
     <slot name="head" />
@@ -806,7 +809,7 @@ const whatsappUrl = `https://wa.me/${cleanWhatsappNumber}?text=${encodeURICompon
     { !hideHeaderFooter && (
       <!-- PWA Install Prompt (Hidden by default) -->
       <div id="pwa-install-prompt" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-charcoal-light/90 backdrop-blur-xl border border-teal/30 p-4 rounded-2xl shadow-2xl items-center gap-4 min-w-[300px]">
-        <img src="/favicon.svg" alt="Kinbo" class="w-12 h-12 rounded-xl bg-charcoal p-1 border border-teal/20" />
+        <img src={enterpriseAssets.logo_url || activeFavicon} alt="Kinbo" class="w-12 h-12 rounded-xl bg-charcoal p-1 border border-teal/20" />
         <div class="flex-1">
           <h4 class="text-offwhite font-syne font-bold text-sm">Install Kinbo</h4>
           <p class="text-muted font-mono text-[10px] leading-tight mt-1">Get the app for a faster, fullscreen experience.</p>

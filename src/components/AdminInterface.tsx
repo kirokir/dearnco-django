@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "preact/hooks";
+import SeoDashboard from "./admin/SeoDashboard";
+import ShowcaseManager from "./admin/ShowcaseManager";
 
 // ─── Cloudinary Upload Helper ───
 async function uploadToCloudinary(file: File): Promise<string | null> {
@@ -89,7 +91,7 @@ function DragDropZone({ onUpload, accept = 'image/*,video/*,.gif', multiple = fa
 }
 
 export default function AdminInterface() {
-    const [activeTab, setActiveTab] = useState<"blog" | "bulk_blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team" | "events">("blog");
+    const [activeTab, setActiveTab] = useState<"blog" | "bulk_blog" | "home" | "ideas" | "products" | "enterprise" | "redirects" | "service_leads" | "services_config" | "team" | "events" | "seo" | "showcase">("blog");
     const [bulkText, setBulkText] = useState("");
     const [parsedBlogs, setParsedBlogs] = useState<any[]>([]);
     const [bulkSaving, setBulkSaving] = useState(false);
@@ -267,6 +269,7 @@ export default function AdminInterface() {
                             <SidebarItem id="blog" label="Blog Manager" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20" /></svg>} count={posts.length} />
                             <SidebarItem id="bulk_blog" label="Bulk Import" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>} />
                             <SidebarItem id="ideas" label="Ideas Vault" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>} count={ideas.length} />
+                            <SidebarItem id="showcase" label="Showcase" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>} />
                         </div>
                     </div>
 
@@ -295,6 +298,7 @@ export default function AdminInterface() {
                     <div>
                         <h3 class="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-3 px-4">System</h3>
                         <div class="space-y-1">
+                            <SidebarItem id="seo" label="SEO Analytics" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>} />
                             <SidebarItem id="redirects" label="Redirects" icon={<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>} count={redirects.length} />
                         </div>
                     </div>
@@ -459,6 +463,8 @@ export default function AdminInterface() {
             {activeTab === "services_config" && <ServicesConfigManager config={servicesConfig} setConfig={setServicesConfig} onRefresh={fetchData} setMessage={setMessage} />}
             {activeTab === "team" && <TeamManager config={teamAssets} setConfig={setTeamAssets} onRefresh={fetchData} setMessage={setMessage} />}
             {activeTab === "events" && <EventsManager events={events} fetchData={fetchData} setMessage={setMessage} />}
+            {activeTab === "seo" && <SeoDashboard />}
+            {activeTab === "showcase" && <ShowcaseManager />}
                 </div>
             </main>
         </div>

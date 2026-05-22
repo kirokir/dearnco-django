@@ -1,0 +1,41 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ShowcaseGallery from "../components/showcase/ShowcaseGallery";
+
+export const prerender = false;
+
+// Fetch showcase data server-side for SEO, or let client handle it.
+// Let's pass it to the client for hydration.
+import { createClient } from '@supabase/supabase-js';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const { data: projects } = await supabase.from('showcase_projects').select('*').order('order_index', { ascending: true });
+---
+
+<Layout title="Showcase & Platforms — Kinbo Technologies" description="A premium gallery of websites, web applications, mobile apps, and AI systems built by Kinbo Technologies.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" slot="head" />
+  <div class="min-h-screen bg-[#050505] text-offwhite pt-24 pb-12 relative overflow-hidden">
+    <!-- Ambient background glows -->
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-teal/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+    
+    <div class="max-w-screen-2xl mx-auto px-6 relative z-10">
+      <header class="mb-16 md:mb-24 text-center md:text-left">
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-teal/10 border border-teal/20 text-teal font-mono text-xs uppercase tracking-widest mb-6">
+          <span class="w-2 h-2 rounded-full bg-teal animate-pulse"></span>
+          Ecosystem Showcase
+        </div>
+        <h1 class="font-syne text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+          Digital <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal to-blue-500">Masterpieces</span>
+        </h1>
+        <p class="font-lora text-lg md:text-xl text-muted max-w-2xl">
+          Explore our premium portfolio of enterprise dashboards, AI healthcare platforms, high-conversion websites, and seamless mobile applications.
+        </p>
+      </header>
+
+      <ShowcaseGallery initialProjects={projects || []} client:load />
+    </div>
+  </div>
+</Layout>

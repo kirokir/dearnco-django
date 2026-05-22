@@ -1,15 +1,287 @@
 import { useState, useEffect } from "preact/hooks";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line
-} from "recharts";
+
+// Gorgeous high-performance native SVG chart for Clicks & Impressions
+function ClicksImpressionsChart({ data }: { data: any[] }) {
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+  if (!data || data.length === 0) return <div class="text-muted font-mono text-xs text-center py-12">No data available</div>;
+
+  const width = 500;
+  const height = 220;
+  const paddingLeft = 45;
+  const paddingRight = 45;
+  const paddingTop = 20;
+  const paddingBottom = 30;
+
+  const chartWidth = width - paddingLeft - paddingRight;
+  const chartHeight = height - paddingTop - paddingBottom;
+
+  const clicks = data.map(d => d.clicks);
+  const impressions = data.map(d => d.impressions);
+
+  const maxClicks = Math.max(...clicks, 1);
+  const maxImpressions = Math.max(...impressions, 1);
+
+  // Generate points
+  const points = data.map((d, i) => {
+    const x = paddingLeft + (i / (data.length - 1)) * chartWidth;
+    const yClicks = paddingTop + chartHeight - (d.clicks / maxClicks) * chartHeight;
+    const yImpressions = paddingTop + chartHeight - (d.impressions / maxImpressions) * chartHeight;
+    return { x, yClicks, yImpressions, data: d };
+  });
+
+  const clickLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.yClicks}`).join(' ');
+  const clickArea = points.length > 0 
+    ? `${clickLine} L ${points[points.length - 1].x} ${paddingTop + chartHeight} L ${points[0].x} ${paddingTop + chartHeight} Z`
+    : '';
+
+  const impressionLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.yImpressions}`).join(' ');
+
+  return (
+    <div class="relative w-full h-full">
+      <div class="flex justify-end gap-4 mb-4 text-[10px] font-mono tracking-wider">
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-1.5 rounded bg-teal inline-block"></span>
+          <span class="text-offwhite/85">CLICKS</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-0.5 border-b border-dashed border-purple-400 inline-block"></span>
+          <span class="text-offwhite/85">IMPRESSIONS</span>
+        </div>
+      </div>
+
+      <svg viewBox={`0 0 ${width} ${height}`} class="w-full h-auto overflow-visible select-none">
+        <defs>
+          <linearGradient id="gscClicksGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.25" />
+            <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        {/* Grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
+          const y = paddingTop + ratio * chartHeight;
+          const clickVal = Math.round(maxClicks - ratio * maxClicks);
+          const impVal = Math.round(maxImpressions - ratio * maxImpressions);
+          return (
+            <g key={ratio} class="opacity-15">
+              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="rgba(255,255,255,0.2)" stroke-dasharray="3 3" />
+              {/* Left Y Axis (Clicks) */}
+              <text x={paddingLeft - 8} y={y + 3} fill="#2dd4bf" font-size="8" text-anchor="end" font-family="monospace">
+                {clickVal}
+              </text>
+              {/* Right Y Axis (Impressions) */}
+              <text x={width - paddingRight + 8} y={y + 3} fill="#a78bfa" font-size="8" text-anchor="start" font-family="monospace">
+                {impVal}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* X Axis Labels */}
+        {data.filter((_, i) => i % 6 === 0 || i === data.length - 1).map((d, i) => {
+          const index = data.indexOf(d);
+          const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
+          const dateStr = d.date ? d.date.substring(5) : '';
+          return (
+            <text key={i} x={x} y={height - 8} fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle" font-family="monospace" class="opacity-80">
+              {dateStr}
+            </text>
+          );
+        })}
+
+        {/* Areas & Lines */}
+        {clickArea && <path d={clickArea} fill="url(#gscClicksGradient)" />}
+        {clickLine && <path d={clickLine} fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round" />}
+        {impressionLine && <path d={impressionLine} fill="none" stroke="#a78bfa" stroke-dasharray="3 3" stroke-width="1.5" stroke-linecap="round" />}
+
+        {/* Vertical Highlight Line */}
+        {hoverIdx !== null && (
+          <line 
+            x1={points[hoverIdx].x} 
+            y1={paddingTop} 
+            x2={points[hoverIdx].x} 
+            y2={paddingTop + chartHeight} 
+            stroke="rgba(255,255,255,0.15)" 
+            stroke-width="1"
+          />
+        )}
+
+        {/* Interactive hover overlays */}
+        {points.map((p, i) => (
+          <g key={i} 
+             onMouseEnter={() => setHoverIdx(i)}
+             onMouseLeave={() => setHoverIdx(null)}
+          >
+            {/* Transparent hover catcher */}
+            <rect 
+              x={p.x - (chartWidth / (data.length - 1)) / 2} 
+              y={paddingTop} 
+              width={chartWidth / (data.length - 1)} 
+              height={chartHeight} 
+              fill="transparent" 
+              class="cursor-crosshair" 
+            />
+            {hoverIdx === i && (
+              <g>
+                <circle cx={p.x} cy={p.yClicks} r="3.5" fill="#2dd4bf" stroke="#0a0a0c" stroke-width="1.5" />
+                <circle cx={p.x} cy={p.yImpressions} r="3.5" fill="#a78bfa" stroke="#0a0a0c" stroke-width="1.5" />
+              </g>
+            )}
+          </g>
+        ))}
+      </svg>
+
+      {/* Modern interactive floating tooltip */}
+      {hoverIdx !== null && (
+        <div 
+          class="absolute bg-charcoal-dark border border-white/10 rounded-lg p-3 text-[10px] font-mono text-offwhite shadow-xl pointer-events-none z-10 space-y-1 backdrop-blur-md"
+          style={{ 
+            left: `${Math.min(Math.max((points[hoverIdx].x / width) * 100, 15), 85)}%`, 
+            top: `${(Math.min(points[hoverIdx].yClicks, points[hoverIdx].yImpressions) / height) * 100 - 35}%`,
+            transform: 'translateX(-50%) translateY(-50%)'
+          }}
+        >
+          <div class="text-muted border-b border-white/5 pb-1 font-bold">{points[hoverIdx].data.date}</div>
+          <div class="flex items-center gap-1.5 text-teal">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal"></span>
+            <span class="font-bold">Clicks:</span>
+            <span>{points[hoverIdx].data.clicks.toLocaleString()}</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-purple-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            <span class="font-bold">Impressions:</span>
+            <span>{points[hoverIdx].data.impressions.toLocaleString()}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Gorgeous native SVG chart for Average Position
+function AvgPositionChart({ data }: { data: any[] }) {
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+  if (!data || data.length === 0) return <div class="text-muted font-mono text-xs text-center py-12">No data available</div>;
+
+  const width = 500;
+  const height = 220;
+  const paddingLeft = 45;
+  const paddingRight = 20;
+  const paddingTop = 20;
+  const paddingBottom = 30;
+
+  const chartWidth = width - paddingLeft - paddingRight;
+  const chartHeight = height - paddingTop - paddingBottom;
+
+  const positions = data.map(d => parseFloat(d.position));
+  const minPos = Math.max(Math.min(...positions) - 1, 1);
+  const maxPos = Math.max(...positions) + 1;
+
+  // Generate points (reversed scale, so smaller numbers are higher on y-axis)
+  const points = data.map((d, i) => {
+    const x = paddingLeft + (i / (data.length - 1)) * chartWidth;
+    const y = paddingTop + ((parseFloat(d.position) - minPos) / (maxPos - minPos)) * chartHeight;
+    return { x, y, data: d };
+  });
+
+  const positionLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+  return (
+    <div class="relative w-full h-full">
+      <div class="flex justify-end gap-4 mb-4 text-[10px] font-mono tracking-wider">
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-1.5 rounded bg-yellow-400 inline-block"></span>
+          <span class="text-offwhite/85">AVERAGE POSITION</span>
+        </div>
+      </div>
+
+      <svg viewBox={`0 0 ${width} ${height}`} class="w-full h-auto overflow-visible select-none">
+        {/* Grid lines (reversed labelling) */}
+        {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
+          const y = paddingTop + ratio * chartHeight;
+          const posVal = (minPos + ratio * (maxPos - minPos)).toFixed(1);
+          return (
+            <g key={ratio} class="opacity-15">
+              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="rgba(255,255,255,0.2)" stroke-dasharray="3 3" />
+              <text x={paddingLeft - 8} y={y + 3} fill="#fbbf24" font-size="8" text-anchor="end" font-family="monospace">
+                {posVal}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* X Axis Labels */}
+        {data.filter((_, i) => i % 6 === 0 || i === data.length - 1).map((d, i) => {
+          const index = data.indexOf(d);
+          const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
+          const dateStr = d.date ? d.date.substring(5) : '';
+          return (
+            <text key={i} x={x} y={height - 8} fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle" font-family="monospace" class="opacity-80">
+              {dateStr}
+            </text>
+          );
+        })}
+
+        {/* Lines */}
+        {positionLine && <path d={positionLine} fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" />}
+
+        {/* Vertical Highlight Line */}
+        {hoverIdx !== null && (
+          <line 
+            x1={points[hoverIdx].x} 
+            y1={paddingTop} 
+            x2={points[hoverIdx].x} 
+            y2={paddingTop + chartHeight} 
+            stroke="rgba(255,255,255,0.15)" 
+            stroke-width="1"
+          />
+        )}
+
+        {/* Interactive hover overlays */}
+        {points.map((p, i) => (
+          <g key={i} 
+             onMouseEnter={() => setHoverIdx(i)}
+             onMouseLeave={() => setHoverIdx(null)}
+          >
+            {/* Transparent hover catcher */}
+            <rect 
+              x={p.x - (chartWidth / (data.length - 1)) / 2} 
+              y={paddingTop} 
+              width={chartWidth / (data.length - 1)} 
+              height={chartHeight} 
+              fill="transparent" 
+              class="cursor-crosshair" 
+            />
+            {hoverIdx === i && (
+              <circle cx={p.x} cy={p.y} r="3.5" fill="#fbbf24" stroke="#0a0a0c" stroke-width="1.5" />
+            )}
+          </g>
+        ))}
+      </svg>
+
+      {/* Floating tooltip */}
+      {hoverIdx !== null && (
+        <div 
+          class="absolute bg-charcoal-dark border border-white/10 rounded-lg p-3 text-[10px] font-mono text-offwhite shadow-xl pointer-events-none z-10 space-y-1 backdrop-blur-md"
+          style={{ 
+            left: `${Math.min(Math.max((points[hoverIdx].x / width) * 100, 15), 85)}%`, 
+            top: `${(points[hoverIdx].y / height) * 100 - 35}%`,
+            transform: 'translateX(-50%) translateY(-50%)'
+          }}
+        >
+          <div class="text-muted border-b border-white/5 pb-1 font-bold">{points[hoverIdx].data.date}</div>
+          <div class="flex items-center gap-1.5 text-yellow-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+            <span class="font-bold">Avg Position:</span>
+            <span>{parseFloat(points[hoverIdx].data.position).toFixed(1)}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function SeoDashboard() {
   const [data, setData] = useState<any>(null);
@@ -51,7 +323,7 @@ export default function SeoDashboard() {
     clicks: r.clicks,
     impressions: r.impressions,
     ctr: (r.ctr * 100).toFixed(2),
-    position: r.position.toFixed(1)
+    position: r.position
   })) || [];
 
   const totalClicks = overviewData.reduce((acc: number, curr: any) => acc + curr.clicks, 0);
@@ -83,37 +355,15 @@ export default function SeoDashboard() {
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-charcoal-light/10 border border-charcoal-light/30 p-6 rounded-xl">
           <h3 class="font-poppins text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Clicks & Impressions</h3>
-          <div class="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={overviewData}>
-                <defs>
-                  <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2dd4bf" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#2dd4bf" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}} tickFormatter={(val) => val.substring(5)} />
-                <YAxis yAxisId="left" stroke="rgba(255,255,255,0.2)" tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}} />
-                <Tooltip contentStyle={{backgroundColor: '#0a0a0c', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff'}} itemStyle={{color: '#2dd4bf'}} />
-                <Area yAxisId="left" type="monotone" dataKey="clicks" stroke="#2dd4bf" fillOpacity={1} fill="url(#colorClicks)" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div class="h-64 flex items-center justify-center">
+            <ClicksImpressionsChart data={overviewData} />
           </div>
         </div>
 
         <div class="bg-charcoal-light/10 border border-charcoal-light/30 p-6 rounded-xl">
           <h3 class="font-poppins text-xs font-bold text-offwhite uppercase tracking-widest mb-6">Average Position</h3>
-          <div class="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={overviewData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}} tickFormatter={(val) => val.substring(5)} />
-                <YAxis reversed domain={['dataMin - 1', 'dataMax + 1']} stroke="rgba(255,255,255,0.2)" tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}} />
-                <Tooltip contentStyle={{backgroundColor: '#0a0a0c', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff'}} itemStyle={{color: '#fbbf24'}} />
-                <Line type="monotone" dataKey="position" stroke="#fbbf24" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div class="h-64 flex items-center justify-center">
+            <AvgPositionChart data={overviewData} />
           </div>
         </div>
       </div>

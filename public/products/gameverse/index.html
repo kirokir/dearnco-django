@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kinbo GameVerse — 100 Browser Games</title>
+    <meta name="description" content="Play 100 stunning browser games instantly. No login, no downloads. Arcade, puzzle, racing, strategy and more — all free.">
+    <meta name="google-adsense-account" content="ca-pub-7373148681267386">
+    <meta name="theme-color" content="#0D0D1A">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="kinbo-top-bar" style="background-color: #0a0a0c; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(45, 212, 191, 0.2); font-family: 'Inter', sans-serif; z-index: 1000; position: relative;">
+        <a href="/" style="color: #2dd4bf; text-decoration: none; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">← Back to Kinbo</a>
+        <span style="font-size: 10px; color: rgba(240, 240, 236, 0.4); letter-spacing: 0.15em; font-family: 'Orbitron', sans-serif;">KINBO TECHNOLOGIES</span>
+    </div>
+    <div id="app">
+        <!-- HOME SCREEN -->
+        <div id="home-screen">
+            <header id="header">
+                <div class="logo" onclick="window.location.hash='#home'">
+                    <span class="logo-icon">🎮</span>
+                    <h1>KINBO <span class="accent">GAMEVERSE</span></h1>
+                    <span class="logo-tagline">100 Games • Zero Installs</span>
+                </div>
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search games..." autocomplete="off" spellcheck="false">
+                </div>
+            </header>
+            <nav id="category-filter">
+                <button class="filter-pill active" data-category="all">All Games</button>
+            </nav>
+            <main id="game-grid"></main>
+            <footer id="footer">
+                <p>Kinbo GameVerse © 2025 — Built with ❤️ and Canvas</p>
+            </footer>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="hidden">
+            <button id="back-btn" title="Back to Home">
+                <span class="back-arrow">←</span>
+                <span class="back-text">Home</span>
+            </button>
+            <div id="game-info-bar">
+                <span id="game-title-bar"></span>
+                <span id="game-highscore-bar">🏆 <span id="hs-value">0</span></span>
+            </div>
+            <canvas id="game-canvas"></canvas>
+            <div id="touch-controls" class="hidden">
+                <button class="touch-btn" id="touch-left">◀</button>
+                <button class="touch-btn" id="touch-right">▶</button>
+                <button class="touch-btn" id="touch-action">●</button>
+            </div>
+        </div>
+
+        <!-- GAME OVER OVERLAY -->
+        <div id="game-over-overlay" class="hidden">
+            <div class="game-over-modal">
+                <div class="modal-glow"></div>
+                <h2 class="game-over-title">GAME OVER</h2>
+                <div class="score-display">
+                    <div class="score-row">
+                        <span class="score-label">Score</span>
+                        <span class="score-value" id="final-score">0</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="score-label">High Score</span>
+                        <span class="score-value" id="final-highscore">0</span>
+                    </div>
+                </div>
+                <div id="new-record" class="hidden">
+                    <span class="trophy">🏆</span>
+                    <span>NEW RECORD!</span>
+                </div>
+                <div class="modal-buttons">
+                    <button id="play-again-btn" class="modal-btn primary">▶ Play Again</button>
+                    <button id="home-btn" class="modal-btn secondary">🏠 Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background effect -->
+    <canvas id="bg-canvas"></canvas>
+
+    <script src="js/gameData.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

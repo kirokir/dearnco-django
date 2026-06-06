@@ -93,7 +93,7 @@ if (supabaseAdmin) {
          data-parallax={enterpriseAssets.hero_parallax_intensity ?? 20}>
       <div class="absolute inset-0 bg-charcoal-dark z-10 pointer-events-none"
            style={`opacity: ${enterpriseAssets.hero_bg_darkness ?? 0.3};`}></div>
-      {(enterpriseAssets.hero_bg_type === 'video' || !enterpriseAssets.hero_bg_type) ? (
+      {(!enterpriseAssets.hero_bg_type || enterpriseAssets.hero_bg_type === 'video') && enterpriseAssets.hero_video_url?.match(/\.(mp4|webm|mov|ogg)$/i) ? (
         <video 
           autoplay 
           muted 
@@ -115,11 +115,11 @@ if (supabaseAdmin) {
     </div>
 
     <div class="relative z-20 max-w-7xl mx-auto px-6 lg:px-12 w-full text-left">
-      <div class="max-w-3xl">
+      <div class="max-w-4xl">
         <span class="font-mono text-xs text-teal uppercase tracking-[0.5em] block mb-6 hero-anim opacity-0 translate-y-8">
           {enterpriseAssets.company_name}
         </span>
-        <h1 class="hero-title-syne text-offwhite mb-8 hero-anim opacity-0 translate-y-8" style="font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.05; word-break: break-word;">
+        <h1 class="hero-title-syne text-offwhite mb-8 hero-anim opacity-0 translate-y-8" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1;">
           Intelligent technology<br/>
           <span class="text-teal">for real outcomes.</span>
         </h1>

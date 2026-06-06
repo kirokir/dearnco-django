@@ -9,8 +9,13 @@ async function uploadToCloudinary(file: File): Promise<string | null> {
     try {
         const res = await fetch('/api/upload', { method: 'POST', body: formData });
         const data = await res.json();
+        if (!res.ok) {
+            alert(`Upload failed: ${data.error || res.statusText}`);
+            return null;
+        }
         return data.url || null;
-    } catch {
+    } catch (e: any) {
+        alert(`Network error during upload: ${e.message}`);
         return null;
     }
 }

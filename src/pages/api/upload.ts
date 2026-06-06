@@ -60,6 +60,8 @@ export async function POST({ request }: { request: Request }) {
         }
     } catch (e: any) {
         console.error('Upload API Error:', e);
-        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+        return new Response(JSON.stringify({ 
+            error: e?.message || String(e) || 'Unknown server error during upload'
+        }), { status: 500 });
     }
 }

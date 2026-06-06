@@ -33,12 +33,12 @@ export async function POST({ request }: { request: Request }) {
         }
 
         // ─── Cloudinary upload ───
-        const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME || "dw4fmucml";
-        const uploadPreset = import.meta.env.CLOUDINARY_UPLOAD_PRESET || "kinbo1";
+        const cloudName = "dw4fmucml";
+        const uploadPreset = "kinbo1";
 
         const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
         uploadFormData.append('upload_preset', uploadPreset);
+        uploadFormData.append('file', file);
 
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
             method: 'POST',

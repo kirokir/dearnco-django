@@ -87,12 +87,12 @@ if (supabaseAdmin) {
   </div>
 
   <!-- Hero Section with Video Parallax -->
-  <section class="relative min-h-screen flex items-center justify-center overflow-hidden" id="hero">
+  <section class="relative min-h-screen flex items-center justify-start overflow-hidden" id="hero">
     <!-- Parallax Background Container -->
     <div class="absolute inset-0 z-0 scale-110" id="hero-video-container"
          data-parallax={enterpriseAssets.hero_parallax_intensity ?? 20}>
       <div class="absolute inset-0 bg-charcoal-dark z-10 pointer-events-none"
-           style={`opacity: ${enterpriseAssets.hero_bg_darkness ?? 0.6};`}></div>
+           style={`opacity: ${enterpriseAssets.hero_bg_darkness ?? 0.3};`}></div>
       {(enterpriseAssets.hero_bg_type === 'video' || !enterpriseAssets.hero_bg_type) ? (
         <video 
           autoplay 
@@ -100,7 +100,7 @@ if (supabaseAdmin) {
           loop 
           playsinline 
           class="w-full h-full object-cover"
-          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 2}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 0.4};`}
+          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 0}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 1};`}
         >
           <source src={enterpriseAssets.hero_video_url} type="video/mp4" />
         </video>
@@ -109,36 +109,38 @@ if (supabaseAdmin) {
           src={enterpriseAssets.hero_video_url}
           alt="Hero Background"
           class="w-full h-full object-cover"
-          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 2}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 0.4};`}
+          style={`filter: blur(${enterpriseAssets.hero_bg_blur ?? 0}px); opacity: ${enterpriseAssets.hero_bg_opacity ?? 1};`}
         />
       )}
     </div>
 
-    <div class="relative z-20 max-w-5xl mx-auto px-6 text-center">
-      <span class="font-mono text-xs text-teal uppercase tracking-[0.5em] block mb-6 hero-anim opacity-0 translate-y-8">
-        {enterpriseAssets.company_name}
-      </span>
-      <h1 class="hero-title-syne text-offwhite mb-8 hero-anim opacity-0 translate-y-8" style="font-size: clamp(2rem, 6vw, 4.5rem); line-height: 0.95; word-break: break-word;">
-        Intelligent technology<br/>
-        <span class="text-teal">for real outcomes.</span>
-      </h1>
-      <p class="font-lora text-base sm:text-lg text-muted max-w-2xl mx-auto leading-relaxed mb-10 hero-anim opacity-0 translate-y-8 px-4">
-        We focus on usable technology that improves outcomes rather than adding complexity. Intelligent everyday apps that combine practical technology with user-focused design.
-      </p>
-      <div class="flex flex-wrap gap-4 justify-center hero-anim opacity-0 translate-y-8 relative z-50 pointer-events-auto">
-        <a href="/showcase" data-astro-reload class="px-8 py-3 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(42,157,143,0.3)] transition-all relative z-50 pointer-events-auto">
-          Explore Products
-        </a>
-        <a href="/about" data-astro-reload class="px-8 py-3 border border-teal/30 text-teal font-poppins font-bold uppercase tracking-widest text-xs rounded-full hover:bg-teal/10 transition-all relative z-50 pointer-events-auto">
-          Our Philosophy
-        </a>
+    <div class="relative z-20 max-w-7xl mx-auto px-6 lg:px-12 w-full text-left">
+      <div class="max-w-3xl">
+        <span class="font-mono text-xs text-teal uppercase tracking-[0.5em] block mb-6 hero-anim opacity-0 translate-y-8">
+          {enterpriseAssets.company_name}
+        </span>
+        <h1 class="hero-title-syne text-offwhite mb-8 hero-anim opacity-0 translate-y-8" style="font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.05; word-break: break-word;">
+          Intelligent technology<br/>
+          <span class="text-teal">for real outcomes.</span>
+        </h1>
+        <p class="font-lora text-base sm:text-lg md:text-xl text-offwhite/90 max-w-2xl leading-relaxed mb-10 hero-anim opacity-0 translate-y-8">
+          We focus on usable technology that improves outcomes rather than adding complexity. Intelligent everyday apps that combine practical technology with user-focused design.
+        </p>
+        <div class="flex flex-wrap gap-4 justify-start hero-anim opacity-0 translate-y-8 relative z-50 pointer-events-auto">
+          <a href="/showcase" data-astro-reload class="px-8 py-4 bg-teal text-charcoal font-poppins font-bold uppercase tracking-widest text-sm rounded-full hover:shadow-[0_0_30px_rgba(42,157,143,0.4)] transition-all relative z-50 pointer-events-auto">
+            Explore Products
+          </a>
+          <a href="/about" data-astro-reload class="px-8 py-4 border-2 border-teal/50 text-teal font-poppins font-bold uppercase tracking-widest text-sm rounded-full hover:bg-teal/10 hover:border-teal transition-all relative z-50 pointer-events-auto">
+            Our Philosophy
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- Scroll Indicator -->
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-muted z-20 hero-anim opacity-0">
+    <div class="absolute bottom-10 left-6 lg:left-12 flex flex-col items-start gap-3 text-muted z-20 hero-anim opacity-0">
+      <div class="w-12 h-px bg-gradient-to-r from-teal to-transparent opacity-80"></div>
       <span class="font-mono text-[9px] tracking-[0.3em] uppercase opacity-50">Scroll</span>
-      <div class="w-px h-12 bg-gradient-to-b from-teal to-transparent opacity-80"></div>
     </div>
   </section>
 

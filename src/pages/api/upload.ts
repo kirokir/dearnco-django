@@ -40,7 +40,8 @@ export async function POST({ request }: { request: Request }) {
         uploadFormData.append('file', file);
         uploadFormData.append('upload_preset', uploadPreset);
 
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+        // Use /auto/upload to handle both images and videos correctly
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
             method: 'POST',
             body: uploadFormData
         });

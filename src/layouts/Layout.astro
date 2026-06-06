@@ -156,17 +156,17 @@ const activeFavicon = (enterpriseAssets.favicon_url && enterpriseAssets.favicon_
 
     { !hideHeaderFooter && (
       <!-- ─── Navbar ─── -->
-      <div class="fixed top-6 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4 z-50 pointer-events-none">
+      <div class="fixed top-2 md:top-6 left-1/2 -translate-x-1/2 w-full max-w-6xl px-2 md:px-4 z-50 pointer-events-none">
         <nav
           class="w-full backdrop-blur-xl bg-charcoal-dark/90 border border-charcoal-light/20 shadow-2xl rounded-full pointer-events-auto"
           id="main-nav"
         >
-          <div class="flex items-center justify-between px-6 py-3">
+          <div class="flex items-center justify-between px-4 py-2 md:px-6 md:py-3">
           <!-- Logo -->
           <a
             href="/"
             data-astro-reload
-            class="flex items-center gap-3 font-poppins text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
+            class="flex items-center gap-2 md:gap-3 font-poppins text-lg md:text-2xl font-bold text-teal hover:text-offwhite transition-colors duration-300 group"
             aria-label="Go to home"
           >
             <div class="w-8 h-8 bg-teal/10 rounded flex items-center justify-center group-hover:bg-teal/20 transition-all border border-teal/20 overflow-hidden">
@@ -769,8 +769,10 @@ const activeFavicon = (enterpriseAssets.favicon_url && enterpriseAssets.favicon_
         flex-direction: column;
         align-items: flex-end;
         gap: 6px;
-        bottom: 202px;
-        right: 20px;
+        bottom: 120px;
+        right: 12px;
+        transform: scale(0.9);
+        transform-origin: right bottom;
       }
       
       .extra-nav-pill {

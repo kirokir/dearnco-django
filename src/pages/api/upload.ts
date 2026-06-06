@@ -40,8 +40,12 @@ export async function POST({ request }: { request: Request }) {
         uploadFormData.append('file', file);
         uploadFormData.append('upload_preset', uploadPreset);
 
-        // Use /auto/upload to handle both images and videos correctly
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+        // Explicitly set resource_type based on file mime type to prevent Cloudinary from 
+        // silently converting videos to images (e.g. .png) due to preset defaults.
+        const isVideo = file.type.startsWith('video/');
+        const endpoint = isVideo ? 'video/upload' : 'image/upload';
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${endpoint}`, {
             method: 'POST',
             body: uploadFormData
         });
